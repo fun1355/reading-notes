@@ -1,0 +1,105 @@
+* Web前端黑客技術揭祕
+** author:: COS, xigiger, monyer
+** E4X:: Gareth Heyes
+** AS:: lcemtuf, cnben, superhei
+** XSS:: Amit Klein
+** CSRF::
+** 界面操作劫持:: Robert Hansen/ Jeremiah Grossman
+Black Hat Europe 2010Paul Stone 2010 伯斯坦和斯坦福大學　107-122 Jump
+** 漏洞挖掘：強大的爬蟲，payload, 自動化輔助
+Django – RESTFUL 輸入／輸出
+
+CSRF
+目標表單是否有效的token隨機數
+目標表單是否有驗證碼
+目標時候判斷了Referer來源
+網站根目錄下crossdomain.xml的"aloow-access-from-domain"是否通配
+目標JSON數據似乎可以自定義callback函數等
+
+界面劫持
+目標的HTTP響應頭是否設置了X-Frame-Options字段．
+目標是否有JavaScript的Frame Busting機制． 
+更簡單的就是用iframe嵌入目標網站試試，若成功，則說
+明羅動存在．
+
+URL
+每個URL都必須具備非常明確的含義，利於爬蟲理解． RESTFUL風格的API
+Django裏的urls.py配置的各種映射．
+
+XSS漏洞挖掘機制
+HTML標籤之間 HTML標籤之內
+輸出在src/href/action等屬性內，比如<a href="[輸出]">click me</a>
+輸出在on*事件內，比如<a href="#" onclick="[輸出]">click me</a>
+輸出在style屬性內，比如<a href="#" style="[輸出]">click me</a>
+成爲JavaScript代碼的值 成爲CSS代碼的值
+HTML和js的自解碼機制
+HTML: 進制解碼 HTML實體解碼/HtmlEncode js: Unicode形式:\uH(十六進制)
+普通十六進制:\xH 純轉義:\',\",\<,\>這樣的在特殊字符之前加\進行轉義
+
+js的代碼混淆
+luoluo最先在Ph4nt0m Webzine 0x03上提到window.name可以跨域傳遞
+經典的混的CheckList
+來自sogl的彙總 參考html5sec.org上整理的CheckList
+Gareth Heyes主導建立的在線Fuzzing平臺(shazzer.co.uk)
+Gmail Cookie XSS
+XSS Backdoor
+** 漏洞利用
+原生態，攻擊向量 明確：目標環境是什麼，目標用戶是誰，達到攻擊的預期效
+果是什麼
+XSS探針:xssprobe
+WebKit內核 記住密碼，鍵盤記錄器 
+內網滲透：獲取內網IP/Port,主機存活狀態，開啓路由器的遠程訪問能力
+
+默認的遠程WEB管理IP地址是"0.0.0.0",如果設置成255.255.255.255,
+則允許互聯網上任意IP進行遠程Web方式的管理，即通過瀏覽器登錄這臺 FAST的
+外網IP，輸入用戶名與密碼即可進行管理操作．
+
+IE:res 
+協議跨域，探測本地與是否存在目標軟件的POC.
+ 利用UNC的跨域:superhei的"走向本地的邪惡之路"
+ mhtml:協議跨域:
+暗夜潛風的"IE下MHTML協議帶來的跨與危害 ",
+superhei的"Hacking with mhtml protocol handler"
+XSS Proxy基於瀏覽器的遠控：XSS Shell, BeEF, Anehta WebSocket，
+持久性socket連接，www.websocket.org，這個鏈接是可跨域的，
+ 可以用來遠控，監聽onmessage事件，及時響應來自服務端發送過來的請求．
+ 案例：高級釣魚攻擊之百度空間登錄DIV層釣魚． 
+案例: 高級釣魚攻擊之Gmail正常服務釣魚．
+ 案例:人人網跨子域盜取MSN號．
+"探究XSSVirus": 高級釣魚攻擊，XSS Keylogger,JSON Hijacking 
+提權<shell:添加管理員帳號>， 大規模XSS攻擊思想：提交友鏈申請進行攻擊
+，通過Google　Hack可以批量得到目標網站列表
+XSS 利用框架
+
+** HTML5安全
+Web Storage, Web Workers, Geolocation 開源Web應用防火牆Modsecurity，
+開源軟件Snort中的XSS檢測 
+HTML5中的新元素突破黑名單策略：新標籤，新屬性
+History API中的新方法：pushState(),replaceState()
+ 短地址+History新方法=完美隱藏URL惡意代碼 
+HTML5下的僵屍網絡: Botnet
+ Web Worker的使用，CORS向任意網站發送跨域請求
+
+** Web蠕蟲
+傳播性，感染性，病毒惡意行爲
+ XSS蠕蟲，CSRF蠕蟲，Clickjacking蠕蟲，文本蠕蟲：依次社工成分越來越高．
+ 2005年11月4號，MySpace　XSS蠕蟲 
+ 譯言CSRF蠕蟲
+ 飯否CSRF蠕蟲–邪惡的Flash遊戲 ClickJacking的蠕蟲世界，
+LikeJacking,ShareJacking,
+
+** 關於防禦
+X-Frame-Options X-XSS-Protection X-Content-Security-Policy
+ Web廠商的防禦：域分離，安全傳輸，安全Cookie,優秀的驗證碼，慎防第三方
+ 內容，
+ 案例：2009年，ring04h針對phpwind和Discuz!的劫持事件
+ 案例：新浪寵物頻道,曾經因爲<iframe>嵌入頁面被掛馬，直接導致訪問新 浪
+ 寵物頻道的人中招．
+ 案例：人人網於2009年出現的Flash蠕蟲
+ XSS防禦方案：OWASP，ESAPI(企業級安全API)
+輸入校驗，輸出校驗，一掐輸入都是有害的． 界面劫持防禦方案：
+X-Frame-Options, Frame Busting腳本防禦
+ Collin Jackson: "Busting Frame Busting a Study of Clickjacking
+ Vulnerabilities on Popular Sites"
+ 用戶防禦：Firefox+NoScript插件，信任最小原則 邪惡的SNS社區：邪惡雙胞胎
+
