@@ -1,0 +1,269 @@
+* [[http://openwebx.org/docs/index.html][Webx框架指南]]
+* 引言
+** 阅读向导
+** Webx是什么？
+** Webx的历史
+** 为什么要用Webx而不是其它的开源框架？
+** Webx的优势
+成熟可靠性
+开放和扩展性
+** Webx还缺少什么？
+*** 目前Webx只支持服务端的表单验证，而没有直接支持客户端的JS验证。
+*** 目前Webx没有直接支持AJAX编程。
+*** 目前Webx没有直接支持REST编程。
+*** 目前Webx没有直接支持Web Flow。
+* Webx框架概览
+** Webx总体介绍
+*** 设计理念
+框架的本质
+基础框架
+层次化
+*** Webx的层次
+**** 三个大层次
+***** SpringExt
+基于Spring，提供扩展组件的能力。它是整个框架的基础。
+***** Webx Framework
+基于Servlet API，提供基础的服务，例如：初始化Spring、初始化日志、接收
+请求、错误处理、开发模式等。Webx Framework只和servlet及spring相关 ——
+它不关心Web框架中常见的一些服务，例如Action处理、表单处理、模板渲染等。
+因此，事实上，你可以用Webx Framework来创建多种风格的Web框架。
+***** Webx Turbine
+基于Webx Framework，实现具体的网页功能，例如：Action处理、表单处理、模
+板渲染等。
+
+**** 剪裁和定制Webx
+***** 级别一：仅使用SpringExt，适用于非Web应用、单元测试
+***** 级别二：仅使用SpringExt及Web组件，在此基础上运行Spring MVC、Struts等非webx框架
+
+***** 级别三：仅使用Webx Framework，创造新的Web框架
+***** 级别四：使用整个Webx框架，定制Turbine
+*** 本章总结
+** SpringExt
+*** 用SpringExt装配服务
+Spring Beans
+Spring Schema
+SpringExt Schema
+*** SpringExt原理
+XML Schema中的秘密
+扩展点，Configuration Point
+捐献，Contribution
+组件和包
+取得Schemas
+*** SpringExt其它特性
+*** 本章总结
+** Webx Framework
+*** Webx的初始化
+初始化级联的Spring容器
+初始化日志系统
+*** Webx响应请求
+增强request、response、session的功能
+Pipeline流程机制
+异常处理机制
+开发模式工具
+响应和处理请求的更多细节
+*** 定制Webx Framework
+定制WebxRootController
+定制WebxController
+*** 本章总结
+** Webx Turbine
+*** 设计理念
+页面驱动
+约定胜于配置
+*** 页面布局
+*** 处理页面的基本流程
+*** 依赖注入
+Spring原生注入手段
+注入request、response和session对象
+参数注入
+*** 定制Webx Turbine
+*** 本章总结
+* Webx基础设施服务
+** Resource Loading服务指南
+*** 资源概述
+什么是资源？
+如何表示资源？
+如何访问资源？
+如何遍历资源？
+有什么问题？
+*** Spring的ResourceLoader机制
+Resource接口
+ResourceLoader和ResourcePatternResolver接口
+在代码中取得资源
+Spring如何装载资源？
+Spring ResourceLoader的缺点
+*** Resource Loading服务
+替换Spring ResourceLoader
+定义新资源
+重命名资源
+重定向资源
+匹配资源
+在多个ResourceLoader中查找
+装载parent容器中的资源
+修改资源文件的内容
+直接使用ResourceLoadingService
+在非Web环境中使用Resource Loading服务
+*** ResourceLoader参考
+FileResourceLoader
+WebappResourceLoader
+ClasspathResourceLoader
+SuperResourceLoader
+关于ResourceLoader的其它考虑
+*** 本章总结
+** Filter、Request Contexts和Pipeline
+*** Filter
+Filter的用途
+Filter工作原理
+Filter的限制
+Webx对filter功能的补充
+*** Request Contexts服务
+Request Contexts工作原理
+Request Contexts的用途
+Request Contexts的使用
+*** Pipeline服务
+Pipeline工作原理
+Pipeline的用途
+Pipeline的使用
+*** 本章总结
+** Request Contexts功能指南
+*** <basic> - 提供基础特性
+拦截器接口
+默认拦截器
+*** <set-locale> -设置locale区域和charset字符集编码
+Locale基础
+Charset编码基础
+Locale和charset的关系
+设置locale和charset
+使用方法
+*** <parser> - 解析参数
+基本使用方法
+上传文件
+高级选项
+*** <buffered> - 缓存response中的内容
+实现原理
+使用方法
+*** <lazy-commit> - 延迟提交response
+什么是提交
+实现原理
+使用方法
+*** <rewrite> -重写请求的URL和参数
+概述
+取得路径
+匹配rules
+匹配conditions
+替换路径
+替换参数
+后续操作
+重定向
+自定义处理器
+*** 本章总结
+** Request Context之Session指南
+*** Session概述
+什么是Session
+Session数据存在哪？
+创建通用的session框架
+*** Session框架
+最简配置
+Session ID
+Session的生命期
+Session Store
+Session Model
+Session Interceptor
+*** Cookie Store
+多值Cookie Store
+单值Cookie Store
+*** 其它Session Store
+Simple Memory Store
+*** 本章总结
+* Webx应用支持服务
+** 表单验证服务指南
+*** 表单概述
+什么是表单验证
+表单验证的形式
+*** 设计
+验证逻辑与表现逻辑分离
+验证逻辑和应用代码分离
+表单验证的流程
+*** 使用表单验证服务
+创建新数据
+修改老数据
+批量创建或修改数据
+*** 表单验证服务详解
+配置详解
+Validators
+Form Tool
+Field keys的格式
+外部验证
+*** 本章总结
+* Webx应用实作
+** 创建第一个Webx应用
+*** 准备工作
+安装JDK
+安装和配置maven
+安装集成开发环境
+*** 创建应用
+*** 运行应用
+*** 提问和解答
+在生产环境的应用上，也会出现前述的“开发者首页”吗？
+“开发模式”是什么意思？
+所生成的应用中包含了什么？
+** Webx日志系统的配置
+*** 名词解释
+日志系统（Logging System）
+日志框架（Logging Framework）
+*** 在Maven中组装日志系统
+在Maven中配置logback作为日志系统
+在Maven中配置log4j作为日志系统
+*** 在WEB应用中配置日志系统
+设置WEB应用
+定制/WEB-INF/logback.xml（或/WEB-INF/log4j.xml）
+同时初始化多个日志系统
+*** 常见错误及解决
+查错技巧
+异常信息：No log system exists
+异常信息：NoSuchMethodError: org.slf4j.MDC.getCopyOfContextMap()
+STDERR输出：Class path contains multiple SLF4J bindings
+看不到日志输出
+*** 本章总结
+* 辅助工具
+** 安装和使用SpringExt插件
+*** SpringExt插件有什么用？
+*** Maven插件
+在pom.xml中定义插件
+启动schema服务器
+导出所有的schemas
+Maven插件的可选参数
+*** Eclipse插件
+安装插件
+利用插件编辑Webx/SpringExt配置文件
+利用插件编辑SpringExt组件
+*** 本章总结
+** AutoConfig工具使用指南
+*** 需求分析
+解决方案
+*** AutoConfig的设计
+角色与职责
+分享二进制目标文件
+部署二进制目标文件
+AutoConfig特性列表
+*** AutoConfig的使用 —— 开发者指南
+建立AutoConfig目录结构
+建立auto-config.xml描述文件
+建立模板文件
+*** AutoConfig的使用 —— 部署者指南
+在命令行中使用AutoConfig
+在maven中使用AutoConfig
+运行并观察AutoConfig的结果
+共享properties文件
+AutoConfig常用命令
+*** 本章总结
+** AutoExpand工具使用指南
+*** AutoExpand工具简介
+Java、JavaEE打包的格式
+应用部署的方式
+AutoExpand的用武之地
+*** AutoExpand的使用
+取得AutoExpand
+执行AutoExpand
+AutoExpand和AutoConfig的合作
+*** AutoExpand的参数
+*** 本章总结

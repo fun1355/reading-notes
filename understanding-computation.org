@@ -1,0 +1,709 @@
+* [[https://www.ruby-lang.org/en/documentation/][ruby]]
+** [[https://en.wikipedia.org/wiki/Ruby_on_Rails%0A][Ruby on Rails]]
+** [[http://www.arachni-scanner.com/][arachni]]
+** TODO [[http://www.metasploit.com/][metasploit]]
+* DONE [[http://computationbook.com/][Understanding Computation]]
+  CLOSED: [2014-08-20 Wed 16:19]
+  - State "DONE"       from "TODO"       [2014-08-20 Wed 16:19]
+** [[https://github.com/sancao2/computationbook.git][computation-book-on-github]]
+** Just Enough Ruby                                                :Chapter1:
+*** DONE [[https://en.wikipedia.org/wiki/Ruby_(programming_language)][Ruby-language-wiki]]
+    Matsumoto describes the design of Ruby as being like a simple Lisp
+    language at its core, with an object system like that of
+    Smalltalk, blocks inspired by higher-order functions, and
+    practical utility like that of Perl.
+
+    Often people, especially computer engineers, focus on the
+    machines. They think, "By doing this, the machine will run
+    faster. By doing this, the machine will run more effectively. By
+    doing this, the machine will something something something." They
+    are focusing on machines. But in fact we need to focus on humans,
+    on how humans care about doing programming or operating the
+    application of the machines. We are the masters. They are the
+    slaves.
+    
+    Ruby is said to follow the principle of least astonishment (POLA),
+    meaning that the language should behave in such a way as to
+    minimize confusion for experienced users. 
+
+*** [[https://www.ruby-lang.org/en/about/][Ruby-about]]
+*** [[http://book.douban.com/subject/2337297/][The Ruby Programming Language]]
+*** [[https://github.com/bbatsov/ruby-style-guide][ruby-style-guide]]
+*** [[http://www.ruby-doc.org/core-2.1.2/][rdoc]]                                                             :manual:
+** Programs and Machines                                              :Part1:
+In Chapter 2, we’ll design and implement a toy programming language by exploring
+several different ways to specify its meaning. Understanding the meaning of a language
+is what allows us to take a lifeless piece of source code and animate it as a dynamic,
+executing process; each specification technique gives us a particular strategy for run-
+ning a program, and we’ll end up with several different ways of implementing the same
+language.
+We’ll see that programming is the art of assembling a precisely defined structure that
+can be dismantled, analyzed, and ultimately interpreted by a machine to create a com-
+putation. And more important, we’ll discover that implementing programming lan-
+guages is easy and fun: although parsing, interpretation, and compilation can seem
+intimidating, they’re actually quite simple and enjoyable to play around with.
+
+Programs aren’t much use without machines to run them on, so in Chapter 3, we’ll
+design very simple machines capable of performing basic, hardcoded tasks. From that
+humble foundation, we’ll work our way up to more sophisticated machines in Chap-
+ter 4, and in Chapter 5, we’ll see how to design a general-purpose computing device
+that can be controlled with software.
+By the time we reach Part II, we’ll have seen the full spectrum of computational power:
+some machines with very limited capabilities, others that are more useful but still frus-
+tratingly constrained, and finally, the most powerful machines that we know how to
+build.
+
+** The Meaning of Programs                                         :Chapter2:
+*** small-step semantics
+      The detailed, execution-oriented style of small-step semantics lends itself well to the
+task of unambiguously specifying real-world programming languages. For example,
+the latest R6RS standard for the Scheme programming language uses[[http://www.r6rs.org/final/html/r6rs/r6rs-Z-H-15.html][ small-step se-
+mantics]] to describe its execution, and provides a [[http://www.r6rs.org/refimpl/][reference implementation]] of those
+semantics written in [[http://redex.racket-lang.org/][PLT Redex]], “a domain-specific language designed for specifying
+and debugging operational semantics.” The OCaml programming language, which is
+built as a series of layers on top of a simpler language called Core ML, also has a [[http://caml.inria.fr/pub/docs/u3-ocaml/ocaml-ml.html#htoc4][small-
+step semantic definition]] of the base language’s runtime behavior.
+See “Semantics” on page 199 for another example of using small-step operational se-
+mantics to specify the meaning of expressions in an even simpler programming lan-
+guage called the lambda calculus.
+*** big-step semantics
+      The most influential use of big-step semantics for specifying real programming lan-
+guages is Chapter 6 of the[[http://www.lfcs.inf.ed.ac.uk/reports/87/ECS-LFCS-87-36/][ original definition of the Standard ML programming lan-
+guage]], which explains all of the runtime behavior of ML in big-step style. Following
+this example, OCaml’s core language has a [[http://caml.inria.fr/pub/docs/u3-ocaml/ocaml-ml.html#htoc7][big-step semantics]] to complement its more
+detailed small-step definition.
+Big-step operational semantics is also used by the W3C: the [[http://www.w3.org/TR/xquery-semantics/][XQuery 1.0 and XPath 2.0
+specification]] uses mathematical inference rules to describe how its languages should
+be evaluated, and [[http://www.w3.org/TR/xpath-full-text-30/][the XQuery and XPath Full Text 3.0 spec]] includes a big-step seman-
+tics written in XQuery.
+
+*** denotional semantics
+We saw earlier that operational semantics is about explaining a language’s meaning by
+designing an interpreter for it. By contrast, the language-to-language translation of de-
+notational semantics is like a compiler: in this case, our implementations of #to_ruby
+effectively compile SIMPLE into Ruby. None of these styles of semantics necessarily says
+anything about how to efficiently implement an interpreter or compiler for a language,
+but they do provide an official baseline against which the correctness of any efficient
+implementation can be judged.
+These denotational definitions also show up in the wild. Older versions of the Scheme
+standard use [[http://www.schemers.org/Documents/Standards/R5RS/HTML/r5rs-Z-H-10.html#%2525_sec_7.2][denotational semantics]] to specify the core language, unlike the current
+standard’s small-step operational semantics, and the development of the XSLT docu-
+ment-transformation language was guided by Philip Wadler’s denotational definitions
+of [[http://homepages.inf.ed.ac.uk/wadler/topics/xml.html#xsl-semantics][XSLT patterns]] and [[http://homepages.inf.ed.ac.uk/wadler/topics/xml.html#xpath-semantics][XPath expressions]].
+
+*** Comparing Semantics Styles
+«while» is a good example of the difference between small-step,
+big-step, and denotational semantics.
+
+The small-step operational semantics of «while» is written as a
+reduction rule for an abstract machine. The overall looping behavior
+isn’t part of the rule’s action reduction just turns a «while»
+statement into an «if» statement—but it emerges as a consequence of
+the future reductions performed by the machine. To understand what
+«while» does, we need to look at all of the small-step rules and work
+out how they interact over the course of a SIMPLE program’s execution.
+
+«while»’s big-step operational semantics is written as an evaluation
+rule that shows how to compute the final environment directly. The
+rule contains a recursive call to itself, so there’s an explicit
+indication that «while» will cause a loop during evaluation, but it’s
+not quite the kind of loop that a SIMPLE programmer would recognize.
+Big-step rules are written in a recursive style, describing the
+complete evaluation of an expression or statement in terms of the
+evaluation of other pieces of syntax, so this rule tells us that the
+result of evaluating a «while» statement may depend upon the result of
+evalu- ating the same statement in a different environment, but it
+requires a leap of intuition to connect this idea with the iterative
+behavior that «while» is supposed to exhibit. Fortunately the leap
+isn’t too large: a bit of mathematical reasoning can show that the two
+kinds of loop are equivalent in principle, and when the metalanguage
+supports tail call optimization, they’re also equivalent in practice.
+
+The denotational semantics of «while» shows how to rewrite it in Ruby,
+namely by using Ruby’s while keyword. This is a much more direct
+translation: Ruby has native support for iterative loops, and the
+denotation rule shows that «while» can be imple- mented with that
+feature. There’s no leap required to understand how the two kinds of
+loop relate to each other, so if we understand how Ruby while loops
+work, we un- derstand SIMPLE «while» loops too. Of course, this means
+we’ve just converted the problem of understanding SIMPLE into the
+problem of understanding the denotation language, which is a serious
+disadvantage when that language is as large and ill-specified as Ruby,
+but it becomes an advantage when we have a small mathematical language
+for writing denotations.
+
+*** Formal Semantics in Practice
+***** Alternatives
+     One alternative is axiomatic semantics, which describes the
+meaning of a statement by making assertions about the state of the
+abstract machine before and after that statement executes: if one
+assertion (the pre- condition) is initially true before the statement
+is executed, then the other assertion (the postcondition) will be true
+afterward.
+Axiomatic semantics is useful for verifying the correctness of
+programs: as statements are plugged together to make larger programs,
+their corresponding assertions can be plugged together to make larger
+assertions, with the goal of showing that an overall assertion about a
+program matches up with its intended specification.
+Although the details are different, axiomatic semantics is the style
+that best characterizes the [[http://www.rubyspec.org/][RubySpec project]], an “executable
+specification for the Ruby programming language” that uses RSpec-style
+assertions to describe the behavior of Ruby’s built-in language
+constructs, as well as its core and standard libraries. For example,
+here’s a fragment of RubySpec’s description of the Array#<< method:
+describe "Array#<<" do
+ it "correctly resizes the Array" do
+  a = []
+  a.size.should == 0
+  a << :foo
+  a.size.should == 1
+  a << :bar << :baz
+  a.size.should == 3
+
+  a = [1, 2, 3]
+  a.shift
+  a.shift
+  a.shift
+  a << :foo
+  a.should == [:foo]
+ end
+end
+
+***** Implementing Parsers
+Implementing a SIMPLE parser entirely from scratch would involve a lot
+of detail and take us on a long diversion from our discussion of
+formal semantics. Hacking on toy programming languages is fun, though,
+and thanks to the existence of parsing tools and libraries it’s not
+especially difficult to construct a parser by relying on other
+people’s work, so here’s a brief outline of how to do it.
+One of the best parsing tools available for Ruby is [[https://github.com/nathansobo/treetop][Treetop]], a
+domain-specific language for describing syntax in a way that allows a
+parser to be automatically generated.
+To keep things simple, this grammar makes no attempt to constrain
+what kinds of expression can appear inside other expressions, which
+means the parser will accept some programs that are obviously wrong.
+For example, we have two rules for binary expressions—less_than and
+multiply—but the only reason for having separate rules is to enforce
+operator precedence, so each rule only requires that a higher precedence
+rule matches its left operand and a same-or-higher-precedence one
+matches its right. This creates the situation where a string like '1 < 2 <
+3' will be parsed successfully, even though the semantics of SIMPLE won’t
+be able to give the resulting expression a meaning.
+Some of these problems can be resolved by tweaking the grammar, but
+there will always be other incorrect cases that the parser can’t spot. We’ll
+separate the two concerns by keeping the parser as liberal as possible
+and using a different technique to detect invalid programs in Chapter 9.
+
+** The Simplest Computers                                          :Chapter3:
+*** Deterministic Finite Automata
+*** Nondeterministic Finite Automata
+    One way to explore is by chipping away at our existing assumptions
+and constraints. For one thing, the determinism constraints seem
+restrictive: maybe we don’t care about every possible input character
+at every state, so why can’t we just leave out rules for characters we
+don’t care about and assume that the machine can go into a generic
+failure state when something unexpected happens? More exotically, what
+would it mean to allow the machine to have contradictory rules, so
+that more than one execution path is possible? Our setup also assumes
+that each state change must happen in response to a character being
+read from the input stream, but what would happen if the machine could
+change state without having to read anything?
+    The collection of strings that are accepted by a particular
+machine is called a language: we say that the machine recognizes that
+language. Not all possible languages have a DFA or NFA that can
+recognize them (see Chapter 4 for more information), but those
+languages that can be rec- ognized by finite automata are called
+regular languages.
+     Relaxing the determinism constraints has produced an imaginary
+machine that is very different from the real, deterministic computers
+we’re familiar with. An NFA deals in possibilities rather than
+certainties; we talk about its behavior in terms of what can happen
+rather than what will happen. This seems powerful, but how can such a
+machine work in the real world? At first glance it looks like a real
+implementation of an NFA would need some kind of foresight in order to
+know which of several possibilities to choose while it reads input: to
+stand a chance of accepting a string, our example NFA must stay in
+state 1 until it reads the third-from-last character, but it has no
+way of knowing how many more characters it will receive. How can we
+simulate an exciting machine like this in boring, deterministic Ruby?
+     The key to simulating an NFA on a deterministic computer is to find a way to explore
+all possible executions of the machine. This brute-force approach eliminates the spooky
+foresight that would be required to simulate only one possible execution by somehow
+making all the right decisions along the way. When an NFA reads a character, there
+are only ever a finite number of possibilities for what it can do next, so we can simulate
+the nondeterminism by somehow trying all of them and seeing whether any of them
+ultimately allows it to reach an accept state.
+     We could do this by recursively trying all possibilities: each time the simulated NFA
+reads a character and there’s more than one applicable rule, follow one of those rules
+and try reading the rest of the input; if that doesn’t leave the machine in an accept state,
+then go back into the earlier state, rewind the input to its earlier position, and try again
+by following a different rule; repeat until some choice of rules leads to an accept state,
+or until all possible choices have been tried without success.
+　　　Another strategy is to simulate all possibilities in parallel by spawning new threads
+every time the machine has more than one rule it can follow next, effectively copying
+the simulated NFA so that each copy can try a different rule to see how it pans out. All
+those threads can be run at once, each reading from its own copy of the input string,
+and if any thread ends up with a machine that’s read every character and stopped in an
+accept state, then we can say the string has been accepted.
+　　　Both of these implementations are feasible, but they’re a bit complicated and inefficient.
+Our DFA simulation was simple and could read individual characters while constantly
+reporting back on whether the machine is in an accept state, so it would be nice to
+simulate an NFA in a way that gives us the same simplicity and transparency.
+Fortunately, there’s an easy way to simulate an NFA without needing to rewind our
+progress, spawn threads, or know all the input characters in advance. In fact, just as
+we simulated a single DFA by keeping track of its current state, we can simulate a single
+NFA by keeping track of all its possible current states. This is simpler and more efficient
+than simulating multiple NFAs that go off in different directions, and it turns out to
+achieve the same thing in the end. If we did simulate many separate machines, then all
+we’d care about is what state each of them was in, but any machines in the same state
+are completely indistinguishable,2 so we don’t lose anything by collapsing all those
+possibilities down into a single machine and asking “which states could it be in by now?”
+instead.
+**** Free Moves
+     These are rules that the machine may spontaneously follow without reading
+any input, and they help here because they give the NFA an initial choice between two
+separate groups of states:
+
+*** Regular Expressions
+    In this chapter, we’ll always think of a regular expression as matching
+an entire string. Real-world implementations of regular expressions typ-
+ically use them for matching parts of strings, with extra syntax needed
+if we want to specify that an entire string should be matched.
+For example, our regular expression hello|goodbye would be written in
+Ruby as /\A(hello|goodbye)\z/ to make sure that any match is anchored
+to the beginning (\A) and end (\z) of the string.
+    Given a regular expression and a string, how do we write a program to decide whether
+the string matches that expression? Most programming languages, Ruby included, al-
+ready have regular expression support built in, but how does that support work? How
+would we implement regular expressions in Ruby if the language didn’t already have
+them?
+　　　It turns out that finite automata are perfectly suited to this job. As we’ll see, it’s possible
+to convert any regular expression into an equivalent NFA—every string matched by
+the regular expression is accepted by the NFA, and vice versa—and then match a string
+by feeding it to a simulation of that NFA to see whether it gets accepted. In the language
+of Chapter 2, we can think of this as providing a sort of denotational semantics for
+regular expressions: we may not know how to execute a regular expression directly,
+but we can show how to denote it as an NFA, and because we have an operational
+semantics for NFAs (“change state by reading characters and following rules”), we can
+execute the denotation to achieve the same result.
+　　　The majority of real-world implementations of regular expressions, like
+the Onigmo library used by Ruby, don’t work by literally compiling
+patterns into finite automata and simulating their execution. Although
+it’s a fast and efficient way of matching regular expressions against
+strings, this approach makes it harder to support more advanced fea-
+tures like capture groups and lookahead/lookbehind assertions. Con-
+sequently most libraries use some kind of backtracking algorithm that
+deals with regular expressions more directly instead of converting them
+into finite automata.
+Russ Cox’s　[[http://code.google.com/p/re2/][RE2 library]] is a production-quality C++ regular expression
+implementation that does compile patterns into automata,6 while Pat
+Shaughnessy has written a detailed [[http://patshaughnessy.net/2012/4/3/exploring-rubys-regular-expression-algorithm][blog post]] exploring how Ruby’s
+regular expression algorithm works.
+**** Parsing
+     We’ve almost built a complete (albeit basic) regular expression implementation. The
+only missing piece is a parser for pattern syntax: it would be much more convenient if
+we could just write (a(|b))* instead of building the abstract syntax tree manually with
+Repeat.new(Concatenate.new(Literal.new('a'), Choose.new(Empty.new, Literal.new
+('b')))). We saw in “Implementing Parsers” on page 58 that it’s not difficult to use
+Treetop to generate a parser that can automatically transform raw syntax into an AST,
+so let’s do that here to finish off our implementation.
+**** Equivalence
+     This chapter has described the idea of a deterministic state machine and added more
+features to it: first nondeterminism, which makes it possible to design machines that
+can follow many possible execution paths instead of a single path, and then free moves,
+which allow nondeterministic machines to change state without reading any input.
+Nondeterminism and free moves make it easier to design finite state machines to per-
+form specific jobs—we’ve already seen that they’re very useful for translating regular
+expressions into state machines—but do they let us do anything that we can’t do with
+a standard DFA?
+Well, it turns out that it’s possible to convert any nondeterministic finite automaton
+into a deterministic one that accepts exactly the same strings. This might be surprising
+given the extra constraints of a DFA, but it makes sense when we think about the way
+we simulated the execution of both kinds of machine.
+**** DFA Minimization
+Some DFAs have the property of being minimal, which means there’s no way to design
+a DFA with fewer states that will accept the same strings. The NFA-to-DFA conversion
+process can sometimes produce nonminimal DFAs that contain redundant states, but
+there’s an elegant way to eliminate this redundancy, known as Brzozowski’s algorithm:
+***** Begin with your nonminimal DFA.
+***** Reverse all of the rules. Visually, this means that every arrow in the machine’s
+diagram stays in the same place but points backward; in code terms, every FAR
+ule.new(state, character, next_state) is replaced with FARule.new(next_state,
+character, state). Reversing the rules usually breaks the determinism con-
+straints, so now you have an NFA.
+***** Exchange the roles of start and accept states: the start state becomes an accept
+state, and each of the accept states becomes a start state. (You can’t directly convert
+all the accept states into start states because an NFA can only have one start state,
+but you can get the same effect by creating a new start state and connecting it to
+each of the old accept states with a free move.)
+***** Convert this reversed NFA to a DFA in the usual way.
+Surprisingly, the resulting DFA is guaranteed to be minimal and contain no redundant
+states. The unhappy downside is that it will only accept reversed versions of the original
+DFA’s strings: if our original DFA accepted the strings 'ab', 'aab', 'aaab', and so on,
+the minimized DFA will accept strings of the form 'ba', 'baa', and 'baaa'. The trick is
+to fix this by simply performing the whole procedure a second time, beginning with
+the reversed DFA and ending up with a double-reversed DFA, which is again guaranteed
+to be minimal but this time accepts the same strings as the machine we started with.
+It’s nice to have an automatic way of eliminating redundancy in a design, but interest-
+ingly, a minimized DFA is also canonical: any two DFAs that accept exactly the same
+strings will minimize to the same design, so we can check whether two DFAs are equiv-
+alent by minimizing them and comparing the resulting machine designs to see if they
+have the same structure.9 This in turn gives us an elegant way of checking whether two
+regular expressions are equivalent: if we convert two patterns that match the same
+strings (e.g., ab(ab)* and a(ba)*b) into NFAs, convert those NFAs into DFAs, then
+minimize both DFAs with Brzozowski’s algorithm, we’ll end up with two identical-
+looking machines.
+
+** Just Add Power                                                  :Chapter4:
+*** Deterministic Pushdown Automata
+A finite state machine with a built-in stack is called a pushdown automaton (PDA), and
+when that machine’s rules are deterministic, we call it a deterministic pushdown au-
+tomaton (DPDA)
+**** There are several design issues here:
+***** Does every rule have to modify the stack, or read input, or change state, or all three?
+***** Should there be two different kinds of rule for pushing and popping?
+***** Do we need a special kind of rule for changing state when the stack is empty?
+***** Is it okay to change state without reading from the input, like a free move in an NFA?
+***** If a DPDA can change state spontaneously like that, what does “deterministic” mean?
+**** We’ll break down a PDA rule into five parts:
+***** The current state of the machine
+***** The character that must be read from the input (optional)
+***** The next state of the machine
+***** The character that must be popped off the stack
+***** The sequence of characters to push onto the stack after the top character has been popped off
+*** Nondeterministic Pushdown Automata
+    #Page123 rulebook.follow_free_moves(super) [這裏的super是什麼意思?]
+**** Nonequivalence
+But wait: we saw in “Equivalence” on page 94 that nondeterministic machines without
+a stack are exactly equivalent in power to deterministic ones. Our Ruby NFA simulation
+behaved like a DFA—moving between a finite number of “simulation states” as it read
+each character of the input string—which gave us a way to turn any NFA into a DFA
+that accepts the same strings. So has nondeterminism really given us any extra power,
+or does our Ruby NPDA simulation just behave like a DPDA? Is there an algorithm for
+converting any nondeterministic pushdown automaton into a deterministic one?
+Well, no, it turns out that there isn’t. The NFA-to-DFA trick only works because we
+can use a single DFA state to represent many possible NFA states. To simulate an NFA,
+we only need to keep track of what states it could currently be in, then pick a different
+set of possible states each time we read an input character, and a DFA can easily do
+that job if we give it the right rules.
+But that trick doesn’t work for PDAs: we can’t usefully represent multiple NPDA con-
+figurations as a single DPDA configuration. The problem, unsurprisingly, is the stack.
+An NPDA simulation needs to know all the characters that could currently be on top
+of the stack, and it must be able to pop and push several of the simulated stacks si-
+multaneously. There’s no way to combine all the possible stacks into a single stack so
+that a DPDA can still see all the topmost characters and access every possible stack
+individually. We didn’t have any difficulty writing a Ruby program to do all this, but
+a DPDA just isn’t powerful enough to handle it.
+So unfortunately, our NPDA simulation does not behave like a DPDA, and there isn’t
+an NPDA-to-DPDA algorithm. The unmarked palindrome problem is an example of a
+job where an NPDA can do something that a DPDA can’t, so nondeterministic push-
+down automata really do have more power than deterministic ones.
+*** Parsing with Pushdown Automata
+“Regular Expressions” on page 79 showed how nondeterministic finite automata can
+be used to implement regular expression matching. Pushdown automata have an im-
+portant practical application too: they can be used to parse programming languages.
+We already saw in “Implementing Parsers” on page 58 how to use Treetop to build a
+parser for part of the SIMPLE language. Treetop parsers use a single parsing expression
+grammar to describe the complete syntax of the language being parsed, but that’s a
+relatively modern idea. A more traditional approach is to break the parsing process
+apart into two separate stages:
+**** Lexical analysis
+Read a raw string of characters and turn it into a sequence of tokens. Each token
+represents an individual building block of program syntax, like “variable name,”
+“opening bracket,” or “while keyword.” A lexical analyzer uses a language-specific
+set of rules called a lexical grammar to decide which sequences of characters should
+produce which tokens. This stage deals with messy character-level details like vari-
+able-naming rules, comments, and whitespace, leaving a clean sequence of tokens
+for the next stage to consume.
+**** Syntactic analysis
+Read a sequence of tokens and decide whether they represent a valid program
+according to the syntactic grammar of the language being parsed. If the program is
+valid, the syntactic analyzer may produce additional information about its struc-
+ture (e.g., a parse tree).
+First we need a syntactic grammar that describes how tokens may be combined to form
+programs. Here’s part of a grammar for SIMPLE, based on the structure of the Treetop
+grammar in “Implementing Parsers” on page 58:
+<statement> 　　::= <while> | <assign>
+<while>　　　　　::= 'w' '(' <expression> ')' '{' <statement> '}'
+<assign> 　　　　::= 'v' '=' <expression>
+<expression> 　 ::= <less-than>
+<less-than>     ::= <multiply> '<' <less-than> | <multiply>
+<multiply>      ::= <term> '*' <multiply> | <term>
+<term>          ::= 'n' | 'v'
+This is called a context-free grammar (CFG).7 Each rule has a symbol on the lefthand
+side and one or more sequences of symbols and tokens on the right. For example, the
+rule <statement> ::= <while> | <assign> means that a SIMPLE statement is either a
+while loop or an assignment, and <assign> ::= 'v' '=' <expression> means that an
+assignment statement consists of a variable name followed by an equals sign and an
+expression.
+The CFG is a static description of SIMPLE’s structure, but we can also think of it as a set
+of rules for generating SIMPLE programs. Starting from the <statement> symbol, we can
+apply the grammar rules to recursively expand symbols until only tokens remain. Here’s
+one of many ways to fully expand <statement> according to the rules:
+<statement> →<assign>
+            →'v' '=' <expression>
+            →'v' '=' <less-than>
+            →'v' '=' <multiply>
+            →'v' '=' <term> '*' <multiply>
+            →'v' '=' 'v' '*' <multiply>
+            →'v' '=' 'v' '*' <term>
+            →'v' '=' 'v' '*' 'n'
+This tells us that 'v' '=' 'v' '*' 'n' represents a syntactically valid program, but we
+want the ability to go in the opposite direction: to recognize valid programs, not gen-
+erate them. When we get a sequence of tokens out of the lexical analyzer, we’d like to
+know whether it’s possible to expand the <statement> symbol into those tokens by
+applying the grammar rules in some order. Fortunately, there’s a way to turn a context-
+free grammar into a nondeterministic pushdown automaton that can make exactly this
+decision.
+***** Practicalities
+This parsing procedure relies on nondeterminism, but in real applications, it’s best to
+avoid nondeterminism, because a deterministic PDA is much faster and easier to sim-
+ulate than a nondeterministic one. Fortunately, it’s almost always possible to eliminate
+nondeterminism by using the input tokens themselves to make decisions about which
+symbol rule to apply at each stage—a technique called lookahead—but that makes the
+translation from CFG to PDA more complicated.
+*** How Much Power?
+The main consequence of having a stack is the ability to recognize
+certain languages that finite automata aren’t capable of recognizing,
+like palindromes and strings of balanced brackets. The unlimited
+storage provided by a stack lets a PDA remember arbitrary amounts of
+information during a computation and refer back to it later.
+Okay, so PDAs are a bit more powerful, but what are their limitations? Even if we’re
+only interested in the kinds of pattern-matching applications we’ve already seen, push-
+down automata are still seriously limited by the way a stack works. There’s no random
+access to stack contents below the topmost character, so if a machine wants to read a
+character that’s buried halfway down the stack, it has to pop everything above it. Once
+characters have been popped, they’re gone forever; we designed a PDA to recognize
+strings with equal numbers of as and bs, but we can’t adapt it to recognize strings with
+equal numbers of three different types of character ('abc', 'aabbcc', 'aaabbbccc', ...)
+because the information about the number of as gets destroyed by the process of
+counting the bs.
+Aside from the number of times that pushed characters can be used, the last-in-first-
+out nature of a stack causes a problem with the order in which information is stored
+and retrieved. PDAs can recognize palindromes, but they can’t recognize doubled-up
+strings like 'abab' and 'baaabaaa', because once information has been pushed onto a
+stack, it can only be consumed in reverse order.
+If we move away from the specific problem of recognizing strings and try to treat these
+machines as a model of general-purpose computers, we can see that DFAs, NFAs, and
+PDAs are still a long way from being properly useful. For starters, none of them has a
+decent output mechanism: they can communicate success by going into an accept state,
+but can’t output even a single character (much less a whole string of characters) to
+indicate a more detailed result. This inability to send information back out into the
+world means that they can’t implement even a simple algorithm like adding two num-
+bers together. And like finite automata, an individual PDA has a fixed program; there
+isn’t an obvious way to build a PDA that can somehow read a program from its input
+and run it.
+** The Ultimate Machine                                            :Chapter5:
+   How much more powerful do our toy systems need to get before
+   they’re able to escape these limitations and do everything that a
+   normal computer can do? 
+   How much more complexity is required to model the behavior of RAM,
+   or a hard drive, or a proper output mechanism?
+   What does it take to design a machine that can actually run
+   programs instead of always executing a single hardcoded task?
+*** Deterministic Turing Machines
+*** Nondeterministic Turing Machines
+The simulation works by using the tape to store a queue of suitably
+encoded Turing machine configurations, each one containing a possible
+current state and tape of the simulated machine. When the simulation
+starts, there’s only one con- figuration stored on the tape,
+representing the starting configuration of the simulated machine. Each
+step of the simulated computation is performed by reading the config-
+uration at the front of the queue, finding each rule that applies to
+it, and using that rule to generate a new configuration that is
+written onto the tape at the back of the queue. Once this has been
+done for every applicable rule, the frontmost configuration is erased
+and the process starts again with the next configuration in the queue.
+The simulated machine step is repeated until the configuration at the
+front of the queue represents a machine that has reached an accept
+state.
+*** Maximum Power
+Let’s look at four other ex-
+tensions to conventional Turing machines—internal storage, subroutines, multiple
+tapes, and multidimensional tape—and see why none of them provides an increase in
+computational power. While some of the simulation techniques involved are compli-
+cated, in the end, they’re all just a matter of programming.
+**** Internal Storage
+States 2, 3, and 4 of this machine are almost identical, except they each represent a
+machine that is remembering a different character from the beginning of the string, and
+in this case, they all do something different when they reach the end.
+***** pros
+Exploiting the current state in this way allows us to design Turing machines that can
+remember any finite combination of facts while the tape head moves back and forth,
+effectively giving us the same capabilities as a machine with explicit “registers” for
+internal storage, at the expense of using a large number of states.
+***** cons
+The machine only works for strings made up of the characters a, b, and
+c; if we wanted it to work for strings containing any alphabetic charac-
+ters (or alphanumeric characters, or whatever larger set we chose), we’d
+have to add a lot more states—one for each character that might need
+to be remembered—and a lot more rules to go with them.
+
+**** Subroutines
+**** Multiple Tapes
+**** Multidimensional Tape
+*** General-Purpose Machines
+All the machines we’ve seen so far have a serious shortcoming: their rules are hardco-
+ded, leaving them unable to adapt to different tasks. A DFA that accepts all the strings
+that match a particular regular expression can’t learn to accept a different set of strings;
+an NPDA that recognizes palindromes will only ever recognize palindromes; a Turing
+machine that increments a binary number will never be useful for anything else.
+
+Can any of our simple machines do that? Instead of having to design a new machine
+every time we want to do a different job, can we design a single machine that can read
+a program from its input and then do whatever job the program specifies?
+**** Encoding
+**** Simulation
+
+** Computation and Computability                                      :Part2:
+These human-centered designs are motivated by convenience rather
+than necessity; even the simple design of a Turing machine is meant to
+remind us of a mathematician working with pencil and paper.
+We’ll investigate this idea in Chapter 6 by trying to write programs
+in an extremely minimal language that doesn’t seem to have any useful
+features at all,
+and follow the thread further in Chapter 7, where we’ll survey a
+variety of simple systems and see how they’re able to perform the same
+computations as more complex machines.
+Once we’ve convinced ourselves that full-powered computation can
+happen in many different kinds of system, we’ll spend Chapter 8
+examining what computation itself is actually capable of. It’s natural
+to assume that computers can solve essentially any problem as long as
+enough time and effort is spent on writing a suitable program, but
+there turn out to be hard theoretical constraints: certain problems
+just can’t be solved by any computer, no matter how fast and efficient
+it is.
+Unfortunately some of these insoluble problems are concerned with
+predicting the behavior of programs, which is exactly the kind of
+thing that programmers would like computers to help them with. We’ll
+look at some strategies for coping with these hard limits of the
+computational universe, and conclude in Chapter 9 by exploring how to
+use abstraction to squeeze approximate answers out of unanswerable
+questions.
+** Programming with Nothing                                        :Chapter6:
+*** Impersonating the Lambda Calculus
+Referring to variables
+Creating procs
+Calling procs
+**** Working with Procs
+*** Implementing the Lambda Calculus
+
+** Universality Is Everywhere                                      :Chapter7:
+** Impossible Programs                                             :Chapter8:
+** Programming in Toyland                                          :Chapter9:
+All these reasons make it useful to be able to discover information about a program
+without actually running it. One way of doing this is to use abstract interpretation, an
+analysis technique in which we execute a simplified version of the program and use the
+results to deduce properties of the original.
+*** Abstract Interpretation
+*** Static Semantics
+This is a static type system, designed for checking the program before
+it’s run; in a statically typed language, each variable has an associated
+type. Ruby’s dynamic type system works differently: variables don’t have
+types, and the types of values are only checked when they’re actually
+used during the execution of a program. This allows Ruby to handle
+values of different types being assigned to the same variable, at the cost
+of not being able to detect typing bugs before the program is executed.
+*** Applications
+A notable industrial application of this technique is the [[http://www.astree.ens.fr/][Astrée static analyzer]], which
+uses abstract interpretation to automatically prove that a C program is free of runtime
+errors like division by zero, out-of-bounds array indexing, and integer overflow. Astrée
+has been used to verify the flight control software of Airbus A340 and A380 airplanes,
+as well as the automatic docking software for the Jules Verne ATV-001 mission that
+transported supplies to the International Space Station. Abstract interpretation respects
+Rice’s theorem by providing safe approximations rather than guaranteed answers, so
+Astrée has the potential to report a possible runtime error where none actually exists
+(a false alarm); in practice, its abstractions were precise enough to avoid any false alarms
+when verifying the A340 software.
+** Afterword
+*** language
+Anyone can design and implement a programming language. The basic
+ideas of syntax and semantics are simple, and tools like Treetop can
+take care of the uninteresting details.
+*** math
+Every computer program is a mathematical object. Syntactically a
+program is just a large number; semantically it can represent a
+mathematical function, or a hierarchical structure which can be
+manipulated by formal reduction rules. This means that many techniques
+and results from mathematics, like Kleene’s recursion theorem or
+Gödel’s incompleteness theorem, can equally be applied to programs.
+*** computation
+Computation, which we initially described as just “what a computer
+does,” has turned out to be something of a force of nature. It’s
+tempting to think of computation as a sophisticated human invention
+that can only be performed by specially- designed systems with many
+complicated parts, but it also shows up in systems that don’t seem
+complex enough to support it. So computation isn’t a sterile, ar-
+tificial process that only happens inside a microprocessor, but rather
+a pervasive phenomenon that crops up in many different places and in
+many different ways.
+Computation is not all-or-nothing. Different machines have different amounts of
+computational power, giving us a continuum of usefulness: DFAs and NFAs have
+limited capabilities, DPDAs are more powerful, NPDAs more powerful still, and
+Turing machines are the most powerful we know of.
+*** encoding
+Encodings and levels of abstraction are essential to harnessing the power of com-
+putation. Computers are machines for maintaining a tower of abstractions, begin-
+ning at the very low level of semiconductor physics and rising to the much higher
+level of multitouch graphical user interfaces. To make computation useful, we need
+to be able to encode complex ideas from the real world in a simpler form that
+machines can manipulate, and then be able to decode the results back into a mean-
+ingful high-level representation.
+*** limitation
+There are limits to what computation can do. We don’t know how to build a
+computer that is fundamentally more capable than a Turing machine, but there
+are well-defined problems that a Turing machine can’t solve, and a lot of those
+problems involve discovering information about the programs we write. We can
+cope with these limitations by learning to make use of vague or incomplete answers
+to questions about our programs’ behavior.
+
+
+
+
+* Understanding Computation 讀後筆記                                            :4h:
+   這本書終於被我看完了，雖然略去第八章，第六七章也是略看的．讓人打開
+   眼界的書，學好編譯器原來可以把代碼寫成這樣．
+   前面第二章講的是實現了一門語言,分別採用三種方法實現:
+   small-step semantics(reduce(environment) rule)，其實就是化簡，a
+   mostly iterative flavor．
+   big-step semantics(evaluate(environment) rule)， a　recursive，get
+   from an expression or statement　straight to its result．
+   denotational semantics(language-to-language translation).感覺最後一
+   種是作弊,其實是每個都映射到一個對應的lambda,讓Ruby幫你eval執行他．
+   第三，四，五章，爲了模擬真是的計算機，或者說簡化並一步步逼近真實的
+   計算機，分別講了三種模型：
+   FA -- DFA, NFA, 並通過實例了兩種是等價的,通過添加free_moves規則和一
+   個新的start state．state存儲狀態．
+   The DFA will have a state to represent each set of possible states
+   of．解決/實現了簡單的Regex(沒有catch)問題．末尾還介紹最小化DFA的算
+   法．
+   PDA -- DPDA, NPDA, 並通過實例告訴我們他們是不等價的,通過
+   configuration存儲state和stack．只是在FA上面添加了stack存儲數據，
+   每次rule_for(其實是轉檯轉移transfer),出棧入棧一次，具體出的是什麼，
+   入的是什麼有規則定義．解決了括號配對的問題．不定價是因爲如果多個
+   NPDA不能簡化成一個DPDA,
+   因爲有多個stack，每個stack的棧頂指針不一樣，不能通過一個stack模擬．
+   TM -- DTM, NTM, 其實就是將PDA的stack換成了tape,存儲左中右三段的字符，
+   中間的是一個字符，相當於棧頂．DTM和NTM貌似是等價的．解決多字符的數
+   量問題．
+   DTM, NTM顯然不等價，不過作者直接沒說，顯然不能通過一個DTM去模擬一個
+   NTM的集合.
+   第六，七，八章，很奇葩的三章．
+   第六章是只用lambda函數實現了語言所有的其他特性，包括number(就是數數，
+   從零開始數過去)，boolean，increment,decrement，取餘/整的除法等．
+   其實解決一個很見的3,5,15的整數的問題．本章後來，順便實現了一套
+   lambda函數的三要素variable,function,call.然後利用small-step進行
+   reduce.
+   第七章，In particular, a universal system can be programmed to
+   simulate any other universal system; a universal Turing machine can
+   evaluate lambda calculus expressions, and a lambda calculus
+   interpreter can simulate the execution of a Turing machine.
+   另外說了SKI Lambda Calculus的另外一種lambda實現．深吸一口氣，後面的放棄．
+   第八章，貌似說一些問題是怎麼也解決不掉的．
+   第九章，用abstract interpreter抽象近似的解決複雜問題．就是繞過複雜
+   的計算，而提取計算的特徵．舉例是兩個數字相乘的符號問題，推廣到兩個
+   數字相加的符號的問題，引入了UNKOWN.
+   還有一些有用的外鏈，比如Treetop,一個結合詞法分析，語法分析的東西，
+   作者原話是現代的編譯器工具．還有Racket,Scheme等．總之，這是一本不可
+   多得的開闊眼界的閒書
+
