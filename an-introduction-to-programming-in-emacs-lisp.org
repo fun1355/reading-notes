@@ -1,0 +1,1664 @@
+* An Introduction to Programming in Emacs Lisp
+** Preface 
+** List Processing
+*** Lisp Lists
+Lisp Atoms
+Whitespace in Lists
+GNU Emacs Helps You Type Lists
+*** Run a Program
+*** Generate an Error Message
+*** Symbol Names and Function Definitions
+*** The Lisp Interpreter
+Byte Compiling
+*** Evaluation
+Evaluating Inner Lists
+*** Variables
+Error Message for a Symbol Without a Function
+Error Message for a Symbol Without a Value
+*** Arguments
+Arguments’ Data Types
+An Argument as the Value of a Variable or List
+Variable Number of Arguments
+Using the Wrong Type Object as an Argument
+The message Function
+*** Setting the Value of a Variable
+Using set
+Using setq
+Counting
+*** Summary
+Learning Lisp is like climbing a hill in which the first part is the steepest. You have
+now climbed the most difficult part; what remains becomes easier as you progress
+onwards.
+In summary,
+• Lisp programs are made up of expressions, which are lists or single atoms.
+• Lists are made up of zero or more atoms or inner lists, separated by whitespace
+and surrounded by parentheses. A list can be empty.
+• Atoms are multi-character symbols, like forward-paragraph, single charac-
+ter symbols like +, strings of characters between double quotation marks, or
+numbers.
+• A number evaluates to itself.
+• A string between double quotes also evaluates to itself.
+• When you evaluate a symbol by itself, its value is returned.
+• When you evaluate a list, the Lisp interpreter looks at the first symbol in
+the list and then at the function definition bound to that symbol. Then the
+instructions in the function definition are carried out.
+• A single quotation mark, ’ , tells the Lisp interpreter that it should return the
+following expression as written, and not evaluate it as it would if the quote
+were not there.
+• Arguments are the information passed to a function. The arguments to a
+function are computed by evaluating the rest of the elements of the list of
+which the function is the first element.
+• A function always returns a value when it is evaluated (unless it gets an error);
+in addition, it may also carry out some action called a “side effect”. In many
+cases, a function’s primary purpose is to create a side effect.
+*** Exercises
+A few simple exercises:
+• Generate an error message by evaluating an appropriate symbol that is not
+within parentheses.
+• Generate an error message by evaluating an appropriate symbol that is between
+parentheses.
+• Create a counter that increments by two rather than one.
+• Write an expression that prints a message in the echo area when evaluated.
+** Practicing Evaluation
+*** Buffer Names
+;;C-u C-x C-e
+(buffer-name)"Weekly-Report-20140905.org"
+(buffer-file-name)
+*** Getting Buffers
+(current-buffer)
+(other-buffer)
+*** Switching Buffers
+(switch-to-buffer (other-buffer))
+*** Buffer Size and the Location of Point
+(buffer-size)
+(point)
+(point-min)
+(point-max)
+*** Exercise
+Find a file with which you are working and move towards its middle. Find its buffer
+name, file name, length, and your position in the file.
+** How To Write Function Definitions
+*** The defun Special Form
+(defun function-name (arguments ...)
+"optional-documentation ..."
+(interactive argument-passing-info )
+ ; optional
+body ...)
+(defun multiply-by-seven (number)
+"Multiply NUMBER by seven."
+(* 7 number))
+(multiply-by-seven 3)
+*** Install a Function Definition
+*** Make a Function Interactive
+(defun multiply-by-seven (number)
+ ; Interactive version.
+"Multiply NUMBER by seven."
+(interactive "p")
+(message "The result is %d" (* 7 number)))
+
+(message "a string with double quotes")
+
+Speaking more generally, you invoke a function like this in either of two ways:
+1. By typing a prefix argument that contains the number to be passed, and
+then typing M-x and the name of the function, as with C-u 3 M-x forward-
+sentence; or,
+2. By typing whatever key or keychord the function is bound to, as with C-u 3
+M-e.
+
+*** Different Options for interactive
+zap-to-char is an interactive compiled Lisp function.
+It is bound to M-z, <kp-f1> z.
+(zap-to-char ARG CHAR)
+Kill up to and including ARGth occurrence of CHAR.
+Case is ignored if `case-fold-search' is non-nil in the current buffer.
+Goes backward if ARG is negative; error if CHAR not found.
+
+(interactive "p\ncZap to char: ")
+The first part of the argument to interactive is ‘p’, with which you are already
+familiar. This argument tells Emacs to interpret a ‘prefix’, as a number to be passed
+to the function. You can specify a prefix either by typing C-u followed by a number
+or by typing META followed by a number. The prefix is the number of specified
+characters. Thus, if your prefix is three and the specified character is ‘x’, then you
+will delete all the text up to and including the third next ‘x’. If you do not set a
+prefix, then you delete all the text up to and including the specified character, but
+no more.
+The ‘c’ tells the function the name of the character to which to delete.
+More formally, a function with two or more arguments can have information
+passed to each argument by adding parts to the string that follows interactive.
+When you do this, the information is passed to each argument in the same order
+it is specified in the interactive list. In the string, each part is separated from
+the next part by a ‘\n’, which is a newline. For example, you can follow ‘p’ with
+a ‘\n’ and an ‘cZap to char: ’. This causes Emacs to pass the value of the prefix
+argument (if there is one) and the character.
+*** Install Code Permanently
+• If you have code that is just for yourself, you can put the code for the function
+definition in your ‘.emacs’ initialization file. When you start Emacs, your
+‘.emacs’ file is automatically evaluated and all the function definitions within
+it are installed. See Chapter 16 “Your ‘.emacs’ File”, page 184.
+• Alternatively, you can put the function definitions that you want installed in
+one or more files of their own and use the load function to cause Emacs to
+evaluate and thereby install each of the functions in the files. See Section 16.9
+“Loading Files”, page 192.
+• Thirdly, if you have code that your whole site will use, it is usual to put it in
+a file called ‘site-init.el’ that is loaded when Emacs is built. This makes
+the code available to everyone who uses your machine. (See the ‘INSTALL’ file
+that is part of the Emacs distribution.)
+*** let
+(let ((zebra ’stripes)
+      (tiger ’fierce))
+(message "One kind of animal has %s and another is %s."
+zebra tiger))
+*** The if Special Form
+(defun type-of-animal (characteristic)
+"Print message in echo area depending on CHARACTERISTIC.
+If the CHARACTERISTIC is the symbol ‘fierce’,
+then warn of a tiger."
+(if (equal characteristic 'fierce)
+(message "It’s a tiger!")))
+
+(setq fierce 1)
+(set 'zebra 2)
+
+(message "aaa %d" abc)
+(type-of-animal 'fierce)
+(type-of-animal 'zebra)
+*** If–then–else Expressions
+*** Truth and Falsehood in Emacs Lisp
+In Emacs Lisp, any value that is not nil—is not the empty list—is considered true. 
+(if 4
+    'true
+  'false)
+(if nil
+    'true
+  'false)
+*** save-excursion
+In Emacs Lisp programs used for editing, the save-excursion function is very
+common. It saves the location of point and mark, executes the body of the function,
+and then restores point and mark to their previous positions if their locations were
+changed. Its primary purpose is to keep the user from being surprised and disturbed
+by unexpected movement of point or mark.
+In Emacs Lisp, point is an integer. The first character in a buffer is
+number one, the second is number two, and so on. The function point returns the
+current position of the cursor as a number. Each buffer has its own value for point.
+(save-excursion
+     body ...)
+*** Review
+In the last few chapters we have introduced a fair number of functions and special
+forms. Here they are described in brief, along with a few similar functions that have
+not been mentioned yet.
+**** eval-last-sexp
+Evaluate the last symbolic expression before the current location of
+point. The value is printed in the echo area unless the function is
+invoked with an argument; in that case, the output is printed in the
+current buffer. This command is normally bound to C-x C-e.
+**** defun
+Define function. This special form has up to five parts: the name,
+a template for the arguments that will be passed to the function,
+documentation, an optional interactive declaration, and the body of
+the definition.
+For example, in an early version of Emacs, the function definition was
+as follows. (It is slightly more complex now that it seeks the first
+non-whitespace character rather than the first visible character.)
+(defun back-to-indentation ()
+  "Move point to first visible character on line."
+  (interactive)
+  (beginning-of-line 1)
+  (skip-chars-forward " \t"))
+**** interactive
+Declare to the interpreter that the function can be used interactively.
+This special form may be followed by a string with one or more parts
+that pass the information to the arguments of the function, in se-
+quence. These parts may also tell the interpreter to prompt for infor-
+mation. Parts of the string are separated by newlines, ‘\n’.
+save-excursion
+if
+Common code characters are:
+b
+ The name of an existing buffer.
+f
+ The name of an existing file.
+p
+The numeric prefix argument. (Note that this ‘p’ is lower
+case.)
+r
+Point and the mark, as two numeric arguments, small-
+est first. This is the only code letter that specifies two
+successive arguments rather than one.
+See section “Code Characters for ‘interactive’” in The GNU Emacs
+Lisp Reference Manual, for a complete list of code characters.
+**** let
+Declare that a list of variables is for use within the body of the let and
+give them an initial value, either nil or a specified value; then evaluate
+the rest of the expressions in the body of the let and return the value
+of the last one. Inside the body of the let, the Lisp interpreter does
+not see the values of the variables of the same names that are bound
+outside of the let.
+For example,
+(let ((foo (buffer-name))
+      (bar (buffer-size)))
+ (message
+  "This buffer is %s and has %d characters."
+  foo bar))
+**** save-excursion
+Record the values of point and mark and the current buffer before
+evaluating the body of this special form. Restore the values of point
+and mark and buffer afterward.
+For example,
+(message "We are %d characters into this buffer."
+         (- (point)
+            (save-excursion
+              (goto-char (point-min)) (point))))
+**** if
+Evaluate the first argument to the function; if it is true, evaluate the
+second argument; else evaluate the third argument, if there is one.
+The if special form is called a conditional. There are other condition-
+als in Emacs Lisp, but if is perhaps the most commonly used.
+For example,
+(if (= 22 emacs-major-version)
+    (message "This is version 22 Emacs")
+  (message "This is not version 22 Emacs"))
+
+**** <,>,<=,>=
+The < function tests whether its first argument is smaller than its sec-
+ond argument. A corresponding function, >, tests whether the first
+argument is greater than the second. Likewise, <= tests whether the
+first argument is less than or equal to the second and >= tests whether
+the first argument is greater than or equal to the second. In all cases,
+both arguments must be numbers or markers (markers indicate posi-
+tions in buffers).
+**** =
+The = function tests whether two arguments, both numbers or markers,
+are equal.
+**** equal,eq
+Test whether two objects are the same. equal uses one meaning of
+the word ‘same’ and eq uses another: equal returns true if the two
+objects have a similar structure and contents, such as two copies of
+the same book. On the other hand, eq, returns true if both arguments
+are actually the same object.
+**** string<,string-lessp,string=,string-equal
+The string-lessp function tests whether its first argument is smaller
+than the second argument. A shorter, alternative name for the same
+function (a defalias) is string<.
+The arguments to string-lessp must be strings or symbols; the ordering 
+is lexicographic, so case is significant. The print names of symbols 
+are used instead of the symbols themselves.
+An empty string, ‘""’, a string with no characters in it, is smaller than
+any string of characters.
+string-equal provides the corresponding test for equality. Its shorter,
+alternative name is string=. There are no string test functions that
+correspond to >, >=, or <=.
+**** message
+Print a message in the echo area. The first argument is a string that
+can contain ‘%s’, ‘%d’, or ‘%c’ to print the value of arguments that
+follow the string. The argument used by ‘%s’ must be a string or a
+symbol; the argument used by ‘%d’ must be a number. The argument
+used by ‘%c’ must be an ascii code number; it will be printed as the
+character with that ascii code. (Various other %-sequences have not
+been mentioned.)
+**** setq,set
+The setq function sets the value of its first argument to the value of
+the second argument. The first argument is automatically quoted by
+setq. It does the same for succeeding pairs of arguments. Another
+function, set, takes only two arguments and evaluates both of them
+before setting the value returned by its first argument to the value
+returned by its second argument.
+**** buffer-name
+Without an argument, return the name of the buffer, as a string.
+**** buffer-file-name
+Without an argument, return the name of the file the buffer is visiting.
+**** current-buffer
+Return the buffer in which Emacsthat is visible on the screen.
+is active; it may not be the buffer
+**** other-buffer
+Return the most recently selected buffer (other than the buffer passed
+to other-buffer as an argument and other than the current buffer).
+**** switch-to-buffer
+Select a buffer for Emacs to be active in and display it in the current
+window so users can look at it. Usually bound to C-x b.
+**** set-buffer
+Switch Emacs’ attention to a buffer on which programs will run. Don’t
+alter what the window is showing.
+**** buffer-size
+Return the number of characters in the current buffer.
+**** point
+Return the value of the current position of the cursor, as an integer
+counting the number of characters from the beginning of the buffer.
+**** point-min
+Return the minimum permissible value of point in the current buffer.
+This is 1, unless narrowing is in effect.
+**** point-max
+Return the value of the maximum permissible value of point in the
+current buffer. This is the end of the buffer, unless narrowing is in
+effect.
+*** Exercises
+• Write a non-interactive function that doubles the value of its argument, a
+number. Make that function interactive.
+
+(defun function-name (arguments ...)
+"optional-documentation ..."
+(interactive argument-passing-info )
+ ; optional
+body ...)
+
+(defun double-arg (number)
+    "double the argument"
+    (interactive "p")
+    (message "the result is %d." (* number 2))
+)
+(double-arg 5)
+
+• Write a function that tests whether the current value of fill-column is greater
+than the argument passed to the function, and if so, prints an appropriate
+message.
+
+(defun greater-than-fill-column-p (number)
+   "test whether the current value of fill-column is greater than the arg"
+   (interactive "p")
+   (if (> number fill-column)
+       (message "the current value of fill-column is greater than the number")
+     (message "the current value of fill-column is not greater than the number")
+   )
+)
+(greater-than-fill-column-p 10)
+** A Few Buffer–Related Functions
+*** Finding More Information
+To use the find-tags command, type M-.
+To create a ‘TAGS’ file in a specific directory, switch to that directory in Emacs
+using M-x cd command, or list the directory with C-x d (dired). Then run the
+compile command, with etags *.el as the command to execute:
+M-x compile RET etags *.el RET
+
+*** A Simplified beginning-of-buffer Definition
+(The prompt for describe-function will offer you the symbol under or preceding
+the cursor, so you can save typing by positioning the cursor right over or after the
+function and then typing C-h f RET.
+
+(defun simplified-beginning-of-buffer ()
+   "Move point to the beginning of the buffer;
+   leave mark at previous position."
+   (interactive)
+   (push-mark)
+   (goto-char (point-min)))
+
+The interactive expression tells Emacs that the function is intended to be used
+interactively. In this example, interactive does not have an argument because
+simplified-beginning-of-buffer does not require one.
+
+The first of these lines is the expression, (push-mark). When this expression
+is evaluated by the Lisp interpreter, it sets a mark at the current position of the
+cursor, wherever that may be. The position of this mark is saved in the mark ring.
+
+The push-mark command sets a mark at the place where the cursor was located
+before it was moved to the beginning of the buffer by the (goto-char (point-
+min)) expression. Consequently, you can, if you wish, go back to where you were
+originally by typing C-x C-x.
+
+*** The Definition of mark-whole-buffer
+(defun mark-whole-buffer ()
+   "Put point at beginning and mark at end of buffer.
+   You probably should not use this function in Lisp programs;
+   it is usually a mistake for a Lisp function to use any subroutine
+   that uses or sets the mark."
+   (interactive)
+   (push-mark (point))
+   (push-mark (point-max) nil t)
+   (goto-char (point-min)))
+
+
+the arguments for push-mark are optional and that if push-mark is not
+passed an argument, the function auto- matically sets mark at the
+location of point by default.
+
+*** The Definition of append-to-buffer
+(defun append-to-buffer (buffer start end)
+  "Append to specified buffer the text of the region.
+  It is inserted into that buffer before its point.
+  When calling from a program, give three arguments:
+  BUFFER (or buffer name), START and END.
+  START and END specify the portion of the current buffer to be copied."
+    (interactive
+      (list (read-buffer "Append to buffer: " (other-buffer
+                                              (current-buffer) t))
+            (region-beginning) (region-end)))
+    (let ((oldbuf (current-buffer)))
+       (save-excursion
+          (let* ((append-to (get-buffer-create buffer))
+                (windows (get-buffer-window-list append-to t t))
+                point)
+            (set-buffer append-to)
+            (setq point (point))
+            (barf-if-buffer-read-only)
+            (insert-buffer-substring oldbuf start end)
+            (dolist (window windows)
+               (when (= (window-point window) point)
+                  (set-window-point window (point))))))))
+
+The let* function is different. It has a ‘*’ in its name. It enables
+Emacs to set each variable in its varlist in sequence, one after
+another.
+Its critical feature is that variables later in the varlist can make
+use of the values to which Emacs set variables earlier in the
+varlist. See “The let* expression”, page 136.
+
+(let (bind-oldbuf-to-value-of-current-buffer)
+     (save-excursion
+     ; Keep track of buffer.
+     change-buffer
+     insert-substring-from-oldbuf-into-buffer )
+change-back-to-original-buffer-when-finished
+let-the-local-meaning-of-oldbuf-disappear-when-finished
+*** Review
+**** describe-function,describe-variable
+Print the documentation for a function or variable. Conventionally
+bound to C-h f and C-h v.
+**** find-tag
+Find the file containing the source for a function or variable and switch
+buffers to it, positioning point at the beginning of the item. Conven-
+tionally bound to M-. (that’s a period following the META key).
+**** save-excursion
+Save the location of point and mark and restore their values after the
+arguments to save-excursion have been evaluated. Also, remember
+the current buffer and return to it.
+**** push-mark
+Set mark at a location and record the value of the previous mark on
+the mark ring. The mark is a location in the buffer that will keep its
+relative position even if text is added to or removed from the buffer.
+**** goto-char
+Set point to the location specified by the value of the argument, which
+can be a number, a marker, or an expression that returns the number
+of a position, such as (point-min).
+**** insert-buffer-substring
+Copy a region of text from a buffer that is passed to the function as
+an argument and insert the region into the current buffer.
+**** mark-whole-buffer
+Mark the whole buffer as a region. Normally bound to C-x h.
+**** set-buffer
+Switch the attention of Emacs to another buffer, but do not change
+the window being displayed. Used 
+**** get-buffer-create,get-buffer
+Find a named buffer or create one if a buffer of that name does not
+exist. The get-buffer function returns nil if the named buffer does
+not exist.
+
+*** Exercises
+• Write your own simplified-end-of-buffer function definition; then test it
+to see whether it works.
+
+(defun simplified-end-of-buffer ()
+  "Move point to the end of buffer; 
+  leave mark at previous position"
+  (interactive)
+  (push-mark)
+  (goto-char (point-max))
+)
+
+• Use if and get-buffer to write a function that prints a message telling you
+whether a buffer exists.
+
+;; Solution:
+(defun wenshan-buffer-exists-p (buffer)
+  "Check if BUFFER exists."
+  (interactive
+   (list (read-buffer "Buffer name: " (other-buffer
+                                       (current-buffer) t))))
+  (if (get-buffer buffer)
+      (message "Buffer `%s' exists" buffer)
+    (message "Buffer `%s' does not exist" buffer)))
+
+• Using find-tag, find the source for the copy-to-buffer function.
+
+暫時不想生成TAGS的方法．
+;; Solution: press "M-. copy-to-buffer RET", then choose the appropriate TAGS file
+
+** A Few More Complex 
+*** The Definition of copy-to-buffer
+The body of copy-to-buffer looks like this,
+...
+(interactive "BCopy to buffer: \nr")
+(let ((oldbuf (current-buffer)))
+  (with-current-buffer (get-buffer-create buffer)
+    (barf-if-buffer-read-only)
+    (erase-buffer)
+    (save-excursion
+    (insert-buffer-substring oldbuf start end)))))
+
+(let (bind-oldbuf-to-value-of-current-buffer)
+(with-the-buffer-you-are-copying-to
+(but-do-not-erase-or-copy-to-a-read-only-buffer )
+(erase-buffer)
+(save-excursion
+insert-substring-from-oldbuf-into-buffer )))
+
+*** The Definition of insert-buffer
+(defun insert-buffer (buffer)
+  "Insert after point the contents of BUFFER.
+  Puts mark after the inserted text.
+  BUFFER may be a buffer or a buffer name."
+  (interactive "*bInsert buffer: ")
+  (or (bufferp buffer)
+      (setq buffer (get-buffer buffer)))
+  (let (start end newmark)
+       (save-excursion
+         (save-excursion
+           (set-buffer buffer)
+           (setq start (point-min) end (point-max)))
+         (insert-buffer-substring buffer start end)
+         (setq newmark (point)))
+       (push-mark newmark)))
+
+**** A Read-only Buffer
+The asterisk is for the situation when the current buffer is a read-only buffer—a
+buffer that cannot be modified. If insert-buffer is called when the current buffer
+is read-only, a message to this effect is printed in the echo area and the terminal
+may beep or blink at you; you will not be permitted to insert anything into current
+buffer. The asterisk does not need to be followed by a newline to separate it from
+the next argument.
+**** ‘b’ in an Interactive Expression
+The next argument in the interactive expression starts with a lower case ‘b’. (This
+is different from the code for append-to-buffer, which uses an upper-case ‘B’. See
+Section 4.4 “The Definition of append-to-buffer”, page 48.) The lower-case ‘b’
+tells the Lisp interpreter that the argument for insert-buffer should be an existing
+buffer or else its name. (The upper-case ‘B’ option provides for the possibility that
+the buffer does not exist.) Emacs will prompt you for the name of the buffer,
+offering you a default buffer, with name completion enabled. If the buffer does not
+exist, you receive a message that says “No match”; your terminal may beep at you
+as well.
+
+**** insert-buffer With an if Instead of an or
+(if (not (bufferp buffer))                  ; if-part
+    (setq buffer (get-buffer buffer)))      ; then-part
+
+**** The or in the Body
+An or function can have any number of arguments. It evaluates each argument
+in turn and returns the value of the first of its arguments that is not nil. Also, and
+this is a crucial feature of or, it does not evaluate any subsequent arguments after
+returning the first non-nil value.
+
+**** The let Expression in insert-buffer
+(save-excursion
+  (inner-save-excursion-expression
+    (go-to-new-buffer-and-set-start-and-end)
+  (insert-buffer-substring buffer start end)
+  (setq newmark (point)))
+
+**** New Body for insert-buffer
+(setq buffer (current-buffer))
+(push-mark
+  (save-excursion
+    (insert-buffer-substring (get-buffer buffer))
+    (point))
+  nil
+
+*** Complete Definition of beginning-of-buffer
+As previously described, when invoked without an argument, beginning-of-
+buffer moves the cursor to the beginning of the buffer (in truth, the beginning
+of the accessible portion of the buffer), leaving the mark at the previous position.
+However, when the command is invoked with a number between one and ten, the
+function considers that number to be a fraction of the length of the buffer, measured
+in tenths, and Emacs moves the cursor that fraction of the way from the beginning
+of the buffer. Thus, you can either call this function with the key command M-<,
+which will move the cursor to the beginning of the buffer, or with a key command
+such as C-u 7 M-< which will move the cursor to a point 70% of the way through
+the buffer. If a number bigger than ten is used for the argument, it moves to the
+end of the buffer.
+
+(defun beginning-of-buffer (&optional arg)
+  "documentation ..."
+  (interactive "P")
+  (or (is-the-argument-a-cons-cell arg)
+      (and are-both-transient-mark-mode-and-mark-active-true )
+      (push-mark))
+  (let (determine-size-and-set-it )
+  (goto-char
+    (if-there-is-an-argument
+        figure-out-where-to-go
+     else-go-to
+        (point-min))))
+     do-nicety
+
+**** Optional Arguments
+The keyword is &optional.  (The ‘&’ in front of ‘optional’ is part of
+the keyword.) In a function definition, if an argumentargument
+whenfollows the keyword &optional,the function is called.  novalue
+need be passed to that
+
+The "P" in the interactive expression tells Emacs to pass a prefix argument,
+if there is one, to the function in raw form. A prefix argument is made by typing
+the META key followed by a number, or by typing C-u and then a number. (If you
+don’t type a number, C-u defaults to a cons cell with a 4. A lowercase "p" in the
+interactive expression causes the function to convert a prefix arg to a number.)
+
+**** beginning-of-buffer with an Argument
+(if (> (buffer-size) 10000)   ;; Avoid overflow for large buffer sizes!
+   (* (prefix-numeric-value arg)
+       (/ size 10))
+   (/
+     (+ 10
+        (*
+        size
+        (prefix-numeric-value arg))) 
+     10)))
+
+***** What happens in a large buffer
+(* numeric-value-of-prefix-arg
+number-of-characters-in-one-tenth-of-the-accessible-buffer )
+
+***** What happens in a small buffer
+   (/
+     (+ 10
+        (*
+        size
+        (prefix-numeric-value arg))) 
+     10))
+
+finally the large number is divided by ten to provide a value that is
+one character larger than the percentage position in the buffer.
+
+**** The Complete beginning-of-buffer
+(defun beginning-of-buffer (&optional arg)
+  "Move point to the beginning of the buffer;
+leave mark at previous position.
+With \\[universal-argument] prefix,
+do not set mark at previous position.
+With numeric arg N,
+put point N/10 of the way from the beginning.
+If the buffer is narrowed,
+this command uses the beginning and size
+of the accessible part of the buffer.
+Don’t use this command in Lisp programs!
+\(goto-char (point-min)) is faster
+and avoids clobbering the mark."
+  (interactive "P")
+  (or (consp arg)
+      (and transient-mark-mode mark-active)
+      (push-mark))
+  (let ((size (- (point-max) (point-min))))
+    (goto-char (if (and arg (not (consp arg)))
+                   (+ (point-min)
+                   (if (> size 10000)
+                       ;; Avoid overflow for large buffer sizes!
+                       (* (prefix-numeric-value arg)
+                          (/ size 10))
+                   (/ (+ 10 (* size (prefix-numeric-value arg)))
+                       10)))
+                   (point-min))))
+  (if arg (forward-line 1)))
+
+\\[universal-argument]
+A ‘\\’ is used before the first square bracket of this expression. This ‘\\’ tells the
+Lisp interpreter to substitute whatever key is currently bound to the ‘[...]’. In
+the case of universal-argument, that is usually C-u, but it might be different.
+(See section “Tips for Documentation Strings” in The GNU Emacs Lisp Reference
+Manual, for more information.)
+
+The last line of the beginning-of-buffer command says to move point
+to the beginning of the next line if the command is invoked with an argument:
+(if arg (forward-line 1)))
+This puts the cursor at the beginning of the first line after the appropriate tenths
+position in the buffer. This is a flourish that means that the cursor is always located
+at least the requested tenths of the way through the buffer, which is a nicety that
+is, perhaps, not necessary, but which, if it did not occur, would be sure to draw
+complaints.
+
+*** Review
+**** or
+Evaluate each argument in sequence, and return the value of the first
+argument that is not nil; if none return a value that is not nil, return
+nil. In brief, return the first true value of the arguments; return a
+true value if one or any of the others are true.
+**** and
+Evaluate each argument in sequence, and if any are nil, return nil;
+if none are nil, return the value of the last argument. In brief, return
+a true value only if all the arguments are true; return a true value if
+one and each of the others is true.
+**** &optional
+A keyword used to indicate that an argument to a function definition
+is optional; this means that the function can be evaluated without the
+argument, if desired.
+**** prefix-numeric-value
+Convert the ‘raw prefix argument’ produced by (interactive "P")
+to a numeric value.
+**** forward-line
+Move point forward to the beginning of the next line, or if the argument
+is greater than one, forward that many lines. If it can’t move as far
+forward as it is supposed to, forward-line goes forward as far as it
+can and then returns a count of the number of additional lines it was
+supposed to move but couldn’t.
+**** erase-buffer
+Delete the entire contents of the current buffer.
+**** bufferp
+Return t if its argument is a buffer; otherwise return nil.
+
+*** optional Argument Exercise
+Write an interactive function with an optional argument that tests whether its
+argument, a number, is greater than or equal to, or else, less than the value of
+fill-column, and tells you which, in a message. However, if you do not pass an
+argument to the function, use 56 as a default value.
+
+(defun compare-arg-with-fill-column (&optional arg)
+    "tests whether its argument, a number, is greater than or equal
+to, or else, less than the value of fill-column, and tells you which,
+in a message. However, if you do not pass an argument to the function,
+use 56 as a default value."
+    (interactive "P")
+    (let (number)
+        (if arg
+            (setq number (prefix-numeric-value arg))
+          (setq number 56))
+        (if (>= number fill-column)
+            (message "the input number %d is not less than fill-column %d." number fill-column)
+          (message "the input number %d is less than fill-column %d." number fill-column))
+    )
+)
+
+;; Solution: press "C-u NUM M-x wenshan-compare-with-fill-column"
+(setq num 1)
+(defun wenshan-compare-with-fill-column (&optional num)
+  "Compare prefix arg NUM with `fill-column'."
+  (interactive "P")
+  (setq num (if num (prefix-numeric-value num) 56))
+  (if (>= num fill-column)
+      (message "%d is greater than or eqaul to `fill-column'" num)
+    (message "%d is less than `fill-column'" num)))
+
+** Narrowing and Widening
+*** The save-restriction Special Form
+In Emacs Lisp, you can use the save-restriction special form to keep track of
+whatever narrowing is in effect, if any. When the Lisp interpreter meets with save-
+restriction, it executes the code in the body of the save-restriction expression,
+and then undoes any changes to narrowing that the code caused. 
+(save-restriction
+  body ... )
+when you use both save-excursion and save-restriction, one right
+after the other, you should use save-excursion outermost.
+   (save-excursion
+     (save-restriction
+       body ...))
+In other circumstances, when not written together, the save-excursion and
+save-restriction special forms must be written in the order appropriate to the
+function.
+For example,
+    (save-restriction
+       (widen)
+       (save-excursion
+         body ...))
+
+*** what-line
+(defun what-line ()
+  "Print the current line number (in the buffer) of point."
+  (interactive)
+  (save-restriction
+    (widen)
+    (save-excursion
+      (beginning-of-line)
+      (message "Line %d"
+               (1+ (count-lines 1 (point)))))))
+Note that the (widen) expression comes between the save-restriction
+and save-excursion special forms. When you write the two save-
+... expressions in sequence, write save-excursion outermost.
+We add one to it because line 2 has only one line before it,
+and count-lines counts only the lines before the current line.
+
+*** Exercise with Narrowing
+Write a function that will display the first 60 characters of the
+current buffer, even if you have narrowed the buffer to its latter
+half so that the first line is inaccessible.  Restore point, mark, and
+narrowing. For this exercise, you need to use a whole potpourri of
+functions, including save-restriction, widen, goto-char, point- min,
+message, and buffer-substring.
+(buffer-substring is a previously unmentioned function you will have
+to investigate yourself; or perhaps you will have to use
+buffer-substring-no-properties or filter-buffer-substring . . . , yet
+other functions. Text properties are a fea- ture otherwise not
+discussed here. See section “Text Properties” in The GNU Emacs Lisp
+Reference Manual.)
+Additionally, do you really need goto-char or point-min? Or can you write
+the function without them?
+
+(defun narrow-to-first-60-chars()
+   "the first 60 characters of the current buffer, even if you have
+narrowed the buffer to its latter half so that the first line is
+inaccessible.  Restore point, mark, and narrowing."
+   (interactive)
+     (save-restriction
+       (widen)
+       ;(message (buffer-substring 1 60))
+       (filter-buffer-substring 61 (point-max) t)
+       (goto-char 60)
+     )
+)
+
+** car, cdr, cons: Fundamental Functions
+The origins of the names for car and cdr, on the other hand, are
+esoteric: car is an acronym from the phrase ‘Contents of the Address
+part of the Register’; and cdr (pronounced ‘could-er’) is an acronym
+from the phrase ‘Contents of the Decrement part of the Register’.
+*** car and cdr
+The car of a list is, quite simply, the first item in the list. Thus
+the car of the list (rose violet daisy buttercup) is rose.
+car does not remove the first item from the list; it only reports what
+it is. After car has been applied to a list, the list is still the
+same as it was. In the jargon, car is ‘non-destructive’. This feature
+turns out to be important.
+The cdr of a list is the rest of the list, that is, the cdr function
+returns the part of the list that follows the first item. Clearly, a
+more reasonable name for cdr would be rest.
+Also, in the first chapter, in the discussion about atoms, I said that
+in Lisp, “certain kinds of atom, such as an array, can be separated
+into parts; but the mechanism for doing this is different from the
+mechanism for splitting a list. As far as Lisp is concerned, the atoms
+of a list are unsplittable.” (See Section 1.1.1 “Lisp Atoms”, page 1.)
+The car and cdr functions are used for splitting lists and are considered 
+fundamental to Lisp. Since they cannot split or gain access
+to the parts of an array, an array is considered an atom. Conversely,
+the other fundamental function, cons, can put together or construct a
+list, but not an array. (Arrays are handled by array-specific
+functions. See section “Arrays” in The GNU Emacs Lisp Reference
+Manual.)
+
+*** cons
+The cons function constructs lists; it is the inverse of car and cdr.
+We often say that ‘cons puts a new element at the beginning of a list;
+it attaches or pushes elements onto the list’, but this phrasing can
+be misleading, since cons does not change an existing list, but
+creates a new one.
+cons must have a list to attach to.1 You cannot start from absolutely
+nothing.  If you are building a list, you need to provide at least an
+empty list at the beginning.  Actually, you can cons an element to an
+atom to produce a dotted pair. Dotted pairs are not discussed here;
+see section “Dotted Pair Notation” in The GNU Emacs Lisp Reference
+Manual.
+Like car and cdr, cons is non-destructive.
+You can find out how many elements there are in a list by using the
+Lisp function length.
+*** nthcdr
+The nthcdr function is associated with the cdr function. What it does is take the
+cdr of a list repeatedly.
+
+*** nth
+The nthcdr function takes the cdr of a list repeatedly. The nth
+function takes the car of the result returned by nthcdr. It returns
+the Nth element of the list.
+Originally, nth was defined in Emacs Lisp in ‘subr.el’, but its
+definition was redone in C in the 1980s.
+The nth function returns a single element of a list. This can be very
+convenient.
+Note that the elements are numbered from zero, not one. That is to
+say, the first element of a list, its car is the zeroth element. This
+is called ‘zero-based’ counting and often bothers people who are
+accustomed to the first element in a list being number one, which is
+‘one-based’.
+It is worth mentioning that nth, like nthcdr and cdr, does not change
+the original list—the function is non-destructive. This is in sharp
+contrast to the setcar and setcdr functions.
+
+*** setcar
+So we can see that setcar did not add a new element to the list as cons would
+have; it replaced antelope with hippopotamus; it changed the list.
+
+*** setcdr
+*** Exercise
+Construct a list of four birds by evaluating several expressions with
+cons. Find out what happens when you cons a list onto itself. Replace
+the first element of the list of four birds with a fish. Replace the
+rest of that list with a list of other fish.
+
+(setq birds '(pigeons eagle magpie swan))
+(setq birds (cons birds '(duck)))
+(nth 0 birds)
+(nthcdr 0 birds)
+(setq birds birds)
+(setcar birds '(cuttlefish))
+(setcdr birds '(catfish))
+
+** Cutting and Storing Text
+*** zap-to-char
+(defun zap-to-char (arg char)
+  "Kill up to and including ARG’th occurrence of CHAR.
+Case is ignored if ‘case-fold-search’ is non-nil in the current buffer.
+Goes backward if ARG is negative; error if CHAR not found."
+  (interactive "p\ncZap to char: ")
+  (if (char-table-p translation-table-for-input)
+      (setq char (or (aref translation-table-for-input char) char)))
+  (kill-region (point) (progn
+                       (search-forward (char-to-string char)
+                                       nil nil arg)
+                       (point))))
+
+**** The interactive Expression
+The part within quotation marks, "p\ncZap to char: ", specifies two
+different things. First, and most simply, is the ‘p’. This part is
+separated from the next part by a newline, ‘\n’. The ‘p’ means that
+the first argument to the function will be passed the value of a
+‘processed prefix’. The prefix argument is passed by typing C- u and a
+number, or M- and a number. If the function is called interactively
+without a prefix, 1 is passed to this argument.  The second part of
+"p\ncZap to char: " is ‘cZap to char: ’. In this part, the lower case
+‘c’ indicates that interactive expects a prompt and that the argument
+will be a character.
+**** The Body of zap-to-char
+char-table-p is an hitherto unseen function. It determines whether its
+argument is a character table.
+
+**** The search-forward Function
+(search-forward "target-string"
+                limit-of-search
+                what-to-do-if-search-fails
+                repeat-count)
+
+**** The progn Special Form
+progn is a special form that causes each of its arguments to be
+evaluated in sequence and then returns the value of the last one. The
+preceding expressions are evaluated only for the side effects they
+perform. The values produced by them are discarded.
+
+**** Summing up zap-to-char
+Now that we have seen how search-forward and progn work, we can see
+how the zap-to-char function works as a whole.
+The first argument to kill-region is the position of the cursor when
+the zap- to-char command is given—the value of point at that
+time. Within the progn, the search function then moves point to just
+after the zapped-to-character and point returns the value of this
+location. The kill-region function puts together these two values of
+point, the first one as the beginning of the region and the second one
+as the end of the region, and removes the region.
+The progn special form is necessary because the kill-region command
+takes two arguments; and it would fail if search-forward and point
+expressions were written in sequence as two additional arguments. The
+progn expression is a single argument to kill-region and returns the
+one value that kill-region needs for its second argument.
+
+*** kill-region
+(defun kill-region (beg end)
+  "Kill (\"cut\") text between point and mark.
+This deletes the text from the buffer and saves it in the kill ring.
+The command \\[yank] can retrieve it from there. ... "
+
+  ;; • Since order matters, pass point first.
+  (interactive (list (point) (mark)))
+  ;; • And tell us if we cannot cut the text.
+  ;; ‘unless’ is an ‘if’ without a then-part.
+  (unless (and beg end)
+          (error "The mark is not set now, so there is no region"))
+  ;; • ‘condition-case’ takes three arguments.
+  ;; If the first argument is nil, as it is here,
+  ;; information about the error signal is not
+  ;; stored for use by another function.
+  (condition-case nil
+
+      ;; • The second argument to ‘condition-case’ tells the
+      ;; Lisp interpreter what to do when all goes well.
+      ;; It starts with a ‘let’ function that extracts the string
+      ;; and tests whether it exists. If so (that is what the
+      ;; ‘when’ checks), it calls an ‘if’ function that determines
+      ;; whether the previous command was another call to
+      ;; ‘kill-region’; if it was, then the new text is appended to
+      ;; the previous text; if not, then a different function,
+      ;; ‘kill-new’, is called.
+      ;; The ‘kill-append’ function concatenates the new string and
+      ;; the old. The ‘kill-new’ function inserts text into a new
+      ;; item in the kill ring.
+      ;; ‘when’ is an ‘if’ without an else-part. The second ‘when’
+      ;; again checks whether the current string exists; in
+      ;; addition, it checks whether the previous command was
+      ;; another call to ‘kill-region’. If one or the other
+      ;; condition is true, then it sets the current command to
+      ;; be ‘kill-region’.
+      (let ((string (filter-buffer-substring beg end t)))
+        (when string                    ;; STRING is nil if BEG = END
+        ;; Add that string to the kill ring, one way or another.
+        (if (eq last-command ’kill-region)
+            ;; − ‘yank-handler’ is an optional argument to
+            ;; ‘kill-region’ that tells the ‘kill-append’ and
+            ;; ‘kill-new’ functions how deal with properties
+            ;; added to the text, such as ‘bold’ or ‘italics’.
+            (kill-append string (< end beg) yank-handler)
+          (kill-new string nil yank-handler)))
+      (when (or string (eq last-command ’kill-region))
+        (setq this-command ’kill-region))
+      nil)
+  ;; • The third argument to ‘condition-case’ tells the interpreter
+  ;; what to do with an error.
+  ;; The third argument has a conditions part and a body part.
+  ;; If the conditions are met (in this case,
+  ;; if text or buffer are read-only)
+  ;; then the body is executed.
+  ;; The first part of the third argument is the following:
+  ((buffer-read-only text-read-only) ;; the if-part
+  ;; ... the then-part
+  (copy-region-as-kill beg end)
+  ;; Next, also as part of the then-part, set this-command, so
+  ;; it will be set in an error
+  (setq this-command ’kill-region)
+  ;; Finally, in the then-part, send a message if you may copy
+  ;; the text to the kill ring without signally an error, but
+  ;; don’t if you may not.
+      (if kill-read-only-ok
+          (progn (message "Read only text copied to kill ring") nil)
+        (barf-if-buffer-read-only)
+        ;; If the buffer isn’t read-only, the text is.
+        (signal ’text-read-only (list (current-buffer)))))
+
+uncommented version:
+
+(defun kill-region (beg end)
+  "Kill (\"cut\") text between point and mark.
+This deletes the text from the buffer and saves it in the kill ring.
+The command \\[yank] can retrieve it from there. ... "
+
+  (interactive (list (point) (mark)))
+  (unless (and beg end)
+          (error "The mark is not set now, so there is no region"))
+  (condition-case nil
+      (let ((string (filter-buffer-substring beg end t)))
+        (when string                    ;; STRING is nil if BEG = END
+        (if (eq last-command ’kill-region)
+            (kill-append string (< end beg) yank-handler)
+          (kill-new string nil yank-handler)))
+      (when (or string (eq last-command ’kill-region))
+        (setq this-command ’kill-region))
+      nil)
+      (if kill-read-only-ok
+          (progn (message "Read only text copied to kill ring") nil)
+        (barf-if-buffer-read-only)
+        ;; If the buffer isn’t read-only, the text is.
+        (signal ’text-read-only (list (current-buffer)))))
+
+**** condition-case
+(condition-case
+  var
+  bodyform
+  error-handler ...)
+
+In short, the bodyform part of a condition-case expression determines
+what should happen when everything works correctly.
+
+An error handler is the third argument to condition case. An error
+handler has two parts, a condition-name and a body. If the
+condition-name part of an error handler matches a condition name
+generated by an error, then the body part of the error handler is run.
+
+As you will expect, the condition-name part of an error handler may be
+either a single condition name or a list of condition names.  
+Also, a complete condition-case expression may contain more than one
+error handler. When an error occurs, the first applicable handler is
+run.
+
+Lastly, the first argument to the condition-case expression, the var argument,
+is sometimes bound to a variable that contains information about the error. How-
+ever, if that argument is nil, as is the case in kill-region, that information is
+discarded.
+In brief, in the kill-region function, the code condition-case works like this:
+   If no errors, run only this code
+      but, if errors, run this other code.
+**** Lisp macro
+A when expression is simply a programmers’ convenience. It is an if
+without the possibility of an else clause. In your mind, you can
+replace when with if and understand what goes on. That is what the
+Lisp interpreter does.
+Technically speaking, when is a Lisp macro. A Lisp macro enables you
+to define new control constructs and other language features. It tells
+the interpreter how to compute another Lisp expression which will in
+turn compute the value. In this case, the ‘other expression’ is an if
+expression.
+
+The unless macro is an if without a then clause.
+
+yank-handler is an optional argument to kill-region that tells the
+kill-append and kill-new functions how deal with properties added to
+the text, such as ‘bold’ or ‘italics’.
+
+last-command is a variable that comes with Emacs that we have not seen before.
+Normally, whenever a function is executed, Emacs sets the value of last-command
+to the previous command.
+
+*** copy-region-as-kill
+(defun copy-region-as-kill (beg end)
+  "Save the region as if killed, but don’t kill it.
+In Transient Mark mode, deactivate the mark.
+If ‘interprogram-cut-function’ is non-nil, also save the text for a window
+system cut and paste."
+  (interactive "r")
+  (if (eq last-command ’kill-region)
+      (kill-append (filter-buffer-substring beg end) (< end beg))
+    (kill-new (filter-buffer-substring beg end)))
+  (if transient-mark-mode
+      (setq deactivate-mark t))
+  nil)
+
+(defun copy-region-as-kill (argument-list)
+  "documentation ..."
+  (interactive "r")
+    body ...)
+
+**** The Body of copy-region-as-kill
+The eq function is similar to the equal function in that it is used
+to test for equality, but differs in that it determines whether two representations
+are actually the same object inside the computer, but with different names. equal
+determines whether the structure and contents of two expressions are the same.
+
+**** The kill-append function
+(defun kill-append (string before-p &optional yank-handler)
+  "Append STRING to the end of the latest kill in the kill ring.
+If BEFORE-P is non-nil, prepend STRING to the kill.
+... "
+  (let* ((cur (car kill-ring)))
+    (kill-new (if before-p (concat string cur) (concat cur string))
+              (or (= (length cur) 0)
+                  (equal yank-handler
+                         (get-text-property 0 ’yank-handler cur)))
+              yank-handler)))
+Also, the function provides an optional argument called yank-handler;
+when invoked, this argument tells the function how to deal with
+properties added to the text, such as ‘bold’ or ‘italics’.
+It has a let* function to set the value of the first element of the
+kill ring to cur.  (I do not know why the function does not use let
+instead; only one value is set in the expression. Perhaps this is a
+bug that produces no problems?)
+The let* function is different. It has a ‘*’ in its name. It enables
+Emacs to set each variable in its varlist in sequence, one after
+another.Its critical feature is that variables later in the varlist
+can make use of the values to which Emacs set variables earlier in the
+varlist.
+
+what it does is determine
+whether the value of the variable end is less than the value of the variable beg. If
+it is, it means that the user is most likely heading towards the beginning of the
+buffer. Also, the result of evaluating the predicate expression, (< end beg), will be
+true and the text will be prepended before the previous text. On the other hand, if
+the value of the variable end is greater than the value of the variable beg, the text
+will be appended after the previous text.
+
+We can now make sense of kill-append: it modifies the contents of the kill
+ring. The kill ring is a list, each element of which is saved text. The kill-append
+function uses the kill-new function which in turn uses the setcar function.
+
+**** The kill-new function
+(defun kill-new (string &optional replace yank-handler)
+  "Make STRING the latest kill in the kill ring.
+Set ‘kill-ring-yank-pointer’ to point to it.
+If ‘interprogram-cut-function’ is non-nil, apply it to STRING.
+Optional second argument REPLACE non-nil means that STRING will replace
+the front of the kill ring, rather than being added to the list.
+..."
+  (if (> (length string) 0)
+      (if yank-handler
+          (put-text-property 0 (length string)
+                             ’yank-handler yank-handler string))
+      (if yank-handler
+          (signal ’args-out-of-range
+                  (list string "yank-handler specified for empty string"))))
+  (if (fboundp ’menu-bar-update-yank-menu)
+      (menu-bar-update-yank-menu string (and replace (car kill-ring))))
+  (if (and replace kill-ring)
+      (setcar kill-ring string)
+    (push string kill-ring)
+    (if (> (length kill-ring) kill-ring-max)
+        (setcdr (nthcdr (1- kill-ring-max) kill-ring) nil)))
+  (setq kill-ring-yank-pointer kill-ring)
+  (if interprogram-cut-function
+      (funcall interprogram-cut-function string (not replace))))
+
+This is the value of kill-ring-max (which is 60, by default).
+
+The fboundp function returns true if
+the symbol it is testing has a function definition that ‘is not void’. 
+*** Digression into C
+DEFUN ("buffer-substring-no-properties", Fbuffer_substring_no_properties,
+        Sbuffer_substring_no_properties, 2, 2, 0,
+        doc: /* Return the characters of part of the buffer,
+        without the text properties.
+        The two arguments START and END are character positions;
+        they can be in either order. */)
+        (start, end)
+Lisp_Object start, end;
+{
+  register int b, e;
+  validate_region (&start, &end);
+  b = XINT (start);
+  e = XINT (end);
+  return make_buffer_string (b, e, 0);
+}
+
+*** Initializing a Variable with defvar
+When you specified a variable using the defvar special form, you could distin-
+guish a variable that a user might want to change from others by typing an asterisk,
+‘*’, in the first column of its documentation string. For example:
+  (defvar shell-command-default-error-buffer nil
+    "*Buffer name for ‘shell-command’ ... error output.
+    ... ")
+
+For me, the major use of the set-variable command is to suggest variables
+that I might want to set in my ‘.emacs’ file. There are now more than 700 such
+variables — far too many to remember readily. Fortunately, you can press TAB after
+calling the M-x set-variable command to see the list of variables. (See section
+“Examining and Setting Variables” in The GNU Emacs Manual.)
+
+*** Review
+**** car,cdr
+car returns the first element of a list; cdr returns the second and
+subsequent elements of a list.
+For example:
+     (car ’(1 2 3 4 5 6 7))
+     ⇒ 1
+     (cdr ’(1 2 3 4 5 6 7))
+     ⇒ (2 3 4 5 6 7)
+**** cons
+cons constructs a list by prepending its first argument to its second
+argument.
+For example:
+     (cons 1 ’(2 3 4))
+     ⇒ (1 2 3 4)
+**** funcall
+funcall evaluates its first argument as a function. It passes its re-
+maining arguments to its first argument.
+**** nthcdr
+Return the result of taking cdr ‘n’ times on list. The nth cdr. The
+a‘rest of the rest’, as it were.
+For example:
+     (nthcdr 3 ’(1 2 3 4 5 6 7))
+     ⇒ (4 5 6 7)
+**** setcar
+setcar changes the first element of a list; setcdr changes the second
+and subsequent elements of a list.
+For example:
+     (setq triple ’(1 2 3))
+     (setcar triple ’37)
+     triple
+     ⇒ (37 2 3)
+**** setcdr
+     (setcdr triple ’("foo" "bar"))
+     triple
+     ⇒ (37 "foo" "bar")
+**** progn
+Evaluate each argument in sequence and then return the value of the
+last.
+For example:
+     (progn 1 2 3 4)
+     ⇒ 4
+**** save-restriction
+Record whatever narrowing is in effect in the current buffer, if any,
+and restore that narrowing after evaluating the arguments.
+**** search-forward
+Search for a string, and if the string is found, move point. With a
+regular expression, use the similar re-search-forward. (See Chap-
+ter 12 “Regular Expression Searches”, page 130, for an explanation
+of regular expression patterns and searches.)
+search-forward and re-search-forward take four arguments:
+1. The string or regular expression to search for.
+2. Optionally, the limit of the search.
+3. Optionally, what to do if the search fails, return nil or an error
+message.
+4. Optionally, how many times to repeat the search; if negative, the
+search goes backwards.
+**** kill-region,delete-and-extract-region,copy-region-as-kill
+kill-region cuts the text between point and mark from the buffer
+and stores that text in the kill ring, so you can get it back by yanking.
+copy-region-as-kill copies the text between point and mark into
+the kill ring, from which you can get it by yanking. The function does
+not cut or remove the text from the buffer.
+delete-and-extract-region removes the text between point and mark from
+the buffer and throws it away. You cannot get it back. (This is not an interactive
+command.)
+
+*** TODO Searching Exercises
+• Write an interactive function that searches for a string. If the search finds the
+string, leave point after it and display a message that says “Found!”. (Do not
+use search-forward for the name of this function; if you do, you will overwrite
+the existing version of search-forward that comes with Emacs. Use a name
+such as test-search instead.)
+• Write a function that prints the third element of the kill ring in the echo area,
+if any; if the kill ring does not contain a third element, print an appropriate
+message.
+
+** How Lists are Implemented
+A pair of address-boxes is called a cons cell or dotted pair. See section “Cons Cell
+and List Types” in The GNU Emacs Lisp Reference Manual, and section “Dotted
+Pair Notation” in The GNU Emacs Lisp Reference Manual, for more information
+about cons cells and dotted pairs.
+Thus, in Lisp, to get the cdr of a list, you just get the address of the next cons
+cell in the series; to get the car of a list, you get the address of the first element of
+the list; to cons a new element on a list, you add a new cons cell to the front of the
+list. That is all there is to it! The underlying structure of Lisp is brilliantly simple!
+And what does the last address in a series of cons cells refer to? It is the address
+of the empty list, of nil.
+In summary, when a Lisp variable is set to a value, it is provided with the address
+of the list to which the variable refers.
+
+*** Symbols as a Chest of Drawers
+*** Exercise
+Set flowers to violet and buttercup. Cons two more flowers on to this list and
+set this new list to more-flowers. Set the car of flowers to a fish. What does
+the more-flowers list now contain?
+
+** Yanking Text Back
+
+*** Kill Ring Overview
+The kill ring is a list of textual strings.
+*** The kill-ring-yank-pointer Variable
+kill-ring-yank-pointer is a variable, just as kill-ring is a
+variable. It points to something by being bound to the value of what
+it points to, like any other Lisp variable.
+The kill ring is generally thought of as the complete structure of
+data that holds the information of what has recently been cut out of
+the Emacs buffers. The kill-ring-yank-pointer on the other hand,
+serves to indicate—that is, to ‘point to’—that part of the kill ring
+of which the first element (the car) will be inserted.
+*** Exercises with yank and nthcdr
+• Using C-h v (describe-variable), look at the value of your kill ring. Add
+several items to your kill ring; look at its value again. Using M-y (yank-pop),
+move all the way around the kill ring. How many items were in your kill ring?
+Find the value of kill-ring-max. Was your kill ring full, or could you have
+Kept more blocks of text within it?
+• Using nthcdr and car, construct a series of expressions to return the first,
+second, third, and fourth elements of a list.
+
+** Loops and Recursion
+(while true-or-false-test
+  body ...)
+*** while
+**** A while Loop and a List
+(while test-whether-list-is-empty
+  body ...
+set-list-to-cdr-of-list )
+
+**** An Example: print-elements-of-list
+
+**** A Loop with an Incrementing Counter
+(while (< count desired-number) ; true-or-false-test
+  body ...
+  (setq count (1+ count))) ; incrementer
+
+(defun name-of-function (argument-list )
+  "documentation ..."
+  (let (varlist )
+    (while (true-or-false-test )
+      body-of-while ... )
+    ... )) ; Need final expression here.
+
+(defun triangle (number-of-rows) ; Version with
+                                 ; incrementing counter.
+  "Add up the number of pebbles in a triangle.
+The first row has one pebble, the second row two pebbles,
+the third row three pebbles, and so on.
+The argument is NUMBER-OF-ROWS."
+  (let ((total 0)
+       (row-number 1))
+    (while (<= row-number number-of-rows)
+      (setq total (+ total row-number))
+      (setq row-number (1+ row-number)))
+    total))
+
+(triangle 4)
+(triangle 7)
+
+
+**** Loop with a Decrementing Counter
+(while (> counter 0) ; true-or-false-test
+  body ...
+  (setq counter (1- counter))); decrementer
+
+;;; First subtractive version.
+(defun triangle (number-of-rows)
+  "Add up the number of pebbles in a triangle."
+  (let ((total 0)
+       (number-of-pebbles-in-row number-of-rows))
+    (while (> number-of-pebbles-in-row 0)
+      (setq total (+ total number-of-pebbles-in-row))
+      (setq number-of-pebbles-in-row
+            (1- number-of-pebbles-in-row)))
+      total))
+
+(defun triangle (number) ; Second version.
+  "Return sum of numbers 1 through NUMBER inclusive."
+  (let ((total 0))
+    (while (> number 0)
+      (setq total (+ total number))
+      (setq number (1- number)))
+    total))
+
+*** Save your time: dolist and dotimes
+
+(defun reverse-list-with-while (list)
+  "Using while, reverse the order of LIST."
+  (let (value) ; make sure list starts empty
+    (while list
+      (setq value (cons (car list) value))
+      (setq list (cdr list)))
+    value))
+(setq animals '(gazelle giraffe lion tiger))
+(reverse-list-with-while animals)
+
+**** The dolist Macro
+(defun reverse-list-with-dolist (list)
+  "Using dolist, reverse the order of LIST."
+  (let (value) ; make sure list starts empty
+    (dolist (element list value)
+      (setq value (cons element value)))))
+(setq animals '(gazelle giraffe lion tiger))
+(reverse-list-with-dolist animals)
+
+Like a while loop, a dolist loops. What is different is that it automatically
+shortens the list each time it loops — it ‘cdrs down the list’ on its own — and
+it automatically binds the car of each shorter version of the list to the first of its
+arguments.
+
+**** The dotimes Macro
+The dotimes macro is similar to dolist, except that it loops a specific number of
+times.
+The first argument to dotimes is assigned the numbers 0, 1, 2 and so forth each
+time around the loop, and the value of the third argument is returned. You need
+to provide the value of the second argument, which is how many times the macro
+loops.
+
+(defun triangle-using-dotimes (number-of-rows)
+  "Using dotimes, add up the number of pebbles in a triangle."
+  (let ((total 0)) ; otherwise a total is a void variable
+    (dotimes (number number-of-rows total)
+      (setq total (+ total (1+ number))))))
+(triangle-using-dotimes 4)
+
+*** Recursion
+**** Building Robots: Extending the Metaphor
+**** The Parts of a Recursive Definition
+**** Recursion with a List
+**** Recursion in Place of a Counter
+An argument of 3 or 4
+**** Recursion Example Using cond
+**** Recursive Patterns
+Recursive Pattern: every
+Recursive Pattern: accumulate
+Recursive Pattern: keep
+**** Recursion without Deferments
+**** No Deferment Solution
+*** Looping Exercise
+
+** Regular Expression Searches
+12.1 The Regular Expression for sentence-end . . . . . . . . . . . . . . . . . . . . . . . . .
+ 130
+12.2 The re-search-forward Function . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 131
+12.3 forward-sentence .. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 132
+The while loops. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 134
+The regular expression search . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 135
+12.4 forward-paragraph: a Goldmine of Functions . . . . . . . . . . . . . . . . . . . . .
+ 136
+The let* expression . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 136
+The forward motion while loop. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 138
+12.5 Create Your Own ‘TAGS’ File . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 141
+12.6 Review . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 143
+12.7 Exercises with re-search-forward .. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 144
+
+** Counting: Repetition and Regexps
+13.1 The count-words-region Function . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 145
+13.1.1 The Whitespace Bug in count-words-region .. . . . . . . . . . . . . . . .
+ 148
+13.2 Count Words Recursively . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 150
+13.3 Exercise: Counting Punctuation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 155
+
+** Counting Words in a defun
+14.1 What to Count? . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 156
+14.2 What Constitutes a Word or Symbol?. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 157
+14.3 The count-words-in-defun Function . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 158
+14.4 Count Several defuns Within a File . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 161
+14.5 Find a File . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 161
+14.6 lengths-list-file in Detail . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 162
+14.7 Count Words in defuns in Different Files . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 164
+14.7.1 The append Function . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 165
+14.8 Recursively Count Words in Different Files . . . . . . . . . . . . . . . . . . . . . . . . .
+ 166
+14.9 Prepare the Data for Display in a Graph . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 167
+14.9.1 Sorting Lists . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 167
+14.9.2 Making a List of Files . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 168
+14.9.3 Counting function definitions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 171
+
+** Readying a Graph
+15.1
+ The graph-body-print Function . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 180
+15.2
+ The recursive-graph-body-print Function . . . . . . . . . . . . . . . . . . . . . .
+ 182
+15.3
+ Need for Printed Axes . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 183
+15.4
+ Exercise . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 183
+
+** Your ‘.emacs’ File
+16.1
+ Site-wide Initialization Files . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 184
+16.2
+ Specifying Variables using defcustom . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 185
+16.3
+ Beginning a ‘.emacs’ File . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 187
+16.4
+ Text and Auto Fill Mode . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 188
+16.5
+ Mail Aliases . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 189
+16.6
+ Indent Tabs Mode . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 190
+16.7
+ Some Keybindings . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 190
+16.8
+ Keymaps . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 191
+16.9
+ Loading Files . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 192
+16.10
+ Autoloading . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 193
+16.11
+ A Simple Extension: line-to-top-of-window .. . . . . . . . . . . . . . . . . . .
+ 194
+16.12
+ X11 Colors . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 195
+16.13
+ Miscellaneous Settings for a ‘.emacs’ File . . . . . . . . . . . . . . . . . . . . . . . . .
+ 196
+16.14
+ A Modified Mode Line . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 198
+
+** Debugging
+17.1
+ debug . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 201
+17.2
+ debug-on-entry. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 202
+17.3
+ debug-on-quit and (debug) . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 203
+17.4
+ The edebug Source Level Debugger . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 204
+17.5
+ Debugging Exercises . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 205
+
+** Conclusion
+
+** A The the-the Function
+** B Handling the Kill Ring
+B.1
+ The current-kill Function. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 211
+B.2
+ yank . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 215
+B.3
+ yank-pop . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 216
+B.4
+ The ‘ring.el’ File . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 217
+
+** C A Graph with Labelled Axes
+C.1 The print-graph Varlist . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 219
+C.2 The print-Y-axis Function . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 219
+C.2.1 Side Trip: Compute a Remainder . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 220
+C.2.2 Construct a Y Axis Element . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 222
+C.2.3 Create a Y Axis Column . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 223
+C.2.4 The Not Quite Final Version of print-Y-axis . . . . . . . . . . . . . . . . .
+ 224
+C.3 The print-X-axis Function . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 225
+C.3.1 X Axis Tic Marks . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 226
+C.4 Printing the Whole Graph . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 229
+C.4.1 Testing print-graph . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 231
+C.4.2 Graphing Numbers of Words and Symbols . . . . . . . . . . . . . . . . . . . . .
+ 232
+C.4.3 A lambda Expression: Useful Anonymity . . . . . . . . . . . . . . . . . . . . . .
+ 233
+C.4.4 The mapcar Function . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 234
+C.4.5 Another Bug . . . Most Insidious . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 235
+C.4.6 The Printed Graph. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ 237
+
+** D Free Software and Free Manuals
+** E GNU Free Documentation License 
+** Index

@@ -1,0 +1,429 @@
+* [[http://www.cnblogs.com/geniusvczh/category/152533.html][vczh的編譯器教程]]
+** [[http://www.cnblogs.com/geniusvczh/archive/2013/04/27/3047560.html][如何设计一门语言（一）——什么是坑(a)]]
+   Haskell代碼竟然看不懂，媽的，不能混了，竟然連別人寫的都看不懂，以
+   後怎麼混江湖~~
+*** [[http://www.yinwang.org/blog-cn/2014/04/18/golang/][垠神噴go語言－－对 Go 语言的综合评价]]
+*** "定义和使用相一致”的原则
+    因为大家都习惯“int* a;”，然后C语言告诉大家其实正确的做法是
+    “int *a;”，那么当你接连的出现两三个变量的时候，问题就来了，你就掉坑
+    里去了。这个时候我们再回头看一看上面那一段长长的函数指针数组变量的
+    声明，会发现其实在这种时候，C语言还是希望你把它看成“int*b;”的这种形
+    式的：f是一个数组，数组返回了一个函数指针，函数返回int，函数的参数
+    是int(*a)(int, int)所以他还是一个函数指针。
+*** 
+*** C++兼容C语言,指针的隐式类型转换
+    class Base
+    {
+    ...
+    };
+    
+    class Derived : public Base
+    {
+    ...
+    };
+    
+    Base* bs = new Derived[10];
+    delete[] bs;
+    我们new[]了一个指针是Derived*类型的，然后隐式转换到了Base*。最后我
+    们拿他delete[]，因为delete[]需要调用析构函数，但是Base*类型的指针式
+    不能正确计算出Derived数组的10个析构函数需要的this指针的位置的，所以
+    在这个时候，代码就完蛋了（如果没完蛋，那只是巧合）。
+*** [[https://en.wikipedia.org/wiki/Typedef][Typedef]]
+** [[http://www.cnblogs.com/geniusvczh/archive/2013/04/28/3049774.html][如何设计一门语言（二）——什么是坑(b)]]
+   当你使用C++的时候C的一部分子集最好少碰.
+   没错，就是那种就算只有一个实现也要用interface的那种流派.
+   用C++的时候，STL有的东西，你就不要自己撸了．
+   我想起以前在MSDN上看过的一句话，说一个结构，如果超过了16个字节，就建议最好不要做成struct。
+*** C#的屬性語法糖
+    其实C#的operator[]不是一个操作符，跟C++不一样，他是当成属性来看待的。
+    属性其实是一个语法糖，其中的getter和setter是两个函数。所以如果一个属
+    性的类型是struct，那么getter的返回值也是struct。一个函数返回struct是
+    什么意思呢？当然是把结果【复制】一遍然后返回出去了。所以当我们写
+    box.Point.x=5的时候，其实等价于box.get_Point().x=5。你拿到的Point是
+    复制过的，你对一个复制过的struct来修改里面的x，自然不能影响box里面存
+    放着的那个Point。所以这是一个无效语句，C#干脆就给你定了个编译错误了。
+    不过你可能会问，List和Array大家都是operator[]也是一个属性，那为什么
+    Array就可以呢？答案很简单，Array是有特殊照顾的……
+*** C++的const問題
+    我们在C++里面用const，一般都是有两个目的。第一个是用const引用来组织
+    C++复制太多东西，第二个是用const指针来代表某些值是不打算让你碰的。
+    但是一个类里面的函数会做什么我们并不知道，所以C++给函数也加上了
+    const。这样对于一个const T的类型，你只能调用T里面所有标记了const的
+    函数了。而且对于标记了const的成员函数，他的this指针也是const T*
+    const类型的，而不是以前的T* const类型。
+    const修饰的应该不是一个类型，而是一个变量才对。
+    virtual void Apply(IMatrix<const float>& filter)=0;
+    改成
+    virtual void Apply(const IMatrix<float>& filter)=0;
+** [[http://www.cnblogs.com/geniusvczh/archive/2013/05/05/3060762.html][如何设计一门语言（三）——什么是坑(面向对象和异常处理)]]
+*** 面向對象
+    不然也就没有那么多人去研究，一个特别合用来写functional programming的
+    语言——javascript——是如何可以“模拟”面向对象语言里面的常用操作——new、
+    继承和虚函数覆盖了。
+    你要是没有多重继承和virtual继承，那用起来就跟傻逼一样，根本发挥不了
+    静态类型语言的优势——让interface当contract.
+*** exception safe的init
+   有些人会说，init没有返回值，我不知道他犯了错误啊——你可以用Exception！
+   还有些人会说，exception safe的构造函数好难写啊——学啊我艸！
+   但是这样仍然有些人会负隅顽抗，都这么麻烦了反正我可以用对Init和返回值
+   就好了——你连exception safe的构造函数都不知道怎么写你怎么知道你可以
+   “用对”它们？
+** [[http://www.cnblogs.com/geniusvczh/archive/2013/05/12/3074195.html][如何设计一门语言（四）——什么是坑(操作模板)]]
+*** CPS
+    一个用CPS变换完整地处理过的λ-calculus程序长的就很像一串指令．
+*** 泛型
+    说白了泛型就是一个对类型进行操作的东西。当然它的内涵远远没有模板那么
+    丰富，但是既然讨论到了对类型的操作，我觉得我要稍微普及一下一个类型系
+    统的常识——父类型和子类型。
+*** 模板
+    除了类的继承，协变逆变以外，还有另一种父类型和子类型的关系——那就是模板类型了．
+    而且C++还有偏特化这种必不可缺的东西。那偏特化有什么用呢？这跟上一篇
+    文章将面向对象的时候一样，其中的一个很大的用处就是拿来做contract。
+*** 類型推導
+    interface和template（其实是concept mapping）拿来做contract的区别，
+    在于你选择一个具有contract的类型的实现的时候，是在运行时做的，还是
+    在编译时做的。其实有很多时候我们并不想，有时候也不能入侵式地给一个
+    类随便添加一个新功能。我们知道，功能就是contract，contract要么是
+    interface，要么是template。interface并不是总是可以加上去的，譬如说
+    对那些不能修改的类，就像string啊int什么的。而且我们也不会拿string和
+    int做多态。这种时候我们就需要concept mapping了，然后靠类型推导去选
+    择正确的实现。在C++里面，就是用template+偏特化来做了。
+*** 编译错误
+    关于编译错误，我觉得有一个事情是很值得说的。为什么熟悉Haskell都觉得
+    Haskell的程序只要经过了编译基本上运行就靠谱了？其实并不是Haskell的
+    程序真的免去了调试的这一步，而是因为这门语言经过了精心的设计，把本
+    来在运行时才检查的事情给转到了编译时。当然这有一个不好的地方，就是
+    我们用C语言来写一个程序的时候，虽然因为C语言抽象能力太差被迫写的很
+    糟糕，但是我们总可以运行一点改一点，最终让他可以执行。Haskell就不一
+    样了，只有能编译和不能编译两种状态，你要不断的修改程序，让他可以编
+    译。一旦可以编译，一般就好了。Haskell的这种特性需要淡定的程序员才能
+    使用。
+    为什么呢，因为Haskell是没有语句的，所以只要你修改了函数让他做了不一样的
+    事情，那么函数的类型就会发生变化。那么所有依赖到这个函数的函数的类型也
+    会发生变化。如果你改错了，那类型检查就会过不去，然后你的程序就不能编译
+    了。Erik Meijer菊苣说得好，函数的类型才是表达函数业务逻辑的地方。而之所
+    以要函数体，那是因为编译器不够聪明，得让你告诉他满足这个类型的最简单的
+    解是什么。
+    所以如果我们在C++也采用这种写法的话——其实也就是把逻辑都交给template+偏
+    特化，或者继承+visitor来做，那么也会有一样的效果，虽然并没有Haskell那么
+    严格。一旦你进行了本质上的逻辑的变动，那你的类型一定会受到影响，那不满
+    足类型要求的地方编译器就会帮你找出来。所以，当你看到一个因为这种情况而
+    产生的编译错误的时候，心理要想：“好棒，编译器又给我找出了一个错误，避免
+    我在运行的时候才苦逼的调试它！”
+    当然，模板的这些手法，可以很轻易地用在continuation passing style变
+    换啊、combinator（很像设计模式但其实不是的东西）啊、async啊actor等
+    各种强类型的物体上面，不过这些东西我今天就不打算细说了。当我们在做
+    类似的事情的时候，我们要把类型设计成能表达业务逻辑的那种形式，从而
+    让编译器查更多的东西，把运行时错误尽量化简为编译错误。
+*** C++的type traits
+    如果concept mapping是在对值通过类型进行分类采用不同的计算方法的话，
+    那么type traits就是用来直接对类型进行计算的。那什么是对类型进行计算
+    呢？我来举个例子。
+    为什么会错呢？因为GetScore函数接受的不是Student而是const Student&！
+    这下可麻烦了。我们有些函数接受的是T，有些函数接受的是const T&，难道
+    要写两个Sort嘛？当然这种代价肯定是不能接受的。于是我们想，如果可以
+    从U(*key)(T)的T推导出vector里面装的是什么那该多好啊。反正无论函数接
+    受的是string, string& const string, const string&，vector反正只能放
+    string的。
+
+    这个时候就要祭出伟大的type traits了。怎么做呢？其实根上面的说法一样，我
+    们把template看成是一个函数，输入是一个类型，输出再也不是值了，还是一个
+    类型就好了：
+    template<typename T>
+    struct RemoveCR
+    {
+    typedef T Result;
+    };
+    
+    template<typename T>
+    struct RemoveCR<T&>
+    {
+    typedef typename RemoveCR<T>::Result Result;
+    };
+    
+    template<typename T>
+    struct RemoveCR<const T>
+    {
+    typedef typename RemoveCR<T>::Result Result;
+    };
+    這裏的例子有點不對，要實現＂RemoveCR<int>::Result的结果是int，
+    RemoveCR<const int&>::Result的结果还是int。＂功能，typedef
+    typename RemoveCR<T>::T Result;
+    vczh的回覆：
+    {typedef T Result;} 里面，T是template里面的那个typename，Result才是
+    重命名后的名字。所以你写的<T>::T这里是不对的，还是得用Result。
+**** [[http://erdani.com/publications/traits.html][Traits: The else-if-then of Types]]
+     // Example 3: A traits example
+     //
+     template <class T>
+     class SomeTemplate
+     {
+     // generic implementation (1)
+     ...
+     };
+     template <>
+     class SomeTemplate<char>
+     {
+     // implementation tuned for char (2)
+     ...
+     };
+     ...
+     SomeTemplate<int> a;      // will use (1)
+     SomeTemplate<char*> b;    // will use (1)
+     SomeTemplate<char> c;     // will use (2)
+*** Haskell的type traits
+    关于type traits，haskell的type class（这东西就跟concept mapping一样）
+    其实也有一部分这样的能力，可以帮你从type class的一部分类型参数推导
+    出另一部分的类型参数。譬如说你这么写：
+    class MyClass a b c : a b => c
+       where ....
+    那么只要你实现了MyClass Int String Char，就不能实现MyClass Int String
+    String了，因为a b => c这条规则已经限制了，(Int String)只能出现一次，c要
+    完全被a和b决定。所以拥有这个=>的haskell的type class也就可以有一部分
+    type traits的功能了，虽然用法跟C++是截然不同的。
+*** C++ template的書
+    们不仅可以把类型放进模板的参数列表里面去，也可以把一个整数放进去。
+    这个时候我们就可以用Int<100>来表达100，用Pair<Int<100>,
+    Pair<Int<200>, Pair<Int<300>, PairEnd>>>来代表数组[100, 200, 300]，
+    然后各种奇技淫巧就可以用来把模板写成一个不带类型的函数式语言了，在
+    编译期什么东西都可以算。这个事情展开讲就太复杂了，而且也没什么用，
+    你们感兴趣的话去看《C++ Template Metaprogramming》就行了。
+*** [[http://msdn.microsoft.com/en-us/library/900fyy8e.aspx][delegate (C# Reference)]]
+    The declaration of a delegate type is similar to a method
+    signature. It has a return value and any number of parameters of
+    any type:
+    public delegate void TestDelegate(string message);
+    public delegate int TestDelegate(MyType m, long num);
+    A delegate is a reference type that can be used to encapsulate a named
+    or an anonymous method. Delegates are similar to function pointers in
+    C++; however, delegates are type-safe and secure. For applications of
+    delegates, see Delegates and Generic Delegates.
+    C#--example
+// Declare delegate -- defines required signature: 
+delegate double MathAction(double num);
+
+class DelegateTest
+{
+    // Regular method that matches signature: 
+    static double Double(double input)
+    {
+        return input * 2;
+    }
+
+    static void Main()
+    {
+        // Instantiate delegate with named method:
+        MathAction ma = Double;
+
+        // Invoke delegate ma: 
+        double multByTwo = ma(4.5);
+        Console.WriteLine("multByTwo: {0}", multByTwo);
+
+        // Instantiate delegate with anonymous method:
+        MathAction ma2 = delegate(double input)
+        {
+            return input * input;
+        };
+
+        double square = ma2(5);
+        Console.WriteLine("square: {0}", square);
+
+        // Instantiate delegate with lambda expression
+        MathAction ma3 = s => s * s * s;
+        double cube = ma3(4.375);
+
+        Console.WriteLine("cube: {0}", cube);
+    }
+    // Output: 
+    // multByTwo: 9 
+    // square: 25 
+    // cube: 83.740234375
+}
+**** [[http://msdn.microsoft.com/en-us/library/aa288459(v%3Dvs.71).aspx][another sample of C# delegate]]
+*** [[http://windjs.org/cn/docs/][windjs]]   
+    Wind.js的前身为Jscex，即JavaScript Computation EXpressions的缩写，
+    它为JavaScript语言提供了一个monadic扩展，能够显著提高一些常见场景下
+    的编程体验（例如异步编程）。
+*** [[https://en.wikipedia.org/wiki/Continuation-passing_style][Continuation-passing style]]
+    這個是什麼意思?看不懂，:D
+*** [[http://msdn.microsoft.com/zh-cn/library/9k7k7cf0.aspx][yield return]]
+    原來C#還有這種語法，返回一個IEnumerator<T>的迭代器．
+    C#一般例子
+    IEnumerable<string> elements = MyIteratorMethod();
+    foreach (string element in elements)
+    {
+    …
+    }
+    C#具體例子
+    public class PowersOf2
+    {
+    static void Main()
+    {
+        // Display powers of 2 up to the exponent of 8:
+        foreach (int i in Power(2, 8))
+        {
+            Console.Write("{0} ", i);
+        }
+    }
+
+    public static System.Collections.IEnumerable<int> Power(int number, int exponent)
+    {
+        int result = 1;
+
+        for (int i = 0; i < exponent; i++)
+        {
+            result = result * number;
+            yield return result;
+        }
+    }
+
+    // Output: 2 4 8 16 32 64 128 256
+    }
+*** [[Asynchronous%20Programming%20with%20Async%20and%20Await%20(C#%20and%20Visual%20Basic)][Asynchronous Programming with Async and Await (C# and Visual Basic)]]
+**** a callee example of async and await
+    // Three things to note in the signature: 
+    //  - The method has an async modifier.  
+    //  - The return type is Task or Task<T>. (See "Return Types" section.)
+    //    Here, it is Task<int> because the return statement returns an integer. 
+    //  - The method name ends in "Async."
+    async Task<int> AccessTheWebAsync()
+    { 
+    // You need to add a reference to System.Net.Http to declare client.
+    HttpClient client = new HttpClient();
+
+    // GetStringAsync returns a Task<string>. That means that when you await the 
+    // task you'll get a string (urlContents).
+    Task<string> getStringTask = client.GetStringAsync("http://msdn.microsoft.com");
+
+    // You can do work here that doesn't rely on the string from GetStringAsync.
+    DoIndependentWork();
+
+    // The await operator suspends AccessTheWebAsync. 
+    //  - AccessTheWebAsync can't continue until getStringTask is complete. 
+    //  - Meanwhile, control returns to the caller of AccessTheWebAsync. 
+    //  - Control resumes here when getStringTask is complete.  
+    //  - The await operator then retrieves the string result from getStringTask. 
+    string urlContents = await getStringTask;
+
+    // The return statement specifies an integer result. 
+    // Any methods that are awaiting AccessTheWebAsync retrieve the length value. 
+    return urlContents.Length;
+    }
+
+**** a caller example of async and await
+     // Signature specifies Task<TResult>
+     async Task<int> TaskOfTResult_MethodAsync()
+     {
+     int hours;
+     // . . .
+     // Return statement specifies an integer result.
+     return hours;
+     }
+     
+     // Calls to TaskOfTResult_MethodAsync
+     Task<int> returnedTaskTResult = TaskOfTResult_MethodAsync();
+     int intResult = await returnedTaskTResult;
+     // or, in a single statement
+     int intResult = await TaskOfTResult_MethodAsync();
+     
+     
+     // Signature specifies Task
+     async Task Task_MethodAsync()
+     {
+     // . . .
+     // The method has no return statement.  
+     }
+     
+     // Calls to Task_MethodAsync
+     Task returnedTask = Task_MethodAsync();
+     await returnedTask;
+     // or, in a single statement
+     await Task_MethodAsync();
+** [[http://www.cnblogs.com/geniusvczh/archive/2013/05/25/3098496.html][如何设计一门语言（五）——面向对象和消息发送]]
+   屮艸芔茻　che3,cao3,hui4,mang3
+*** 虚函数表
+    虚函数表那么大，要是每一个类的实例都带一个表的话岂不是很浪费内存？
+    这种人就应该先去看《Inside the C++ Object Model》
+*** 開放和封閉
+    于是我们围绕着消息发送的语法糖玩了很久，终于遇到了两大终极问题。这两个
+    问题说白了都是开放和封闭的矛盾。我们用基类和一大堆子类的结构来写程序的
+    时候，需要把逻辑都封装在虚函数里面，不然的话你就得cast了，cast是将程序
+    最终导向失控的根源之一。这个时候我们对类型扩展是开放的，而对逻辑扩展是
+    封闭的．
+    class Shape
+    {
+    　　　public:
+    　　　virtual double GetArea()=0;
+    　　　virtual bool HitTest(Point p)=0;
+    };
+    
+    class Circle : public Shape ...;
+    class Rectangle : public Shape ... ;
+
+    我们每当添加一个新形状的时候，只要实现GetArea和HitTest，那么事情就
+    做完了。所以你可以无限的添加新形状——所以类型扩展是开放的。但是你却
+    永远只能做GetArea和HitTest——对逻辑扩展是封闭的。你如果想做除了
+    GetArea和HitTest以外的更多的事情的话，这个时候你就被迫做cast了。那
+    么在类型相对稳定的情况下有没有别的方法呢？设计模式告诉我们，我们可
+    以用Visitor来把情况扭转过来——做成对类型扩展封闭，而对逻辑扩展开放的：
+*** [[http://ruby.about.com/od/beginningruby/a/mixin.htm][Ruby Mixin Modules]]
+    Mixins provide a much more Ruby-like solution to this
+    problem. Mixins are a group of methods not yet attached to any
+    class. They exist in a module, and are not useful until included
+    in a class. Once included, the methods in the mixin module are now
+    normal methods of the class.
+** [[http://www.cnblogs.com/geniusvczh/archive/2013/06/10/3130745.html][如何设计一门语言（六）——exception和error code]]
+   谁构造谁释放的原则.
+*** error code也没什么问题
+    只是需要一个前提——你的语言得跟Haskell一样有monad和comonad。你看
+    Haskell就没有exception，大家也写的很开心。为什么呢？因为只要把返回
+    带error code结果的函数给做成一个monad/comonad，那么就可以用CPS变换
+    把它变成exception了。所以说CPS作为跟goto同样基本的控制流语句真是当
+    之无愧呀，只是CPS是type rich的，goto是type poor的。
+*** CPS變換
+    CPS变换就是把所有g(f(x))都给改写成f(x,r=>g(r))的过程。
+    把两个await换成回调已经让我们写的够辛苦了，那么如果我们把await写在
+    了循环里面，事情就不那么简单了。CPS需要把循环翻译成递归，那你就得把
+    lambda表达时拿出来写成一个普通的函数——这样他就可以有名字了——然后才
+    能递归（写出一个用于CPS的Y-combinator是一件很困难的事情，尽管并没有
+    比Y-combinator本身困难多少）。这个例子就复杂到爆炸了，我在这里就不
+    演示了。
+    总而言之，C#因为有了CPS变换（await），就可以把button4_Click帮你写成
+    button3_Click然后再帮你写成button2_Click，最后把整个函数变成异步和
+    回调的形式（真正的做法要更聪明一点，大家可以反编译去看）在异步回调
+    的写法里面，exception和error code其实是一样的。但是CPS+exception和
+    CPS+error code就跟单线程下面的exception和error code一样，有着重大的
+    区别。这就是为什么文章一开始会说，我只会在带CPS变换的语言
+    （Haskell/F#/etc）里面使用error code。
+    在这类语言里面利用相同的技巧，就可以不是异步的东西也用CPS包装起来，
+    譬如说monadic parser combinator。至于你要选择monad还是comonad，基本
+    上就是取决于你要自动提供错误处理还是要手动提供错误处理。像上面的
+    Task.ContinueWith，是要求你手动提供错误处理的（因为你catch了之后可
+    以干别的事情，Task无法自动替你选择最好的措施），所以他就把
+    Task.ContinueWith写成了comonad的那个样子。
+
+** [[http://www.cnblogs.com/geniusvczh/p/3174522.html][如何设计一门语言（七）——闭包、lambda和interface]]
+*** [[http://msdn.microsoft.com/en-us/library/aa288436(v%3Dvs.71).aspx][C# Tutorial]]    
+*** [[http://technet.microsoft.com/en-us//library/dd799517][C#的協變和逆變]]
+Covariance
+Enables you to use a more specific type than originally specified.
+You can assign an instance of IEnumerable<Derived> (IEnumerable(Of Derived) in Visual Basic) to a variable of type IEnumerable<Base>.
+Contravariance
+Enables you to use a more generic (less derived) type than originally specified.
+You can assign an instance of IEnumerable<Base> (IEnumerable(Of Base) in Visual Basic) to a variable of type IEnumerable<Derived>.
+*** argument passing
+    call by value
+    call by reference
+    call by need --说的就是如果一个参数没被用上，那传进去的时候就不会执行。
+    call by name --call by name也是call by reference的，但是区别在于你
+    每一次使用一个参数的时候，程序都会把计算这个参数的表达式执行一遍。
+*** symbol resolving
+    所谓的symbol resolving讲的就是解决程序在看到一个名字的时候，如何知
+    道这个名字到底指向的是谁的问题。
+    lexical scoping -- 在定义的地方向上查找名字．
+    dynamic scoping -- 在运行的时候向上查找名字．
+    到底一个lambda表达式抓下来的外面的符号是只读的还是可读写的呢？ --
+    python告诉我们，这是只读的。C#和javascript告诉我们，这是可读写的。
+    C++告诉我们，你们自己来决定每一个符号的规则。
+*** 閉包
+    闭包其实就是那个被lambda表达式抓下来的“上下文”加上函数本身了。

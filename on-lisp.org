@@ -1,0 +1,183 @@
+* on-lisp
+** The Extensible Language
+*** Design by Evolution
+*** Programming Bottom-Up
+*** Extensible Software
+*** Extending Lisp
+*** Why Lisp (or When)
+** Functions
+   In fact, except for a small number of operators called special forms, the core
+of Lisp is a collection of Lisp functions. 
+*** Functions as Data
+   Nearly all programming languages provide some form of function or procedure.
+What does it mean to say that Lisp provides them as a data type? It means that in
+Lisp we can do with functions all the things we expect to do with more familiar
+data types, like integers: create new ones at runtime, store them in variables and in
+structures, pass them as arguments to other functions, and return them as results.
+*** Defining Functions
+   Those defuns are not just procedure definitions, they’re Lisp calls. 
+   (lambda (x) (* x 2)) describes a function which takes one argument x, and returns 2x.
+   A lambda-expression can also be considered as the name of a function. 
+   In Common Lisp, we can have a function named double and a variable
+named double at the same time.When a name occurs first in a function
+call, or is preceded by a sharp-quote, it is taken to refer to a
+function. Otherwise it is treated as a variable name.It is therefore
+said that Common Lisp has distinct name-spaces for variables and
+functions.
+   The function symbol-value takes a symbol and returns the value of
+the corresponding special variable. while symbol-function does the
+same for a globally defined function.
+   Underlying defun, which resembles procedure definition in any other
+language, is a more general mechanism: building a function and
+associating it with a certain name are two separate operations.
+
+*** Functional Arguments
+*** Functions as Properties
+*** Scope
+*** Closures
+*** Local Functions
+*** Tail-Recursion
+*** Compilation
+*** Functions from Lists
+** Functional Programming
+*** Functional Design
+*** Imperative Outside-In
+*** Functional Interfaces
+*** Interactive Programming
+** Utility Functions
+*** Birth of a Utility
+*** Invest in Abstraction
+*** Operations on Lists
+*** Search
+*** Mapping
+*** I/O
+*** Symbols and Strings
+*** Density
+** Returning Functions
+*** Common Lisp Evolves
+*** Orthogonality
+*** Menoizing
+*** Composing Functions
+*** Recursion on Cdrs
+*** Recursion on Subtrees
+*** When to Build Functions
+** Functions as Representation
+*** Networks
+*** Compiling Networks
+*** Looking Forward
+** Macros
+*** How Macros Work
+*** Backquote
+*** Defining Simple Macros
+*** Testing Macroexpansion
+*** Destructuring in Parameter Lists
+*** A Model of Macros
+*** Macros as Programs
+*** Macro Style
+*** Dependence on Macros
+*** Macros from Functions
+*** Symbol Macros
+** When to Use Macros
+*** When Nothing Else Will Do
+*** Macro or Function?
+*** Applications for Macros
+** Variable Capture
+*** Macro Argument Capture
+*** Free Symbol Capture
+*** When Capture Occurs
+*** Avoiding Capture with Better Names
+*** Avoiding Capture by Prior Evaluation
+*** Avoiding Capture with Gensyms
+*** Avoiding Capture with Packages
+*** Capture in Other Name-Spaces
+*** Why Bother?
+** Other Macro Pitfalls
+*** Number of Evaluations
+*** Order of Evaluation
+*** Non-functional Expanders
+*** Recursion
+** Classic Macros
+*** Creating Context
+*** The with- Macro
+*** Conditional Evaluation
+*** Iteration
+*** Iteration with Multiple Values
+*** Need for Macros
+** Generalized Variables
+*** The Concept
+*** The Multiple Evaluation Problem
+*** New Utilities
+*** More Complex Utilities
+*** Defining Inversions
+** Computation at Compile-Time
+*** New Utilities
+*** Example: Bezier Curves
+*** Applications
+** Anaphoric Macros
+*** Anaphoric Variants
+*** Failure
+*** Referential Transparency
+** Macros Returning Functions
+*** Building Functions
+*** Recursion on Cdrs
+*** Recursion on Subtrees
+*** Lazy Evaluation
+** Macro-Defining Macros
+*** Abbreviations
+*** Properties
+*** Anaphoric Macros
+** Read-Macros
+*** Macro Characters
+*** Dispatching Macro Characters
+*** Delimiters
+*** When What Happens
+** Destructuring
+*** Destructuring on Lists
+*** Other Structures
+*** Reference
+*** Matching
+** A Query Compiler
+*** The Database
+*** Pattern-Matching Queries
+*** A Query Interpreter
+*** Restrictions on Binding
+*** A Query Compiler
+** Continuations
+*** Scheme Continuations
+*** Continuation-Passing Macros
+*** Code-Walkers and CPS Conversion
+** Multiple Processes
+*** The Process Abstraction
+*** Implementation
+*** The Less-than-Rapid Prototype
+** Nondeterminism
+*** The Concept
+*** Search
+*** Scheme Implementation
+*** Common Lisp Implementation
+*** Cuts
+*** True Nondeterminism
+** Parsing with ATNs
+*** Background
+*** The Formalism
+*** Nondeterminism
+*** An ATN Compiler
+*** A Sample ATN
+** Prolog
+*** Concepts
+*** An Interpreter
+*** Rules
+*** The Need for Nondeterminism
+*** New Implementation
+*** Adding Prolog Features
+*** Examples
+*** The Senses of Compile
+** Object-Oriented Lisp
+*** Plus c.a Change
+*** Objects in Plain Lisp
+*** Classes and Instances
+*** Methods
+*** Auxiliary Methods and Combination
+*** CLOS and Lisp
+*** When to Object
+ 
