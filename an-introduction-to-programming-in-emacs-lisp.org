@@ -1324,15 +1324,12 @@ And what does the last address in a series of cons cells refer to? It is the add
 of the empty list, of nil.
 In summary, when a Lisp variable is set to a value, it is provided with the address
 of the list to which the variable refers.
-
 *** Symbols as a Chest of Drawers
 *** Exercise
 Set flowers to violet and buttercup. Cons two more flowers on to this list and
 set this new list to more-flowers. Set the car of flowers to a fish. What does
 the more-flowers list now contain?
-
 ** Yanking Text Back
-
 *** Kill Ring Overview
 The kill ring is a list of textual strings.
 *** The kill-ring-yank-pointer Variable
@@ -1392,7 +1389,6 @@ The argument is NUMBER-OF-ROWS."
 (triangle 4)
 (triangle 7)
 
-
 **** Loop with a Decrementing Counter
 (while (> counter 0) ; true-or-false-test
   body ...
@@ -1418,7 +1414,6 @@ The argument is NUMBER-OF-ROWS."
     total))
 
 *** Save your time: dolist and dotimes
-
 (defun reverse-list-with-while (list)
   "Using while, reverse the order of LIST."
   (let (value) ; make sure list starts empty
@@ -1461,158 +1456,575 @@ loops.
 *** Recursion
 **** Building Robots: Extending the Metaphor
 **** The Parts of a Recursive Definition
+(defun name-of-recursive-function (argument-list )
+  "documentation ..."
+  (if do-again-test
+    body ...
+    (name-of-recursive-function
+      next-step-expression )))
+
 **** Recursion with a List
+(defun print-elements-recursively (list)
+  "Print each element of LIST on a line of its own.
+Uses recursion."
+  (when list ; do-again-test
+        (print (car list)) ; body
+        (print-elements-recursively ; recursive call
+          (cdr list)))) ; next-step-expression
+(setq animals '(gazelle giraffe lion tiger))
+(print-elements-recursively animals)
+
 **** Recursion in Place of a Counter
-An argument of 3 or 4
+(defun triangle-recursively (number)
+  "Return the sum of the numbers 1 through NUMBER inclusive.
+Uses recursion."
+(if (= number 1) ; do-again-test
+  1 ; then-part
+  (+ number ; else-part
+     (triangle-recursively   ; recursive call
+     (1- number))))) ; next-step-expression
+(triangle-recursively 7)
+
 **** Recursion Example Using cond
+(cond
+  body ...)
+
+(cond
+ (first-true-or-false-test first-consequent )
+ (second-true-or-false-test second-consequent )
+ (third-true-or-false-test third-consequent )
+  ...)
+
+(defun triangle-using-cond (number)
+ (cond ((<= number 0) 0)
+       ((= number 1) 1)
+       ((> number 1)
+        (+ number (triangle-using-cond (1- number))))))
+
 **** Recursive Patterns
-Recursive Pattern: every
-Recursive Pattern: accumulate
-Recursive Pattern: keep
+***** Recursive Pattern: every
+• If a list be empty, return nil.
+• Else, act on the beginning of the list (the car of the list)
+− through a recursive call by the function on the rest (the cdr) of the list,
+− and, optionally, combine the acted-on element, using cons, with the re-
+sults of acting on the rest.
+
+(defun print-elements-recursively (list)
+ "Print each element of LIST on a line of its own.
+Uses recursion."
+ (when list ; do-again-test
+       (print (car list)) ; body
+       (print-elements-recursively ; recursive call
+        (cdr list)))) ; next-step-expression
+
+(setq animals ’(gazelle giraffe lion tiger))
+(print-elements-recursively animals)
+
+***** Recursive Pattern: accumulate
+• If a list be empty, return zero or some other constant.
+• Else, act on the beginning of the list (the car of the list),
+− and combine that acted-on element, using + or some other combining
+function, with
+− a recursive call by the function on the rest (the cdr) of the list.
+(defun add-elements (numbers-list)
+ "Add the elements of NUMBERS-LIST together."
+ (if (not numbers-list)
+     0
+     (+ (car numbers-list) (add-elements (cdr numbers-list)))))
+(add-elements '(1 2 3 4))
+
+***** Recursive Pattern: keep
+• If a list be empty, return nil.
+• Else, if the beginning of the list (the car of the list) passes a test
+− act on that element and combine it, using cons with
+− a recursive call by the function on the rest (the cdr) of the list.
+• Otherwise, if the beginning of the list (the car of the list) fails the test
+− skip on that element,
+− and, recursively call the function on the rest (the cdr) of the list.
+
+(defun keep-three-letter-words (word-list)
+ "Keep three letter words in WORD-LIST."
+(cond ;; First do-again-test: stop-condition
+ ((not word-list) nil) ;; Second do-again-test: when to act
+ ((eq 3 (length (symbol-name (car word-list)))) ;; combine acted-on element with recursive call on shorter list
+        (cons (car word-list) (keep-three-letter-words (cdr word-list)))) 
+;; Third do-again-test: when to skip element
+;; recursively call shorter list with next-step expression
+ (t (keep-three-letter-words (cdr word-list)))))
+
+(keep-three-letter-words '(one two three four five six))
+
 **** Recursion without Deferments
 **** No Deferment Solution
+The solution to the problem of deferred operations is to write in a manner that does
+not defer operations2. This requires writing to a different pattern, often one that
+involves writing two function definitions, an ‘initialization’ function and a ‘helper’
+function.
+The ‘initialization’ function sets up the job; the ‘helper’ function does the work.
+
+(defun triangle-initialization (number)
+ "Return the sum of the numbers 1 through NUMBER inclusive.
+This is the ‘initialization’ component of a two function
+duo that uses recursion."
+ (triangle-recursive-helper 0 0 number))
+
+(defun triangle-recursive-helper (sum counter number)
+ "Return SUM, using COUNTER, through NUMBER inclusive.
+This is the ‘helper’ component of a two function duo
+that uses recursion."
+ (if (> counter number)
+     sum
+ (triangle-recursive-helper (+ sum counter) ; sum
+                            (1+ counter) ; counter
+                            number))) ; number
+
 *** Looping Exercise
+• Write a function similar to triangle in which each row has a value which is
+the square of the row number. Use a while loop.
+
+(defun square-element-triangle (number)
+ "triangle in which each row has a value which is
+the square of the row number. Use a while loop."
+ (let ((total 0))
+  (while (> number 0)
+   (setq total (+ total (* number number)))
+   (setq number (1- number)))
+  total))
+(square-element-triangle 5)
+
+• Write a function similar to triangle that multiplies instead of adds the values.
+(defun multiply-element-triangle (number)
+ "Write a function similar to triangle that multiplies instead of adds
+ the values."
+ (let ((total 1))
+  (while (> number 0)
+   (setq total (* total number))
+   (setq number (1- number)))
+  total))
+(multiply-element-triangle 5)
+
+• Rewrite these two functions recursively. Rewrite these functions using cond.
+
+(defun square-element-triangle-with-recursive (number)
+ "triangle in which each row has a value which is
+the square of the row number. Use a while loop."
+ (cond ((= number 0)  0)
+       (t (+ (* number number) (square-element-triangle-with-recursive (1- number))))))
+
+(square-element-triangle-with-recursive 5)
+
+(defun multiply-element-triangle-with-recursive (number)
+ "Write a function similar to triangle that multiplies instead of adds
+ the values."
+ (cond ((= number 0) 0)
+       ((= number 1) 1)
+       (t (* number (multiply-element-triangle-with-recursive (1- number))))))
+(multiply-element-triangle-with-recursive 5)
+
+• Write a function for Texinfo mode that creates an index entry at the beginning
+of a paragraph for every ‘@dfn’ within the paragraph. (In a Texinfo file, ‘@dfn’
+marks a definition. This book is written in Texinfo.)
+Many of the functions you will need are described in two of the previous chap-
+ters, Chapter 8 “Cutting and Storing Text”, page 79, and Chapter 10 “Yank-
+ing Text Back”, page 104. If you use forward-paragraph to put the index
+entry at the beginning of the paragraph, you will have to use C-h f (describe-
+function) to find out how to make the command go backwards.
+For more information, see “Indicating Definitions, Commands, etc.” in Tex-
+info, The GNU Documentation Format.
+
+forward-paragraph is an interactive compiled Lisp function.
 
 ** Regular Expression Searches
-12.1 The Regular Expression for sentence-end . . . . . . . . . . . . . . . . . . . . . . . . .
- 130
-12.2 The re-search-forward Function . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 131
-12.3 forward-sentence .. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 132
-The while loops. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 134
-The regular expression search . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 135
-12.4 forward-paragraph: a Goldmine of Functions . . . . . . . . . . . . . . . . . . . . .
- 136
-The let* expression . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 136
-The forward motion while loop. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 138
-12.5 Create Your Own ‘TAGS’ File . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 141
-12.6 Review . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 143
-12.7 Exercises with re-search-forward .. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 144
+*** The Regular Expression for sentence-end
+Two backslashes, ‘\\’, are required before the parentheses and vertical bars: the
+first backslash quotes the following backslash in Emacs; and the second indicates
+that the following character, the parenthesis or the vertical bar, is special.
+
+(sentence-end)
+*** The re-search-forward Function
+(re-search-forward "regular-expression "
+                   limit-of-search
+                   what-to-do-if-search-fails
+                   repeat-count)
+
+*** forward-sentence
+(defun forward-sentence (&optional arg)
+  "Move forward to next ‘sentence-end’. With argument, repeat.
+With negative argument, move backward repeatedly to ‘sentence-beginning’.
+The variable ‘sentence-end’ is a regular expression that matches ends of
+sentences. Also, every paragraph boundary terminates sentences as well."
+  (interactive "p")
+  (or arg (setq arg 1))
+  (let ((opoint (point))
+      (sentence-end (sentence-end)))
+      (while (< arg 0)
+        (let ((pos (point))
+            (par-beg (save-excursion (start-of-paragraph-text) (point))))
+        (if (and (re-search-backward sentence-end par-beg t)
+                 (or (< (match-end 0) pos)
+                 (re-search-backward sentence-end par-beg t)))
+            (goto-char (match-end 0))
+          (goto-char par-beg)))
+        (setq arg (1+ arg)))
+      (while (> arg 0)
+        (let ((par-end (save-excursion (end-of-paragraph-text) (point))))
+        (if (re-search-forward sentence-end par-end t)
+            (skip-chars-backward " \t\n")
+
+          (goto-char par-end)))
+        (setq arg (1- arg)))
+      (constrain-to-field nil opoint t)))
+
+The local value of point, from before the search, is used in
+the constrain-to-field function which handles forms and equivalents. 
+[Return the position closest to NEW-POS that is in the same field as OLD-POS.
+A field is a region of text with the same `field' property.
+
+If NEW-POS is nil, then use the current point instead, and move point
+to the resulting constrained position, in addition to returning that
+position.]
+The function looks long at first sight and it is best to look at its skeleton first,
+and then its muscle. The way to see the skeleton is to look at the expressions that
+start in the left-most columns:
+
+*** forward-paragraph: a Goldmine of Functions
+
+The let* expression
+The forward motion while loop 
+*** Create Your Own ‘TAGS’ File
+Besides C-h f (describe-function), another way to see the source of a
+function is to type M-. (find-tag) and the name of the function when
+prompted for it.  The M-. (find-tag) command takes you directly to the
+source for a function, variable, or node.
+
+The etags program takes all the usual shell ‘wildcards’. For example,
+if you have two directories for which you want a single ‘TAGS’ file, type
+etags *.el ../elisp/*.el, where ‘../elisp/’ is the second directory:
+  M-x compile RET etags *.el ../elisp/*.el RET
+‘etags’ is very helpful when you are writing code yourself and want to refer
+back to functions you have already written. Just run etags again at intervals as
+you write new functions, so they become part of the ‘TAGS’ file.
+
+The GNU Emacs sources come with a ‘Makefile’ that contains a sophisticated
+etags command that creates, collects, and merges tags tables from all over the
+Emacs sources and puts the information into one ‘TAGS’ file in the ‘src/’ directory.
+(The ‘src/’ directory is below the top level of your Emacs directory.)
+To build this ‘TAGS’ file, go to the top level of your Emacs source directory and
+run the compile command make tags:
+M-x compile RET make tags RET
+(The make tags command works well with the GNU Emacs sources, as well as with
+some other source packages.)
+For more information, see section “Tag Tables” in The GNU Emacs Manual.
+
+*** Review
+**** while
+Repeatedly evaluate the body of the expression so long as the first
+element of the body tests true. Then return nil. (The expression is
+evaluated only for its side effects.)
+For example:
+(let ((foo 2))
+(while (> foo 0)
+(insert (format "foo is %d.\n" foo))
+(setq foo (1- foo))))
+⇒ foo is 2.
+foo is 1.
+nil
+(The insert function inserts its arguments at point; the format func-
+tion returns a string formatted from its arguments the way message
+formats its arguments; \n produces a new line.)
+**** re-search-forward
+Search for a pattern, and if the pattern is found, move point to rest
+just after it.
+Takes four arguments, like search-forward:
+1. A regular expression that specifies the pattern to search for. (Re-
+member to put quotation marks around this argument!)
+2. Optionally, the limit of the search.
+3. Optionally, what to do if the search fails, return nil or an error
+message.
+4. Optionally, how many times to repeat the search; if negative, the
+search goes backwards.
+**** let*
+Bind some variables locally to particular values, and then evaluate
+the remaining arguments, returning the value of the last one. While
+binding the local variables, use the local values of variables bound
+earlier, if any.
+For example:
+(let* ((foo 7)
+(bar (* 3 foo)))
+(message "‘bar’ is %d." bar))
+⇒ ‘bar’ is 21.
+**** match-beginning
+Return the position of the start of the text found by the last regular
+expression search.
+**** looking-at
+Return t for true if the text after point matches the argument, which
+should be a regular expression.
+**** eobp
+Return t for true if point is at the end of the accessible part of a
+buffer. The end of the accessible part is the end of the buffer if the
+buffer is not narrowed; it is the end of the narrowed part if the buffer
+is narrowed.
+
+*** Exercises with re-search-forward
+• Write a function to search for a regular expression that matches two or more
+blank lines in sequence.
+• Write a function to search for duplicated words, such as ‘the the’. See section
+“Syntax of Regular Expressions” in The GNU Emacs Manual, for information
+on how to write a regexp (a regular expression) to match a string that is
+composed of two identical halves. You can devise several regexps; some are
+better than others. The function I use is described in an appendix, along with
+several regexps. See Appendix A “the-the Duplicated Words Function”,
+page 209.
 
 ** Counting: Repetition and Regexps
-13.1 The count-words-region Function . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 145
-13.1.1 The Whitespace Bug in count-words-region .. . . . . . . . . . . . . . . .
- 148
-13.2 Count Words Recursively . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 150
-13.3 Exercise: Counting Punctuation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 155
+*** The count-words-region Function
+;;; First version; has bugs!
+(defun count-words-region (beginning end)
+  "Print number of words in the region.
+Words are defined as at least one word-constituent
+character followed by at least one character that
+is not a word-constituent. The buffer’s syntax
+table determines which characters these are."
+  (interactive "r")
+  (message "Counting words in region ... ")
+;;; 1. Set up appropriate conditions.
+  (save-excursion
+    (goto-char beginning)
+    (let ((count 0))
+;;; 2. Run the while loop.
+      (while (< (point) end)
+        (re-search-forward "\\w+\\W*")
+        (setq count (1+ count)))
+;;; 3. Send a message to the user.
+      (cond ((zerop count)
+            (message
+              "The region does NOT have any words."))
+            ((= 1 count)
+            (message
+              "The region has 1 word."))
+            (t
+            (message
+              "The region has %d words." count))))))
+
+**** The Whitespace Bug in count-words-region
+;;; Final version: while
+(defun count-words-region (beginning end)
+  "Print number of words in the region."
+  (interactive "r")
+  (message "Counting words in region ... ")
+;;; 1. Set up appropriate conditions.
+  (save-excursion
+    (let ((count 0))
+    (goto-char beginning)
+;;; 2. Run the while loop.
+  (while (and (< (point) end)
+         (re-search-forward "\\w+\\W*" end t))
+    (setq count (1+ count)))
+;;; 3. Send a message to the user.
+  (cond ((zerop count)
+        (message
+          "The region does NOT have any words."))
+        ((= 1 count)
+        (message
+          "The region has 1 word."))
+        (t
+        (message
+          "The region has %d words." count))))))
+
+(re-search-forward REGEXP &optional BOUND NOERROR COUNT)
+Optional third argument, if t, means if fail just return nil (no error).
+  If not nil and not t, move to limit of search and return nil.
+*** Count Words Recursively
+;;; Recursive version
+(defun count-words-region (beginning end)
+  "Print number of words in the region.
+Words are defined as at least one word-constituent
+character followed by at least one character that is
+not a word-constituent. The buffer’s syntax table
+determines which characters these are."
+  (interactive "r")
+  (message "Counting words in region ... ")
+  (save-excursion
+    (goto-char beginning)
+    (let ((count (recursive-count-words end)))
+    (cond ((zerop count)
+          (message
+            "The region does NOT have any words."))
+          ((= 1 count)
+          (message 
+            "The region has 1 word."))
+          (t
+          (message
+            "The region has %d words." count))))))
+
+(defun recursive-count-words (region-end)
+  "documentation ..."
+;;; 1. do-again-test
+  (if (and (< (point) region-end)
+    (re-search-forward "\\w+\\W*" region-end t))
+;;; 2. then-part: the recursive call
+  (1+ (recursive-count-words region-end))
+;;; 3. else-part
+  0))
+
+*** Exercise: Counting Punctuation
+Using a while loop, write a functiona region—period, comma, semicolon,Do the same using recursion.
+to count the number of punctuation marks in
+colon, exclamation mark, and question mark.
 
 ** Counting Words in a defun
-14.1 What to Count? . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 156
-14.2 What Constitutes a Word or Symbol?. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 157
-14.3 The count-words-in-defun Function . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 158
-14.4 Count Several defuns Within a File . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 161
-14.5 Find a File . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 161
-14.6 lengths-list-file in Detail . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 162
-14.7 Count Words in defuns in Different Files . . . . . . . . . . . . . . . . . . . . . . . . . .
- 164
-14.7.1 The append Function . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 165
-14.8 Recursively Count Words in Different Files . . . . . . . . . . . . . . . . . . . . . . . . .
- 166
-14.9 Prepare the Data for Display in a Graph . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 167
-14.9.1 Sorting Lists . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 167
-14.9.2 Making a List of Files . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 168
-14.9.3 Counting function definitions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 171
+• First, write a function to count the words in one definition. This includes the
+problem of handling symbols as well as words.
+• Second, write a function to list the numbers of words in each function in a file.
+This function can use the count-words-in-defun function.
+• Third, write a function to list the numbers of words in each function in each
+of several files. This entails automatically finding the various files, switching
+to them, and counting the words in the definitions within them.
+• Fourth, write a function to convert the list of numbers that we created in step
+three to a form that will be suitable for printing as a graph.
+• Fifth, write a function to print the results as a graph.
 
+*** What to Count?
+(defun count-words-in-defun ()
+  "Return the number of words and symbols in a defun."
+  (beginning-of-defun)
+  (let ((count 0)
+       (end (save-excursion (end-of-defun) (point))))
+    (while (and (< (point) end)
+           (re-search-forward
+             "\\(\\w\\|\\s_\\)+[^ \t\n]*[ \t\n]*"
+             end t))
+      (setq count (1+ count)))
+    count))
+
+;;; Interactive version.
+(defun count-words-defun ()
+  "Number of words and symbols in a function definition."
+  (interactive)
+  (message
+    "Counting words and symbols in function definition ... ")
+    (let ((count (count-words-in-defun)))
+    (cond
+      ((zerop count)
+      (message
+        "The definition does NOT have any words or symbols."))
+      ((= 1 count)
+      (message
+        "The definition has 1 word or symbol."))
+      (t
+      (message
+        "The definition has %d words or symbols." count)))))
+
+(global-set-key "\C-c=" 'count-words-defun)
+
+(defun)
+(defun multiply-by-seven (number)
+  "Multiply NUMBER by seven."
+  (* 7 number))
+(beginning-of-defun)
+(end-of-defun)
+
+很奇怪，(beginning-of-defun)，(end-of-defun)這兩個eval的結果到達org的標
+題處．
+Counting words and symbols in function definition ... 
+The definition has 112 words or symbols.
+
+*** What Constitutes a Word or Symbol?
+*** The count-words-in-defun Function
+*** Count Several defuns Within a File
+*** Find a File
+*** lengths-list-file in Detail
+*** Count Words in defuns in Different Files
+**** The append Function
+*** Recursively Count Words in Different Files
+*** Prepare the Data for Display in a Graph
+**** Sorting Lists
+**** Making a List of Files
+**** Counting function definitions
 ** Readying a Graph
-15.1
- The graph-body-print Function . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 180
-15.2
- The recursive-graph-body-print Function . . . . . . . . . . . . . . . . . . . . . .
- 182
-15.3
- Need for Printed Axes . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 183
-15.4
- Exercise . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 183
-
+*** The graph-body-print Function
+*** The recursive-graph-body-print Function
+*** Need for Printed Axes
+*** Exercise
 ** Your ‘.emacs’ File
-16.1
- Site-wide Initialization Files . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 184
-16.2
- Specifying Variables using defcustom . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 185
-16.3
- Beginning a ‘.emacs’ File . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 187
-16.4
- Text and Auto Fill Mode . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 188
-16.5
- Mail Aliases . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 189
-16.6
- Indent Tabs Mode . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 190
-16.7
- Some Keybindings . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 190
-16.8
- Keymaps . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 191
-16.9
- Loading Files . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 192
-16.10
- Autoloading . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 193
-16.11
- A Simple Extension: line-to-top-of-window .. . . . . . . . . . . . . . . . . . .
- 194
-16.12
- X11 Colors . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 195
-16.13
- Miscellaneous Settings for a ‘.emacs’ File . . . . . . . . . . . . . . . . . . . . . . . . .
- 196
-16.14
- A Modified Mode Line . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 198
-
+*** Site-wide Initialization Files
+*** Specifying Variables using defcustom
+*** Beginning a ‘.emacs’ File
+*** Text and Auto Fill Mode
+*** Mail Aliases
+*** Indent Tabs Mode
+*** Some Keybindings
+*** Keymaps
+*** Loading Files
+*** Autoloading
+*** A Simple Extension: line-to-top-of-window
+*** X11 Colors
+*** Miscellaneous Settings for a ‘.emacs’ File
+*** A Modified Mode Line
 ** Debugging
-17.1
- debug . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 201
-17.2
- debug-on-entry. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 202
-17.3
- debug-on-quit and (debug) . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 203
-17.4
- The edebug Source Level Debugger . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 204
-17.5
- Debugging Exercises . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 205
+*** debug
+(defun triangle-bugged (number)
+  "Return sum of numbers 1 through NUMBER inclusive."
+  (let ((total 0))
+  (while (> number 0)
+    (setq total (+ total number))
+    (setq number (1= number)))  ; Error here.
+  total))
+(triangle-bugged 5)
+*** debug-on-entry
+M-x debug-on-entry RET triangle-bugged RET
+
+In the ‘*Backtrace*’ buffer, type d. Emacs will evaluate the first expression in
+triangle-bugged; the buffer will look like this:
+
+You can quit a ‘*Backtrace*’ buffer by typing q in it; this quits the trace, but
+does not cancel debug-on-entry.
+
+To cancel the effect of debug-on-entry, call cancel-debug-on-entry and the
+name of the function, like this:
+M-x cancel-debug-on-entry RET triangle-bugged RET
+
+*** debug-on-quit and (debug)
+(defun triangle-bugged (number)
+  "Return sum of numbers 1 through NUMBER inclusive."
+  (let ((total 0))
+  (while (> number 0)
+    (setq total (+ total number))
+    (debug)
+    (setq number (1= number)))  ; Error here.
+  total))
+(triangle-bugged 5)
+
+*** The edebug Source Level Debugger
+*** Debugging Exercises
+•Install the count-words-region function and then cause it to enter the built-
+in debugger when you call it. Run the command on a region containing two
+words. You will need to press d a remarkable number of times. On your system,
+is a ‘hook’ called after the command finishes? (For information on hooks,
+see section “Command Loop Overview” in The GNU Emacs Lisp Reference
+Manual.)
+•Copy count-words-region into the ‘*scratch*’ buffer, instrument the func-
+tion for Edebug, and walk through its execution. The function does not need
+to have a bug, although you can introduce one if you wish. If the function
+lacks a bug, the walk-through completes without problems.
+• While running Edebug, type ? to see a list of all the Edebug commands. (The
+global-edebug-prefix is usually C-x X, i.e. CTRL-x followed by an upper case
+X; use this prefix for commands made outside of the Edebug debugging buffer.)
+• In the Edebug debugging buffer, use the p (edebug-bounce-point) command
+to see where in the region the count-words-region is working.
+• Move point to some spot further down the function and then type the h
+(edebug-goto-here) command to jump to that location.
+• Use the t (edebug-trace-mode) command to cause Edebug to walk through
+the function on its own; use an upper case T for edebug-Trace-fast-mode.
+• Set a breakpoint, then run Edebug in Trace mode until it reaches the stopping
+point.
 
 ** Conclusion
-
 ** A The the-the Function
+Sometimes when you you write text, you duplicate words—as with “you you” near
+the beginning of this sentence. I find that most frequently, I duplicate “the”; hence,
+I call the function for detecting duplicated words, the-the.
+
 ** B Handling the Kill Ring
 B.1
  The current-kill Function. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -1628,37 +2040,126 @@ B.4
  217
 
 ** C A Graph with Labelled Axes
-C.1 The print-graph Varlist . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 219
-C.2 The print-Y-axis Function . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 219
-C.2.1 Side Trip: Compute a Remainder . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 220
-C.2.2 Construct a Y Axis Element . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 222
-C.2.3 Create a Y Axis Column . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 223
-C.2.4 The Not Quite Final Version of print-Y-axis . . . . . . . . . . . . . . . . .
- 224
-C.3 The print-X-axis Function . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 225
-C.3.1 X Axis Tic Marks . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 226
-C.4 Printing the Whole Graph . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 229
-C.4.1 Testing print-graph . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 231
-C.4.2 Graphing Numbers of Words and Symbols . . . . . . . . . . . . . . . . . . . . .
- 232
-C.4.3 A lambda Expression: Useful Anonymity . . . . . . . . . . . . . . . . . . . . . .
- 233
-C.4.4 The mapcar Function . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 234
-C.4.5 Another Bug . . . Most Insidious . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 235
-C.4.6 The Printed Graph. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
- 237
+*** The print-graph Varlist
+*** The print-Y-axis Function
+C.2.1 Side Trip: Compute a Remainder . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 220
+C.2.2 Construct a Y Axis Element . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 222
+C.2.3 Create a Y Axis Column . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 223
+C.2.4 The Not Quite Final Version of print-Y-axis . . . . . . . . . . . . . . . . . 224
+*** The print-X-axis Function
+C.3.1 X Axis Tic Marks . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 226
+*** Printing the Whole Graph
+C.4.1 Testing print-graph . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 231
+C.4.2 Graphing Numbers of Words and Symbols . . . . . . . . . . . . . . . . . . . . . 232
+C.4.3 A lambda Expression: Useful Anonymity . . . . . . . . . . . . . . . . . . . . . . 233
+C.4.4 The mapcar Function . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 234
+C.4.5 Another Bug . . . Most Insidious . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 235
+C.4.6 The Printed Graph. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 237
 
 ** D Free Software and Free Manuals
 ** E GNU Free Documentation License 
 ** Index
+* 讀書筆記
+　 這本書，是入門級別的，introductive名副其實．如果真的要寫一些東西的，
+接下來，也不用看這本書，直接看manual最好．想學的就是怎麼查，怎麼生成
+TAG，這個我會在下面的鏈接總結裏面具體記錄從源碼編譯到生成TAG.
+   還有這本書有個很重要的特點的是，每個special form他都會給出一個template/prototype
+一樣的東西，然後就是每條語句都解釋一邊非常清晰．這個聽起來是不是有點像函數聲明，然後函數定義．
+就是差不多，但是他更加推廣了，比如後面講到while,recursion的一些範式的時候，也用這種方法．就是
+他的高明之處了．我還是舉recursion的例子吧．
+(defun name-of-recursive-function (argument-list )
+  "documentation ..."
+  (if do-again-test
+    body ...
+    (name-of-recursive-function
+      next-step-expression )))
+先是定義出recursion的範式，接着解釋每條僞代碼的含義．就是分小結討論（對
+常用的list，counter，cond等）. 接着是對模式再進行分類（果然，廣義上說，
+學習就是分類），every，accumulate，keep等．
+　　延續我虎頭蛇尾的一貫風格．以下幾章和附錄沒仔細看（ Counting:
+Repetition and Regexps，Counting Words in a defun， Readying a　Graph），
+其他都認真做了筆記和聯繫，也找了[[https://github.com/sancao2/emacs-lisp-intro-solutions][github上別人做的練習]] ，沒有抄都是自己做
+的．做不出來有些也沒有做了．
+** build emacs
+   git clone git://git.savannah.gnu.org/emacs.git
+   ./autogen.sh
+   ./configure
+   make
+*** 我的機器配置
+    ➜  emacs git:(master) ✗ uname -a
+Linux linux-896c.site 3.11.10-21-desktop #1 SMP PREEMPT Mon Jul 21 15:28:46 UTC 2014 (9a9565d) i686 i686 i386 GNU/Linux
+*** configure error: makeinfo
+configure: error: You do not seem to have makeinfo >= 4.7, and your
+source tree does not seem to have pre-built manuals in the `info' directory.
+Either install a suitable version of makeinfo, or re-run configure
+with the `--without-makeinfo' option to build without the manuals.
+   [[http://stackoverflow.com/questions/338317/what-is-makeinfo-and-how-do-i-get-it][What is makeinfo, and how do I get it?]] 
+   sudo zypper install texinfo
+*** configure error
+configure: error: The following required libraries were not found:
+     libgif/libungif
+Maybe some development libraries/packages are missing?
+If you don't want to link with them give
+     --with-gif=no
+as options to configure
+
+   sudo zypper install giflib-devel
+  
+*** generate TAGS
+**** etags ./admin/*.c ... ./oldXMenu/*.c
+-*- mode: compilation; default-directory: "~/Develop/emacs/" -*-
+Compilation started at Sat Sep  6 12:24:55
+
+etags ./admin/*.c ./admin/*.el ./src/*.c ./lib/*.c ./lib-src/*.c ./lisp/*.el ./lwlib/*.c ./oldXMenu/*.c
+
+Compilation finished at Sat Sep  6 12:24:55
+**** make tags
+-*- mode: compilation; default-directory: "~/Develop/emacs/" -*-
+Compilation started at Sat Sep  6 15:03:28
+
+make tags
+[ -r "src/config.in" ] || ( cd . && /bin/sh /home/k/Develop/emacs/build-aux/missing autoheader )
+make -C lib all
+make[1]: Entering directory `/home/k/Develop/emacs/lib'
+make  all-am
+make[2]: Entering directory `/home/k/Develop/emacs/lib'
+make[2]: Nothing to be done for `all-am'.
+make[2]: Leaving directory `/home/k/Develop/emacs/lib'
+make[1]: Leaving directory `/home/k/Develop/emacs/lib'
+make -C lib-src all
+make[1]: Entering directory `/home/k/Develop/emacs/lib-src'
+make[1]: Nothing to be done for `all'.
+make[1]: Leaving directory `/home/k/Develop/emacs/lib-src'
+dirstate='.bzr/checkout/dirstate';				\
+vcswitness='$(srcdir)/../'$dirstate;				\
+[ -r "./$dirstate" ] || vcswitness='';			\
+make -C src all VCSWITNESS="$vcswitness"
+make[1]: Entering directory `/home/k/Develop/emacs/src'
+make -C ../lwlib liblw.a
+make[2]: Entering directory `/home/k/Develop/emacs/lwlib'
+make[2]: `liblw.a' is up to date.
+make[2]: Leaving directory `/home/k/Develop/emacs/lwlib'
+make -C ../admin/unidata all EMACS="../../src/bootstrap-emacs"
+make[2]: Entering directory `/home/k/Develop/emacs/admin/unidata'
+make[2]: Nothing to be done for `all'.
+make[2]: Leaving directory `/home/k/Develop/emacs/admin/unidata'
+make -C ../leim leim-list.el EMACS="../src/bootstrap-emacs"
+make[2]: Entering directory `/home/k/Develop/emacs/leim'
+make[2]: Nothing to be done for `leim-list.el'.
+make[2]: Leaving directory `/home/k/Develop/emacs/leim'
+make[1]: Leaving directory `/home/k/Develop/emacs/src'
+make -C src tags
+make[1]: Entering directory `/home/k/Develop/emacs/src'
+make -C ../lwlib liblw.a
+make[2]: Entering directory `/home/k/Develop/emacs/lwlib'
+make[2]: `liblw.a' is up to date.
+make[2]: Leaving directory `/home/k/Develop/emacs/lwlib'
+make -C ../admin/unidata all EMACS="../../src/bootstrap-emacs"
+make[2]: Entering directory `/home/k/Develop/emacs/admin/unidata'
+make[2]: Nothing to be done for `all'.
+make[2]: Leaving directory `/home/k/Develop/emacs/admin/unidata'
+make[1]: Leaving directory `/home/k/Develop/emacs/src'
+
+Compilation finished at Sat Sep  6 15:03:29
+
+
