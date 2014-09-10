@@ -1,0 +1,137 @@
+* Part I. Fundamentals of Compilation
+* Preface
+* Introduction
+** Modules and interfaces
+** Tools and software
+** Data structures for tree languages
+* Lexical Analysis
+To translate a program from one language into another, a compiler must
+firstpull it apart and understand its structure and meaning, then put
+it together in adifferent way. The front end of the compiler performs
+analysis; the back end does synthesis.
+The analysis is usually broken up into
+Lexical analysis: breaking the input into individual words or "tokens";
+Syntax analysis: parsing the phrase structure of the program; and
+Semantic analysis: calculating the program's meaning.
+** Lexical tokens
+** Regular expressions
+These are six separate automata; how can they be combined into a
+singlemachine that can serve as a lexical analyzer?
+** Finite automata
+** Nondeterministic Finite Automata
+** Lex:a lexical analyzer generators
+Along with the tiger. lex file you should turn in documentation for
+thefollowing points:
+•how you handle comments;
+•how you handle strings;
+•error handling;
+•end-of-file handling;
+•other interesting features of your lexer.
+* Parsing
+** Context-free grammars
+** Predictive Parsing
+** LR Parsing
+** Using parser generators
+** error recovery
+* Abstract Syntax
+** Semantic actions
+** Abstract parse trees
+* Type Checking
+** Symbol tables
+** Bindings for the Tiger compiler
+** Type-checking expressions
+** Type-checking declarations
+* Activation Records
+** Stack frames
+** Frames in the Tiger compiler
+* Translation to Intermediate Code
+** Intermediate representation trees
+** Translation into trees
+** Declarations
+* Basic Blocks and Traces
+** Canonical trees
+** Taming conditional branches
+* Instruction Selection
+** Algorithms for instruction selection
+** CISC machines
+** Instruction selection for the Tiger compiler
+* Liveness analysis
+** Solution of dataflow equations
+** Liveness in the Tiger compiler
+** Interference graph construction
+* Register allocation
+** Coloring by simplification
+** Coalescing
+** Precolored nodes
+** Graph coloring implementation
+** Register allocation for trees
+* Putting it all together
+* Part II. Advanced Topics 
+* Garbage collection
+** Mark-and-sweep collection
+** Reference counts
+** Copying collection
+** Generational collection
+** Incremental collection
+** Baker's algorithm
+** Interface to the compiler
+* Object-oriented languages
+** Classes
+** Single inheritance of data fields
+** Multiple inheritance
+** Testing class membership
+** Private fields and methods
+** Classless languages
+** Optimizing object-oriented programs
+* Functional Programming Languages
+** A simple functional language
+** Closures
+** Immutable variables
+** Inline expansion
+** Closure conversion
+** Efficient tail recursion
+** Lazy evaluation
+* Polymorphic Types
+** Parametric polymorphism
+** Type inference
+** Translation to intermediate code
+** Resolution of static overloading
+* Dataflow Analysis
+** Intermediate representation for flow analysis
+** Various dataflow analyses
+** Transformations using dataflow analysis
+** Speeding up dataflow analysis
+** Alias analysis
+* Loop Optimizations
+** Dominators
+** Loop-invariant computations
+** Induction variables
+** Array bounds checks
+** Loop unrolling
+* Static Single-Assignment Form
+** Converting to SSA form
+** Efficient computation of the dominator tree
+** Optimization algorithms using SSA
+** Arrays, pointers, and memory
+** The control-dependence graph
+** Converting back from SSA form
+** A functional intermediate form
+* Scheduling and Pipelining
+** Loop scheduling without resource bounds
+** Resource-bounded loop pipelining
+** Branch prediction
+* Memory Hierarchies
+** Cache organization
+** Cache-block alignment
+** Prefetching
+** Loop interchange
+** Blocking
+** Garbage collection and the memory hierarchy
+* Appendix: Tiger Language Reference Manual
+** Lexical issues
+** Declarations
+** Variables and expressions
+** Standard library
+** Sample Tiger programs
+* Bibliography
+* Index

@@ -427,3 +427,78 @@ You can assign an instance of IEnumerable<Base> (IEnumerable(Of Base) in Visual 
     C++告诉我们，你们自己来决定每一个符号的规则。
 *** 閉包
     闭包其实就是那个被lambda表达式抓下来的“上下文”加上函数本身了。
+所以，interface其实跟lambda表达是一样，也可以看成是一个闭包。只是
+interface的入口比较多，lambda表达式的入口只有一个（类似于C++的
+operator()）。大家可能会问，class是什么呢？class当然是interface内部不可
+告人的实现细节的。我们知道，依赖实现细节来编程是不对的，所以我们要依赖
+接口编程。
+*** go的大括號
+    大括号不能换行的代码真他妈的难读啊，远远望去就像一坨屎！go语言还把
+javascript自动补全分号的算法给抄去了，真是没品位。
+*** summary
+阅读C语言的复杂的声明语法
+什么是语法噪音
+什么是语法的一致性
+C++的const的意思
+C#的struct和property的问题
+C++的多重继承
+封装到底意味着什么
+为什么exception要比error code写起来干净、容易维护而且不需要太多的沟通
+为什么C#的有些interface应该表达为concept
+模板和模板元编程
+协变和逆变
+type rich programming
+OO的消息发送的含义
+虚函数表是如何实现的
+什么是OO里面的类型扩展开放/封闭与逻辑扩展开放/封闭
+visitor模式如何逆转类型和逻辑的扩展和封闭
+CPS（continuation passing style）变换与异步调用的异常处理的关系
+CPS如何让exception变成error code
+argument passing和symbol resolving
+如何用lambda实现mutable struct和immutable struct
+如何用lambda实现interface
+** [[http://www.cnblogs.com/geniusvczh/p/3219204.html][如何设计一门语言（八）——异步编程和CPS变换]]
+   CPS完全看不懂，Haskell,C#,F#
+** [[http://www.cnblogs.com/geniusvczh/p/3264768.html][如何设计一门语言（九）——类型]]
+   依然沒看懂类型推导，類型檢查其實也不太清楚．
+** [[http://www.cnblogs.com/geniusvczh/p/3323637.html][如何设计一门语言（十）——正则表达式与领域特定语言（DSL)]]
+   首先确定语言的结构，翻译成语法树，再翻译成不带“fuck”的“骨架EBNF”，再
+设计具体的细节写成完整的EBNF。要先从结构入手然后才设计语法，并且要把最
+短的语法分配给最常用的功能。
+   C++的宏是从外向内展开的，这意味着dynamic scoping和call by name。
+Fpmacro是从内向外展开的，这意味着lexical scoping和call by value。
+   其实设计一个DSL首先要求你对领域本身有着足够的理解，在长期的开发中已
+经在这个领域里面感受到了极大的痛苦，这样你才能真的设计出一个专门根除痛
+点的DSL来。
+** [[http://www.cnblogs.com/geniusvczh/p/3378411.html][如何设计一门语言（十一）——删减语言的功能]]
+　  功能少的语言如果还适用范围广，那所有的概念必定是正交的，最后就会变得跟
+数学一样。数学的概念很正交吧，正交的东西都特别抽象，一点都不直观的。
+  　只有冗余的东西在他带来危害的时候，我们应该果断删除它（譬如在有
+interface前提下的class）。
+** [[http://www.cnblogs.com/geniusvczh/p/3416833.html][如何设计一门语言（十二）——设计可扩展的类型]]
+那么什么是扩展呢？简单的来讲，扩展就是在不修改原有代码的情况下，仅仅通
+过添加新的代码，就可以让原有的功能适应更多的情况。
+虚函数的好处是你可以在不修改原有代码的前提下添加新的Dom类型，但是所有针
+对Dom Tree的操作紧密的耦合在了一起，并且逻辑还分散在了每一个具体的Dom类
+型里面。你添加一个新功能就要修改所有的DomBase的子类，因为你要给他们都添
+加你需要的虚函数。
+ 
+Visitor的好处是你可以在不修改原有代码的前提下添加新的Dom操作，但是所有
+的Dom类型却紧密的耦合在了一起，因为IVisitor类型要包含所有DomBase的子类。
+你每天加一个新的Dom类型就得修改所有的操作——即IVisitor的接口和所有的具体
+的Visitor。而且还有另一个问题，就是虚函数的默认实现写起来比较鸟了。
+
+Dynamic dispatch和解耦这从一开始以来就是一对矛盾，要彻底解决他们其实是
+很难的。虽然上面的作法看起来类型和操作都解耦了，可实际上这就让我们失去
+了本地代码的dll的功能了。因为编译器不可能收集到以后才动态链接进来的dll
+代码里面的"动态偏特化"的代码对吧。不过这个问题对于像CLR一样基于一个VM一
+样的支持JIT的runtime来讲，这其实并不是个大问题。而且Java的J2EE也好，
+Microsoft的Enterprise Library也好，他们的IoC（Inverse of Control）其实
+也是在模拟这个写法。我认为以后静态类型语言的方向，肯定是朝着这个路线走
+的。尽管这些概念再也不能被直接map到本地代码了，但是这让我们从语义上的耦
+合中解放了出来，对于写需要稳定执行的大型程序来说，有着莫大的助。
+** [[http://www.cnblogs.com/geniusvczh/p/3525686.html][跟vczh看实例学编译原理——零：序言]]
+   四個例子，沒細看，想先過一邊
+** [[http://www.cnblogs.com/geniusvczh/p/3544184.html][跟vczh看实例学编译原理——一：Tinymoe的设计哲学]]
+** [[http://www.cnblogs.com/geniusvczh/p/3577561.html][跟vczh看实例学编译原理——二：实现Tinymoe的词法分析]]
+** [[http://www.cnblogs.com/geniusvczh/p/3619235.html][跟vczh看实例学编译原理——三：Tinymoe与无歧义语法分析]]
