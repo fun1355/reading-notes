@@ -1,0 +1,213 @@
+An Introduction to GCC
+* Introduction
+** A brief history of GCC
+** Major features of GCC
+** Programming in C and C++
+** Conventions used in this manual 
+* Compiling a C program
+** Compiling a simple C program
+The option ‘-Wall’ turns on all the most commonly-used compiler
+warnings—it is recommended that you always use this option! 
+** Finding errors in a simple program
+** Compiling multiple source files
+** Compiling files independently
+*** Creating object files from source files
+*** Creating executables from object files 
+** Recompiling and relinking
+** A simple makefile
+** Linking with external libraries
+   $ gcc -Wall calc.c /usr/lib/libm.a -o calc
+   $ gcc -Wall calc.c -lm -o calc
+is equivalent to the original command above using the full library name
+‘/usr/lib/libm.a’.
+   In general, the compiler option ‘-lNAME ’ will attempt to link object
+files with a library file ‘libNAME.a’ in the standard library directories.
+   A library which calls an external function defined in another
+library should appear before the library containing the function.
+As for object files, most current compilers will search all libraries,
+regardless of order. However, since not all compilers do this it is best to
+follow the convention of ordering libraries from left to right.
+*** Link order of libraries 
+** Using library header files 
+* Compilation options
+** Setting search paths
+By default, gcc searches the following directories for header files:
+/usr/local/include/
+/usr/include/
+and the following directories for libraries:
+/usr/local/lib/
+/usr/lib/
+The compiler options ‘-I’(INCLUDE_PATH) and ‘-L’ add new directories to the beginning
+of the include path and library search path respectively.
+*** -Idir
+Add the directory dir to the head of the list of directories to be searched for
+header files. This can be used to override a system header file, substituting
+your own version, since these directories are searched before the system header
+file directories. However, you should not use this option to add directories that
+contain vendor-supplied system header files (use ‘-isystem’ for that). If you
+use more than one ‘-I’ option, the directories are scanned in left-to-right order;
+the standard system directories come after.
+If a standard system include directory, or a directory specified with ‘-isystem’,
+is also specified with ‘-I’, the ‘-I’ option is ignored. The directory is still
+searched but as a system directory at its normal position in the system include
+chain. This is to ensure that GCC’s procedure to fix buggy system headers and
+the ordering for the include_next directive are not inadvertently changed.
+If you really need to change the search order for system directories, use the
+‘-nostdinc’ and/or ‘-isystem’ options.
+
+*** -Ldir
+Add directory dir to the list of directories to be searched for ‘-l’.
+
+*** Search path example
+ gcc -Wall -I/opt/gdbm-1.8.3/include
+-L/opt/gdbm-1.8.3/lib dbmain.c -lgdbm
+*** Environment variables
+C_INCLUDE_PATH=/opt/gdbm-1.8.3/include
+export C_INCLUDE_PATH
+
+LIBRARY_PATH=/opt/gdbm-1.8.3/lib
+export LIBRARY_PATH
+
+*** Extended search paths 
+C_INCLUDE_PATH=.:/opt/gdbm-1.8.3/include:/net/include
+LIBRARY_PATH=.:/opt/gdbm-1.8.3/lib:/net/lib
+
+gcc -I. -I/opt/gdbm-1.8.3/include -I/net/include
+-L. -L/opt/gdbm-1.8.3/lib -L/net/lib
+** Shared libraries and static libraries
+Static libraries are the ‘.a’ files seen earlier. When a program is
+linked against a static library, the machine code from the object
+files for any external functions used by the program is copied from
+the library into the final executable.
+
+Shared libraries are handled with a more advanced form of linking,
+which makes the executable file smaller. They use the extension ‘.so’,
+which stands for shared object.
+
+An executable file linked against a shared library contains only a small
+table of the functions it requires, instead of the complete machine code
+from the object files for the external functions. Before the executable file
+starts running, the machine code for the external functions is copied into
+memory from the shared library file on disk by the operating system—a
+process referred to as dynamic linking.
+
+Whenever a static library ‘libNAME.a’ would be used for linking with
+the option ‘-lNAME ’ the compiler first checks for an alternative
+shared library with the same name and a ‘.so’ extension.
+
+Consequently, the ‘libgdbm.so’ shared object file is used in preference to
+the ‘libgdbm.a’ static library.
+
+The simplest way to set the load path is through the environment
+variable LD_LIBRARY_PATH. For example, the following commands set the
+load path to ‘/opt/gdbm-1.8.3/lib’ so that ‘libgdbm.so’ can be found:
+
+As noted earlier, it is also possible to link directly with individual library
+files by specifying the full path to the library on the command line. For
+example, the following command will link directly with the static library
+‘libgdbm.a’,
+$ gcc -Wall -I/opt/gdbm-1.8.3/include
+dbmain.c /opt/gdbm-1.8.3/lib/libgdbm.a
+
+and the command below will link with the shared library file ‘libgdbm.so’:
+$ gcc -Wall -I/opt/gdbm-1.8.3/include
+dbmain.c /opt/gdbm-1.8.3/lib/libgdbm.so
+
+In the latter case it is still necessary to set the library load path when
+running the executable.
+
+** C language standards
+*** ANSI/ISO
+For reference, the non-standard keywords and macros defined by the GNU
+C extensions are asm, inline, typeof, unix and vax. More details can
+be found in the GCC Reference Manual “Using GCC” (see [Further
+reading], page 91).
+The GNU C Library provides a number of these macros (referred to as
+feature test macros) which allow control over the support for POSIX ex-
+tensions (_POSIX_C_SOURCE), BSD extensions (_BSD_SOURCE), SVID ex-
+tensions (_SVID_SOURCE), XOPEN extensions (_XOPEN_SOURCE) and GNU
+extensions (_GNU_SOURCE).
+The _GNU_SOURCE macro enables all the extensions together, with the
+POSIX extensions taking precedence over the others in cases where they
+conflict. Further information about feature test macros can be found in
+the GNU C Library Reference Manual, see [Further reading], page 91.
+
+*** Strict ANSI/ISO
+*** Selecting specific standards 
+** Warning options in -Wall
+** Additional warning options
+** Recommended warning options 
+* Using the preprocessor
+** Defining macros
+** Macros with values
+** Preprocessing source files 
+* Compiling for debugging
+** Examining core files
+** Displaying a backtrace
+** Setting a breakpoint
+** Stepping through the program
+** Modifying variables
+** Continuing execution
+** More information 
+* Compiling with optimization
+** Source-level optimization
+*** Common subexpression elimination
+*** Function inlining 
+** Speed-space tradeoffs
+*** Loop unrolling 
+** Scheduling
+** Optimization levels
+** Examples
+** Optimization and debugging
+** Optimization and compiler warnings 
+* Compiling a C++ program
+** Compiling a simple C++ program
+** C++ compilation options
+** Using the C++ standard library
+** Templates
+*** Using C++ standard library templates
+*** Providing your own templates
+*** Explicit template instantiation
+*** The export keyword 
+* Platform-specific options
+** Intel and AMD x86 options
+*** x86 extensions
+*** x86 64-bit processors 
+** DEC Alpha options
+** SPARC options
+** POWER/PowerPC options
+** Multi-architecture support
+** Floating-point issues
+** Portability of signed and unsigned types 
+* Troubleshooting
+** Help for command-line options
+** Version numbers
+** Verbose compilation
+** Stopping a program in an infinite loop
+** Preventing excessive memory usage 
+* Compiler-related tools
+** Creating a library with the GNU archiver
+** Using the profiler gprof
+** Coverage testing with gcov 
+* How the compiler works
+** An overview of the compilation process
+** The preprocessor
+** The compiler
+** The assembler
+** The linker 
+* Examining compiled files
+** Identifying files
+** Examining the symbol table
+** Finding dynamically linked libraries 
+* Common error messages
+** Preprocessor error messages
+** Compiler error messages
+** Linker error messages
+** Runtime error messages n
+* Getting help
+* Further reading
+* Acknowledgements
+* Free software organizations
+* GNU Free Documentation License
+** ADDENDUM: How to use this License for your documents 
+

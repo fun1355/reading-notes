@@ -27,6 +27,7 @@ thefollowing points:
 •error handling;
 •end-of-file handling;
 •other interesting features of your lexer.
+
 * Parsing
 ** Context-free grammars
 ** Predictive Parsing

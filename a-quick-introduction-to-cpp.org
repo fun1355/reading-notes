@@ -1,0 +1,120 @@
+* a-quick-introduction-to-cpp
+** inheritance
+   So the question to ask yourself before using inheritance is: what's your goal? Is it to
+write your programs with the fewest number of characters possible? If so, inheritance is
+really useful, but so is changing all of your function and variable names to be one letter long
+{ "a", "b", "c" { and once you run out of lower case ones, start using upper case, then two
+character variable names: "XX XY XZ Ya ..." (I'm joking here.) Needless to say, it is really
+easy to write unreadable code using inheritance.
+   So when is it a good idea to use inheritance and when should it be avoided? My rule
+of thumb is to only use it for representing shared behavior between objects, and to never
+use it for representing shared implementation. With C++, you can use inheritance for both
+concepts, but only the rst will lead to truly simpler implementations.
+   To illustrate the di erence between shared behavior and shared implementation, suppose
+you had a whole bunch of di erent kinds of objects that you needed to put on lists. For
+example, almost everything in an operating system goes on a list of some sort: bu ers,
+threads, users, terminals, etc.
+   A very common approach to this problem (particularly among people new to object-
+oriented programming) is to make every object inherit from a single base class Object, which
+contains the forward and backward pointers for the list. But what if some object needs
+to go on multiple lists? The whole scheme breaks down, and it's because we tried to use
+inheritance to share implementation (the code for the forward and backward pointers) instead
+of to share behavior. A much cleaner (although slightly slower) approach would be to de ne
+a list implementation that allocated forward/backward pointers for each object that gets put
+on a list.
+   In sum, if two classes share at least some of the same member function signatures { that
+is, the same behavior, and if there's code that only relies on the shared behavior, then there
+may be a bene t to using inheritance. In Nachos, locks don't inherit from semaphores, even
+though locks are implemented using semaphores. The operations on semaphores and locks
+are di erent. Instead, inheritance is only used for various kinds of lists (sorted, keyed, etc.),
+and for di erent implementations of the physical disk abstraction, to re ect whether the disk
+has a track bu er, etc. A disk is used the same way whether or not it has a track bu er; the
+only di erence is in its performance characteristics.
+
+** templates
+   So what's wrong with templates? You've all been taught to make your code modular so
+that it can be re-usable, so everything should be a template, right? Wrong.
+   The principal problem with templates is that they can be very di cult to debug { tem-
+plates are easy to use if they work, but nding a bug in them can be di cult. In part this
+is because current generation C++ debuggers don't really understand templates very well.
+Nevertheless, it is easier to debug a template than two nearly identical implementations that
+di er only in their types.
+   So the best advice is { don't make a class into a template unless there really is a near
+term use for the template. And if you do need to implement a template, implement and
+debug a non-template version rst. Once that is working, it won't be hard to convert it to
+a template. Then all you have to worry about code explosion { e.g., your program's object
+code is now megabytes because of the 15 copies of the hash table/list/... routines, one for
+each kind of thing you want to put in a hash table/list/... (Remember, you have an unhelpful
+compiler!)
+** Features To Avoid Like the Plague
+Multiple inheritance. 
+References. 
+Operator overloading. 
+Function overloading.
+Standard template library.
+Exceptions.
+** a number of features of C that to avoid
+Pointer arithmetic.
+Casts from integers to pointers and back.
+Using bit shift in place of a multiply or divide.
+Assignment inside conditional.
+Using #define when you could use enum. 
+** Epilogue
+I've argued in this note that you should avoid using certain C++ and C features. But you're
+probably thinking I must be leaving something out { if someone put the feature in the
+language, there must be a good reason, right? I believe that every programmer should strive
+to write code whose behavior would be immediately obvious to a reader; if you nd yourself
+writing code that would require someone reading the code to thumb through a manual in
+order to understand it, you are almost certainly being way too subtle. There's probably a
+much simpler and more obvious way to accomplish the same end. Maybe the code will be a
+little longer that way, but in the real world, it's whether the code works and how simple it
+is for someone else to modify, that matters a whole lot more than how many characters you
+had to type.
+A nal thought to remember:
+   \There are two ways of constructing a software design: one way is to make it so
+simple that there are obviously no de ciencies and the other way is to make it so
+complicated that there are no obvious de ciencies."
+C. A. R. Hoare, \The Emperor's Old Clothes", CACM Feb. 1981
+** Further Reading
+   James Coplien, \Advanced C++", Addison-Wesley. This book is only for experts, but
+it has some good ideas in it, so keep it in mind once you've been programming in C++
+for a few years.
+   James Gosling. \The Java Language." Online at \http://java.sun.com/" Java is a safe
+subset of C++. It's main application is the safe extension of Web browsers by allowing
+you to download Java code as part of clicking on a link to interpret and display the
+document. Safety is key here, since after all, you don't want to click on a Web link and
+have it download code that will crash your browser. Java was de ned independently
+of this document, but interestingly, it enforces a very similar style (for example, no
+multiple inheritance and no operator overloading).
+   C.A.R. Hoare, \The Emperor's Old Clothes." Communications of the ACM, Vol. 24,
+No. 2, February 1981, pp. 75-83. Tony Hoare's Turing Award lecture. How do you
+build software that really works? Attitude is everything { you need a healthy respect
+for how hard it is to build working software. It might seem that addding this whiz-bang
+feature is only \a small matter of code", but that's the path to late, buggy products
+that don't work.
+   Brian Kernighan and Dennis Ritchie, \The C Programming Language", Prentice-Hall.
+The original C book { a very easy read. But the language has evolved since it was rst
+designed, and this book doesn't describe all of C's newest features. But still the best
+place for a beginner to start, even when learning C++.
+   Steve Maguire, \Writing Solid Code", Microsoft Press. How to write bug-free software;
+I think this should be required reading for all software engineers. This really will change
+your life -- if you don't follow the recommendations in this book, you'll probably never
+write code that completely works, and you'll spend your entire life struggling with hard
+to nd bugs. There is a better way! Contrary to the programming language types,
+this doesn't involve proving the correctness of your programs, whatever that means.
+Instead, Maguire has a set of practical engineering solutions to writing solid code.
+   Steve Maguire, \Debugging the Development Process", Microsoft Press. Maguire's
+follow up book on how to lead an e ective team, and by the way, how to be an e ective
+engineer. Maguire's background is that he is a turnaround artist for Microsoft -- he
+gets assigned to oundering teams, and gures out how to make them e ective. After
+you've pulled a few all-nighters to get that last bug out of your course project, you're
+probably wondering why in heck you're studying computer science anyway. This book
+will explain how to write programs that work, and still have a life!
+   Scott Meyers, \Effective C++". This book describes how 50 easy ways to make mis-
+takes C++; if you avoid these, you will be a lot more likely to write C++ code that
+works.
+   Bjarne Stroustrup, \The C++ Programming Language", Addison-Wesley. This should
+be the de nite reference manual, but it isn't. You probably thought I was joking when
+I said the C++ language was continually evolving. I bought the second edition of this
+book three years ago, and it is already out of date. Fortunately, it's still OK for the
+subset of C++ that I us
