@@ -710,6 +710,8 @@ The C++ Standard (Published by Wiley, ISBN 0-470-84674-7)
 -Idir:載入dir作爲頭文件加載目錄．
 -Ldir:載入dir作爲庫加載目錄．有個特殊用法，-L. --加載當前目錄．
 -DNAME(=VALUE):相當與頭文件裏面加載macro,macro的名字是NAME,默認是1.
+-v,--help:實用的幫助．
+-v:編譯的時候，輸出詳細信息．
 ** 不常用的命令:
 -std=gnu90:採用的c語言標準．gnu定義了一些更多的關鍵字和默認的宏．
 -ansi,-pedantic:這兩個結合，能禁用所有的gnu方言的特性．
