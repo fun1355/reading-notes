@@ -133,17 +133,235 @@ conflict. Further information about feature test macros can be found in
 the GNU C Library Reference Manual, see [Further reading], page 91.
 
 *** Strict ANSI/ISO
+The command-line option ‘-pedantic’ in combination with ‘-ansi’ will
+cause gcc to reject all GNU C extensions, not just those that are incom-
+patible with the ANSI/ISO standard. This helps you to write portable
+programs which follow the ANSI/ISO standard.
 *** Selecting specific standards 
+‘-std=c89’ or ‘-std=iso9899:1990’
+The original ANSI/ISO C language standard (ANSI X3.159-1989,
+ISO/IEC 9899:1990). GCC incorporates the corrections in the two
+ISO Technical Corrigenda to the original standard.
+
+‘-std=iso9899:199409’
+The ISO C language standard with ISO Amendment 1, published
+in 1994. This amendment was mainly concerned with internation-
+alization, such as adding support for multibyte characters to the C
+library.
+
+‘-std=c99’ or ‘-std=iso9899:1999’
+The revised ISO C language standard, published in 1999 (ISO/IEC
+9899:1999).
+The C language standards with GNU extensions can be selected with the
+options ‘-std=gnu89’ and ‘-std=gnu99’.
 ** Warning options in -Wall
+*** ‘-Wcomment’ (included in ‘-Wall’)
+This option warns about nested comments. Nested comments typ-
+ically arise when a section of code containing comments is later
+commented out:
+/* commented out
+double x = 1.23 ; /* x-position */
+*/
+Nested comments can be a source of confusion—the safe way to
+“comment out” a section of code containing comments is to sur-
+round it with the preprocessor directive #if 0 ... #endif:
+/* commented out */
+#if 0
+double x = 1.23 ; /* x-position */
+#endif
+*** ‘-Wformat’ (included in ‘-Wall’)
+This option warns about the incorrect use of format strings in func-
+tions such as printf and scanf, where the format specifier does
+not agree with the type of the corresponding function argument.
+*** ‘-Wunused’ (included in ‘-Wall’)
+This option warns about unused variables. When a variable is de-
+clared but not used this can be the result of another variable being
+accidentally substituted in its place. If the variable is genuinely not
+needed it can be removed from the source code.
+*** ‘-Wimplicit’ (included in ‘-Wall’)
+This option warns about any functions that are used without be-
+ing declared. The most common reason for a function to be used
+without being declared is forgetting to include a header file.
+*** ‘-Wreturn-type’ (included in ‘-Wall’)
+This option warns about functions that are defined without a re-
+turn type but not declared void. It also catches empty return
+statements in functions that are not declared void.
+For example, the following program does not use an explicit return
+value:
+#include <stdio.h>
+int
+main (void)
+{
+printf ("hello world\n");
+return;
+}
+The lack of a return value in the code above could be the result
+of an accidental omission by the programmer—the value returned
+by the main function is actually the return value of the printf
+function (the number of characters printed). To avoid ambiguity,
+it is preferable to use an explicit value in the return statement,
+either as a variable or a constant, such as return 0.
+
 ** Additional warning options
+*** ‘-W’
+This is a general option similar to ‘-Wall’ which warns about a
+selection of common programming errors, such as functions which
+can return without a value (also known as “falling off the end of
+the function body”), and comparisons between signed and unsigned
+values. For example, the following function tests whether an un-
+signed integer is negative (which is impossible, of course):
+
+int
+foo (unsigned int x)
+{
+  if (x < 0)
+    return 0; /* cannot occur */
+  else
+    return 1;
+}
+Compiling this function with ‘-Wall’ does not produce a warning,
+  $ gcc -Wall -c w.c
+but does give a warning with ‘-W’:
+  $ gcc -W -c w.c
+  w.c: In function ‘foo’:
+  w.c:4: warning: comparison of unsigned expression < 0 is always false
+
+In practice, the options ‘-W’ and ‘-Wall’ are normally used together.
+
+*** ‘-Wconversion’
+This option warns about implicit type conversions that could cause
+unexpected results. For example, the assignment of a negative
+value to an unsigned variable, as in the following code,
+unsigned int x = -1;
+is technically allowed by the ANSI/ISO C standard (with the neg-
+ative integer being converted to a positive integer, according to the
+machine representation) but could be a simple programming error.
+If you need to perform such a conversion you can use an explicit
+cast, such as ((unsigned int) -1), to avoid any warnings from
+this option. On two’s-complement machines the result of the cast
+gives the maximum number that can be represented by an unsigned
+integer.
+*** ‘-Wshadow’
+This option warns about the redeclaration of a variable name in
+a scope where it has already been declared. This is referred to as
+variable shadowing, and causes confusion about which occurrence
+of the variable corresponds to which value.
+The following function declares a local variable y that shadows the
+declaration in the body of the function:
+double
+test (double x)
+{
+  double y = 1.0;
+  {
+    double y;
+    y = x;
+  }
+  return y;
+}
+This is valid ANSI/ISO C, where the return value is 1. The shad-
+owing of the variable y might make it seem (incorrectly) that the
+return value is x, when looking at the line y = x (especially in a
+large and complicated function).
+*** ‘-Wcast-qual’
+This option warns about pointers that are cast to remove a type
+qualifier, such as const. For example, the following function dis-
+cards the const qualifier from its input argument, allowing it to be
+overwritten:
+void
+f (const char * str)
+{
+  char * s = (char *)str;
+  s[0] = ’\0’;
+}
+The modification of the original contents of str is a violation of its
+const property. This option will warn about the improper cast of
+the variable str which allows the string to be modified.
+*** ‘-Wwrite-strings’
+This option implicitly gives all string constants defined in the pro-
+gram a const qualifier, causing a compile-time warning if there is
+an attempt to overwrite them. The result of modifying a string
+constant is not defined by the ANSI/ISO standard, and the use of
+writable string constants is deprecated in GCC.
+*** ‘-Wtraditional’
+This option warns about parts of the code which would be inter-
+preted differently by an ANSI/ISO compiler and a “traditional”
+pre-ANSI compiler.(5) When maintaining legacy software it may
+be necessary to investigate whether the traditional or ANSI/ISO
+interpretation was intended in the original code for warnings gen-
+erated by this option.
+*** 'Werror'
+The ‘-Werror’ option changes the default behavior by converting
+warnings into errors, stopping the compilation whenever a warning
+occurs.
+
 ** Recommended warning options 
 * Using the preprocessor
 ** Defining macros
+The complete set of predefined macros can be listed by running the
+GNU preprocessor cpp with the option ‘-dM’ on an empty file:
+$ cpp -dM /dev/null
+#define __i386__ 1
+#define __i386 1
+#define i386 1
+#define __unix 1
+#define __unix__ 1
+#define __ELF__ 1
+#define.......
+unix 1
+
 ** Macros with values
+To define a macro with a value, the ‘-D’ command-line option can be
+used in the form ‘-DNAME =VALUE ’. 
+When a macro is defined with ‘-D’ alone, gcc uses a default value of 1.
+A macro can be defined to a empty value using quotes on the command
+line, -DNAME ="". 
+A macro containing quotes can be defined using shell-escaped quote
+characters. For example, the command-line option -DMESSAGE="\"Hello,
+World!\"" defines a macro MESSAGE which expands to the sequence of
+characters "Hello, World!". 
 ** Preprocessing source files 
+The ‘-E’ option causes gcc to run the preprocessor, display the expanded
+output, and then exit without compiling the resulting source code. The
+value of the macro TEST is substituted directly into the output, producing
+the sequence of characters const char str[] = "Hello, World!" ;.
+
+The ‘-save-temps’ option also saves ‘.s’ assembly files and ‘.o’
+object files in addition to preprocessed ‘.i’ files.
+
 * Compiling for debugging
+GCC provides the ‘-g’ debug option to store additional debugging
+information in object files and executables. This debugging information
+allows errors to be traced back from a specific machine instruction to the
+corresponding line in the original source file. It also allows the execution
+of a program to be traced in a debugger, such as the GNU Debugger gdb
+(for more information, see “Debugging with GDB: The GNU Source-Level
+Debugger”, [Further reading], page 91). Using a debugger also allows the
+values of variables to be examined while the program is running.
+The debug option works by storing the names of functions and vari-
+ables (and all the references to them), with their corresponding source
+code line-numbers, in a symbol table in object files and executables.
 ** Examining core files
+In the GNU Bash shell the command ulimit -c controls the maximum
+size of core files. If the size limit is zero, no core files are produced. The
+current size limit can be shown by typing the following command:
+  $ ulimit -c
+  0
+If the result is zero, as shown above, then it can be increased with the
+following command to allow core files of any size to be written:(3)
+$ ulimit -c unlimited
+Note that this setting only applies to the current shell. To set the limit
+for future sessions the command should be placed in an appropriate login
+file, such as ‘.bash_profile’ for the GNU Bash shell.
+
+$ gdb a.out core
+(gdb) print p
 ** Displaying a backtrace
+(gdb) backtrace
+
+A complete description of all the commands available in gdb can be
+found in the manual “Debugging with GDB: The GNU Source-Level De-
+bugger” (see [Further reading], page 91).
+
 ** Setting a breakpoint
 ** Stepping through the program
 ** Modifying variables
@@ -152,14 +370,78 @@ the GNU C Library Reference Manual, see [Further reading], page 91.
 * Compiling with optimization
 ** Source-level optimization
 *** Common subexpression elimination
+x = cos(v)*(1+sin(u/2)) + sin(w)*(1-sin(u/2))
+==>
+t = sin(u/2)
+x = cos(v)*(1+t) + sin(w)*(1-t)
+
 *** Function inlining 
 ** Speed-space tradeoffs
 *** Loop unrolling 
 ** Scheduling
+The lowest level of optimization is scheduling, in which the compiler de-
+termines the best ordering of individual instructions. Most CPUs allow
+one or more new instructions to start executing before others have fin-
+ished. Many CPUs also support pipelining, where multiple instructions
+execute in parallel on the same CPU.
+
 ** Optimization levels
+*** ‘-O0’ or no ‘-O’ option (default)
+At this optimization level GCC does not perform any optimiza-
+tion and compiles the source code in the most straightforward way
+possible. Each command in the source code is converted directly
+to the corresponding instructions in the executable file, without
+rearrangement. This is the best option to use when debugging a
+program.
+The option ‘-O0’ is equivalent to not specifying a ‘-O’ option.
+*** ‘-O1’ or ‘-O’
+This level turns on the most common forms of optimization that
+do not require any speed-space tradeoffs. With this option the
+resulting executables should be smaller and faster than with ‘-O0’.
+The more expensive optimizations, such as instruction scheduling,
+are not used at this level.
+Compiling with the option ‘-O1’ can often take less time than com-
+piling with ‘-O0’, due to the reduced amounts of data that need to
+be processed after simple optimizations.
+*** ‘-O2’
+This option turns on further optimizations, in addition to those
+used by ‘-O1’. These additional optimizations include instruction
+scheduling. Only optimizations that do not require any speed-space
+tradeoffs are used, so the executable should not increase in size. The
+compiler will take longer to compile programs and require more
+memory than with ‘-O1’. This option is generally the best choice
+for deployment of a program, because it provides maximum opti-
+mization without increasing the executable size. It is the default
+optimization level for releases of GNU packages.
+*** ‘-O3’
+This option turns on more expensive optimizations, such as func-
+tion inlining, in addition to all the optimizations of the lower levels
+‘-O2’ and ‘-O1’. The ‘-O3’ optimization level may increase the speed
+of the resulting executable, but can also increase its size. Under
+some circumstances where these optimizations are not favorable,
+this option might actually make a program slower.
+*** ‘-funroll-loops’
+This option turns on loop-unrolling, and is independent of the other
+optimization options. It will increase the size of an executable.
+Whether or not this option produces a beneficial result has to be
+examined on a case-by-case basis.
+*** ‘-Os’
+This option selects optimizations which reduce the size of an exe-
+cutable. The aim of this option is to produce the smallest possible
+executable, for systems constrained by memory or disk space. In
+some cases a smaller executable will also run faster, due to better
+cache usage.
+*** recommend as short
+For most purposes it is satisfactory to use ‘-O0’ for debugging, and
+‘-O2’ for development and deployment.
 ** Examples
 ** Optimization and debugging
-** Optimization and compiler warnings 
+** Optimization and compiler warnings
+$ gcc -Wall -O2 -c uninit.c
+uninit.c: In function ‘sign’:
+uninit.c:4: warning: ‘s’ might be used uninitialized
+in this function
+ 
 * Compiling a C++ program
 ** Compiling a simple C++ program
 ** C++ compilation options
@@ -168,12 +450,46 @@ the GNU C Library Reference Manual, see [Further reading], page 91.
 *** Using C++ standard library templates
 *** Providing your own templates
 *** Explicit template instantiation
+In this approach, template functions are no longer compiled at the
+point where they are used, as a result of the ‘-fno-implicit-templates’
+option. Instead, the compiler looks for an explicit instantiation of the
+template using the template keyword with a specific type to force its
+compilation (this is a GNU extension to the standard behavior). These
+instantiations are typically placed in a separate source file, which is then
+compiled to make an object file containing all the template functions
+required by a program. This ensures that each template appears in only
+one object file, and is compatible with linkers which cannot eliminate
+duplicate definitions in object files.
+
 *** The export keyword 
 * Platform-specific options
 ** Intel and AMD x86 options
+Code produced with a specific ‘-march=CPU ’ option will be faster but
+will not run on other processors in the x86 family. If you plan to distribute
+executable files for general use on Intel and AMD processors they should
+be compiled without any ‘-march’ options.
+
+AMD has enhanced the 32-bit x86 instruction set to a 64-bit instruc-
+tion set called x86-64, which is implemented their AMD64 processors. (2)
+inOn AMD64 systems GCC generates 64-bit code by default. The option
+‘-m32’ allows 32-bit code to be generated instead.
+The AMD64 processor has several different memory models for programs
+running in 64-bit mode. The default model is the 'small' code model,
+which allows code and data up to 2 GB in size. The medium code model
+allows unlimited data sizes and can be selected with
+‘-mcmodel=medium’.  There is also a 'large' code model, which supports
+an unlimited code size in addition to unlimited data size.
+
+Compilation of the Linux kernel on the AMD64 requires the options
+‘-mcmodel=kernel -mno-red-zone’.
 *** x86 extensions
 *** x86 64-bit processors 
 ** DEC Alpha options
+The DEC Alpha processor has default settings which maximize floating-
+point performance, at the expense of full support for IEEE arithmetic
+features.
+GCC provides the option ‘-mieee’ to enable full support for IEEE
+arithmetic.
 ** SPARC options
 ** POWER/PowerPC options
 ** Multi-architecture support
@@ -183,31 +499,233 @@ the GNU C Library Reference Manual, see [Further reading], page 91.
 ** Help for command-line options
 ** Version numbers
 ** Verbose compilation
+The output produced by ‘-v’ can be useful whenever there is a problem
+with the compilation process itself. It displays the full directory paths
+used to search for header files and libraries, the predefined preprocessor
+symbols, and the object files and libraries used for linking.
+
 ** Stopping a program in an infinite loop
 ** Preventing excessive memory usage 
 * Compiler-related tools
+This chapter describes a number of tools which are useful in combination
+with GCC. These include the GNU archiver ar, for creating libraries, and
+the GNU profiling and coverage testing programs, gprof and gcov.
+
 ** Creating a library with the GNU archiver
+$ ar cr libhello.a hello_fn.o bye_fn.o
+The option ‘cr’ stands for “create and replace”.
+
+The archiver ar also provides a “table of contents” option ‘t’ to list
+the object files in an existing library:
+  $ ar t libhello.a
+  hello_fn.o
+  bye_fn.o
+
+The short-cut library linking option ‘-l’ can also be used to link the
+program, without needing to specify the full filename of the library ex-
+plicitly:
+$ gcc -Wall -L. main.c -lhello -o hello
+The option ‘-L.’ is needed to add the current directory to the library
+search path. 
+
 ** Using the profiler gprof
+The GNU profiler gprof is a useful tool for measuring the performance
+of a program—it records the number of calls to each function and the
+amount of time spent there, on a per-function basis. Functions which
+consume a large fraction of the run-time can be identified easily from the
+output of gprof. Efforts to speed up a program should concentrate first
+on those functions which dominate the total run-time.
+
+$ gcc -Wall -c -pg collatz.c
+$ gcc -Wall -pg collatz.o
+
+If the program consists of more than one source file then the ‘-pg’ op-
+tion should be used when compiling each source file, and used again when
+linking the object files to create the final executable (as shown above).
+Forgetting to link with the option ‘-pg’ is a common error, which pre-
+vents profiling from recording any useful information.
+
 ** Coverage testing with gcov 
+The GNU coverage testing tool gcov analyses the number of times each
+line of a program is executed during a run. This makes it possible to
+find areas of the code which are not used, or which are not exercised
+in testing. When combined with profiling information from gprof the
+information from coverage testing allows efforts to speed up a program to
+be concentrated on specific lines of the source code.
+
+$ gcc -Wall -fprofile-arcs -ftest-coverage cov.c
+This creates an instrumented executable which contains additional in-
+structions that record the number of times each line of the program is ex-
+ecuted. The option ‘-ftest-coverage’ adds instructions for counting the
+number of times individual lines are executed, while ‘-fprofile-arcs’ in-
+corporates instrumentation code for each branch of the program. Branch
+instrumentation records how frequently different paths are taken through
+‘if’ statements and other conditionals. The executable must then be run
+to create the coverage data:
+
+The gcov command produces an annotated version of the original source
+file, with the file extension ‘.gcov’, containing counts of the number of
+times each line was executed:
+The line counts can be seen in the first column of the output. Lines which
+were not executed are marked with hashes ‘######’. The command ‘grep
+’######’ *.gcov’ can be used to find parts of a program which have not
+been used.
+
 * How the compiler works
 ** An overview of the compilation process
+• preprocessing (to expand macros)
+• compilation (from source code to assembly language)
+• assembly (from assembly language to machine code)
+• linking (to create the final executable)
 ** The preprocessor
+$ cpp hello.c > hello.i
+The result is a file ‘hello.i’ which contains the source code with all
+macros expanded. By convention, preprocessed files are given the file
+extension ‘.i’ for C programs and ‘.ii’ for C++ programs. In practice,
+the preprocessed file is not saved to disk unless the ‘-save-temps’ option
+is used.
 ** The compiler
+The command-
+line option ‘-S’ instructs gcc to convert the preprocessed C source code
+to assembly language without creating an object file:
+$ gcc -Wall -S hello.i
 ** The assembler
+When there are calls to external functions in the assembly source
+file, the assembler leaves the addresses of the external functions
+undefined, to be filled in later by the linker.
+$ as hello.s -o hello.o
 ** The linker 
+In practice, an executable requires many external functions
+from system and C run-time (crt) libraries. Consequently, the actual link
+commands used internally by GCC are complicated. For example, the full
+command for linking the Hello World program is:
+$ ld -dynamic-linker /lib/ld-linux.so.2 /usr/lib/crt1.o
+/usr/lib/crti.o /usr/lib/gcc-lib/i686/3.3.1/crtbegin.o
+-L/usr/lib/gcc-lib/i686/3.3.1 hello.o -lgcc -lgcc_eh
+-lc -lgcc -lgcc_eh /usr/lib/gcc-lib/i686/3.3.1/crtend.o
+/usr/lib/crtn.o
 * Examining compiled files
 ** Identifying files
+The file command looks at the contents of an object file or
+executable and determines some of its characteristics, such as whether
+it was compiled with dynamic or static linking.
+    $ file a.out
+    a.out: ELF 32-bit LSB executable, Intel 80386,
+    version 1 (SYSV), dynamically linked (uses shared
+    libs), not stripped
+The file command can also be used on object files, where it gives similar
+output. 
+*** ELF
+The internal format of the executable file (ELF stands for “Exe-
+cutable and Linking Format”, other formats such as COFF “Com-
+mon Object File Format” are used on some older operating systems
+(e.g. MS-DOS)).
+*** 32-bit
+The word size (for some platforms this would be 64-bit).
+*** LSB
+Compiled for a platform with least significant byte first word-
+ordering, such as Intel and AMD x86 processors (the alternative
+MSB most significant byte first is used by other processors, such
+as the Motorola 680x0)(1). Some processors such as Itanium and
+MIPS support both LSB and MSB orderings.
+*** Intel 80386
+The processor the executable file was compiled for.
+*** version 1 (SYSV)
+This is the version of the internal format of the file.
+*** dynamically linked
+The executable uses shared libraries (statically linked indicates
+programs linked statically, for example using the ‘-static’ option)
+*** not stripped
+The executable contains a symbol table (this can be removed with
+the strip command).
+
 ** Examining the symbol table
+    $ nm a.out
+
+A ‘T’ in the second column indicates a function that is defined in
+the object file, while a ‘U’ indicates a function which is undefined
+(and should be resolved by linking against another object file).
+
+A complete explanation of the output of nm can be found in the GNU
+Binutils manual.
+
 ** Finding dynamically linked libraries 
+The command ldd examines an executable and displays a list of the shared
+libraries that it needs. These libraries are referred to as the shared library
+dependencies of the executable.
+
+The ldd command can also be used to examine shared libraries them-
+selves, in order to follow a chain of shared library dependencies.
+
 * Common error messages
 ** Preprocessor error messages
 ** Compiler error messages
 ** Linker error messages
 ** Runtime error messages n
 * Getting help
+http://www.gnu.org/prep/service.html
+http://www.network-theory.co.uk/gcc/intro/
 * Further reading
+Using GCC (for GCC version 3.3.1) by Richard M. Stallman and
+the GCC Developer Community (Published by GNU Press, ISBN
+1-882114-39-6)
+Debugging with GDB: The GNU Source-Level Debugger by Richard
+M. Stallman, Roland Pesch, Stan Shebs, et al. (Published by GNU
+Press, ISBN 1-882114-88-4)
+GNU Make: A Program for Directing Recompilation by Richard M.
+Stallman and Roland McGrath (Published by GNU Press, ISBN 1-
+882114-82-5)
+The GNU Bash Reference Manual by Chet Ramey and Brian Fox
+(Published by Network Theory Ltd, ISBN 0-9541617-7-7)
+** C/C++ language
+The GNU C Library Reference Manual by Sandra Loosemore with
+Richard M. Stallman, et al (2 vols) (Published by GNU Press, ISBN
+1-882114-22-1 and 1-882114-24-8)
+The C Programming Language (ANSI edition) Brian W. Kernighan,
+Dennis Ritchie (ISBN 0-13110362-8)
+The C++ Programming Language (3rd edition) Bjarne Stroustrup
+(ISBN 0-20188954-4)
+The C Standard: Incorporating Technical Corrigendum 1 (Published
+by Wiley, ISBN 0-470-84573-2)
+The C++ Standard (Published by Wiley, ISBN 0-470-84674-7)
 * Acknowledgements
 * Free software organizations
 * GNU Free Documentation License
 ** ADDENDUM: How to use this License for your documents 
 
+* 讀書心得
+** 吐槽一下
+   這本書找不到最新版的電子版．我用的目錄有是官方最新版本的．
+有些內容沒有，比如調試打斷點，單步;報錯信息等．
+下了源碼，每個例子都自己敲一邊，還是方便的．
+　　總體來說，這本書還是非常適合入門的．
+** 最實用的幾個命令：
+-c:只到assemble,生成*.o,不link.
+-E:只preprocess,生成*.i，不compile,assemble,link.
+-save-temps:保存所有的中間生成文件，包括*.i,*.o等．
+-o:輸出的文件名，默認a.out.
+-O0(不帶-O時默認),-O1(相當於帶-O),-O2:優化等級，開發時候用-O0,發佈用-O2.
+-lNAME:libNAME.a/so, 優先是用so.
+-Wall:最方便的報錯選項，測試過這個不是默認選項，所以最好加上．
+-Idir:載入dir作爲頭文件加載目錄．
+-Ldir:載入dir作爲庫加載目錄．有個特殊用法，-L. --加載當前目錄．
+-DNAME(=VALUE):相當與頭文件裏面加載macro,macro的名字是NAME,默認是1.
+** 不常用的命令:
+-std=gnu90:採用的c語言標準．gnu定義了一些更多的關鍵字和默認的宏．
+-ansi,-pedantic:這兩個結合，能禁用所有的gnu方言的特性．
+-march=CPU:針對某款CPU生成指令，不能用於其他CPU了，不常用．
+ulimit -c unlimited:這個設置了才能生成core文件．
+** 一些工具？
+   ar,gprof,gcov,ldd,make,gdb.
+
+** file命令的輸出是什麼意思？
+    a.out: ELF 32-bit LSB executable, Intel 80386,
+    version 1 (SYSV), dynamically linked (uses shared
+    libs), not stripped
+比如這個輸出什麼意思，看Identifying files．
+** 怎麼使用gdb?
+只知道gdb a.out (core)這種方式．
+(gdb)print [local-var]這種打印變量．
+(gdb)backtrace打印調用堆棧．
+** 怎麼使用make?
+   沒用提到，但是必須學．
