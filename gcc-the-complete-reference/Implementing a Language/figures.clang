@@ -1,0 +1,6 @@
+set color blue;
+set location (100,200);
+draw circle 30;
+set color red;
+set location (250,200);
+draw rectangle (10,10);
