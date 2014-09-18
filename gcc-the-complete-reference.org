@@ -1,0 +1,1990 @@
+GCC -- The Complete Referencepp=
+* introduction
+ Chapter 1 is a general introduction to the fundamental concepts of GCC, 
+including a list of its parts and the languages it compiles.
+ Chapter 2 contains procedures you can use to install GCC.
+ Chapter 3 describes the workings of the preprocessor and how you can 
+employit to process the source code of a language.
+ Chapter 4 contains examples of compiling and linking C.
+ Chapter 5 contains examples of compiling and linking C++.
+ Chapter 6 contains examples of compiling and linking Objective-C.
+ Chapter 7 contains examples of compiling and linking Fortran.
+ Chapter 8 contains examples of compiling and linking Java.
+ Chapter 9 contains examples of compiling and linking Ada.
+ Chapter 10 contains examples of mixing two languages to create a singleexecutable.
+ Chapter 11 explains how the internationalization facilities can be employed
+in your compiled program to allow its displayed strings to be modified to fit
+a locale.
+ Chapter 12 contains examples of producing and using static and shared
+libraries.
+ Chapter 13 explains the fundamentals of using the GNU debugger.
+ Chapter 14 describes the use of make and its associated utilities.
+ Chapter 15 discusses the GNU assembler and describes how you can use it in
+conjunction with GCC.
+ Chapter 16 describes the process required to configure GCC to compile and link
+programs to be executed on another computer.
+ Chapter 17 describes how GCC can be used to produce code for an embedded
+system.
+ Chapter 18 contains examples of generating useful output from the compiler
+other than object code.
+　Chapter 19 describes the rudiments offront end for GCC.
+using lex and yacc to create a language
+ Chapter 20 describes the content of the intermediate language produced by the
+compiler front end and read by the compiler back end.
+ Chapter 21 contains a list of the command-line options that apply versions of
+GCC running on specific hardware.
+ Appendix A contains a copy of the GNU Public License.
+ Appendix B lists the environment variables that effect GCC.
+ Appendix C is a cross-reference of the command-line options by category.
+ Appendix D is an alphabetical listing of the command-line options.
+ Appendix E is a glossary.
+* The Free Software Compiler 
+* Introduction to GCC 
+** Parts List
+*** c++,g++
+A version of gcc that sets the default language to C++ and
+automatically includes the standard C++ libraries when linking.
+This is the same as g++.
+*** ccl
+The actual C compiler.
+*** crt0.o
+The initialization and shutdown code is customized for each
+system and compiled into this file, which is then linked to each
+executable to perform the necessary program startup and
+shutdown activities.
+*** cc1plus
+The actual C++ compiler.
+*** gcc
+The driver program that coordinates execution of compilers
+and linkers to produce the desired output.
+*** libgcc
+This library contains routines that could be considered part
+of the compiler because they are linked with virtually every
+executable. They are special routines that are linked with an
+executable program to perform fundamental tasks such as
+floating point arithmetic. The routines in this library are often
+platform dependent.
+*** libstdc++
+The runtime library contains all the C++ classes and functions
+defined as part of the standard language.
+
+** Tools list
+*** as
+The GNU assembler. It is really a family of assemblers because it
+can be compiled to work with one of several different platforms.
+This program is part of the binutils package.
+*** ld
+The GNU linker. This program combines a collection of object
+files into an executable program. This program is part of the
+binutils package.
+
+*** addr2line
+Given an address inside an executable file, addr2line uses the
+debug information in the file to translate the address into a source
+code file name and line number. This program is part of the
+binutils package.
+*** ar
+A program to maintain library archive files by adding, removing,
+and extracting files from the archive. The most common use for
+this utility is to create and manage object library archives used
+by the linker. This program is part of the binutils package.
+
+*** c++filt
+The program accepts names that have been mangled by the C++
+compiler (which it does for overloading) and translates the mangled
+names to their original form. This program is part of the binutils
+package.
+*** gconf
+A profiling tool used with gprof to determine where the greatest
+amount of time is being spent during the execution of your program.
+*** gdb
+The GNU debugger, which can be used to examine the values and
+actions inside a program while it is running.
+*** gprof
+This program will monitor the execution of a program that has
+been compiled with profiling code built into it and reports the
+amount of time spent in each function, providing a profile from
+which routines can be optimized. This program is part of the
+binutils package.
+*** libtool
+A generic librarythe use of sharedsupport script used in makefiles to
+simplify libraries.
+*** make
+A utility that reads a makefile script to determine which parts
+of a program need compiling and linking and then issues the
+commands necessary to do so. It reads a script (named makefile
+or Makefile) that defines file relationships and dependencies.
+*** nm
+Lists the symbols defined in an object file. This program is part
+of the binutils package.
+*** objdump
+Displays several different kinds of information stored inside one
+or more object file. This program is part of the binutils package.
+*** readelf
+Displays information from an ELF formatted object file. This
+program is part of the binutils package.
+*** size
+Lists the names and sizes of each of the sections in an object file.
+This program is part of the binutils package.
+*** strings
+Reads through a file of any type and extracts the character strings
+for display. This program is part of the binutils package.
+*** strip
+Removes the symbol table, along with any other information
+required for debugging, from an object file or an archive library.
+This program is part of the binutils package.
+*** vcg
+The Ratfor viewer reads information from a text file and displays
+it as a graph. The vcg utility is not distributed as part of GCC, but
+the -dv option can be used to generate optimization data in the
+format understood by vcg.
+** mailist
+All the mailing lists can be accessed at the website http://www.gnu.org/software/
+gcc/lists.html. Entries can be made on this page to subscribe and unsubscribe to the
+lists. Also, each list has its own website that can be used to search and read through
+the archived messages of the list. The name of the list preceded by gcc.gnu.org/ml/ is
+the name of the website. For example, to locate the gcc-announce archive website, go to
+http://gcc.gnu.org/ml/gcc-announce.
+
+* Acquiring and Installing the Compiler
+** Configuration Options
+The installation options are the ones specified on the command line of
+the configure script. This script generates the files that control
+compiling and installing. Every option has a default that is correct
+for creating a compiler (or set of compilers) for your local machine,
+but there are circumstances where adjustments must be made. The
+following is a description of these options:
+** The binutils
+** Running the Test Suite
+* Using the Compiler Collection
+* The Preprocessor
+In GNU terminology, the preprocessor is referred to as CPP. The GNU executable
+program is named cpp.
+** Directives
+*** define
+#define errout(a,b,...) \
+fprintf(stderr,"File %s Line %d\n",a,b); \
+fprintf(stderr,__VA_ARGS__)
+
+errout(__FILE__,__LINE__,"Unexpected termination\n");
+*** ##
+As a special case of the concatenation operator, you can request that
+the preceding comma be removed when __VA_ARGS__ is empty by inserting
+it in the argument list, like this:
+fprintf(stderr, ##__VA_ARGS__)
+The concatenation directive can be used inside a macro to join two source code tokens
+into one. This can be used to construct names that would otherwise be misinterpreted
+by the parser.
+
+*** #error and #warning
+The #error directive will cause the preprocessor to report a fatal error and halt. This
+can be used to trap conditions where there is an attempt to compile a program in some
+way that is known not to work. For example, the following will only compile successfully
+if the macro __unix__ has been defined:
+
+#ifndef __unix__
+#error "This section will onlywork on UNIX systems"
+#endif
+
+The #warning directive works the same as the #error directive, except the
+condition is not fatal and the preprocessor continues after issuing the message.
+
+*** #include_next
+The #include_next directive is used only for special situations. It is used inside one
+header file to include another one, and it causes the search for the new header file to
+begin in the directory following the one in which the current header was found.
+
+#include_next "stdio.h"
+#undef getc
+#define getc(fp) ((int)'x')
+Using this header will cause the system version of stdio.h to be included and
+then have the getc macro redefined.
+*** #line
+  Debuggers need to be able to associate file names and line numbers with data items
+and executable code, so the preprocessor inserts this information into its output to the
+compiler. It is necessary to track the original names and numbers this way because
+the preprocessor combines several files into one. The compiler uses these numbers when
+it builds the tables it inserts into the object code.
+  Normally, allowing the preprocessor to determine the line numbers by counting
+them is exactly what needs to happen, but it is also possible that some other processing
+can cause these line numbers to be off. For example, a common method of implementing
+SQL statements is to write them as macros and a have a special processor expand the
+macros into the detailed SQL function calls. This expansion can run to several lines and
+cause the line count to be different. The SQL process will correct this by inserting
+#line directives in its output so that the preprocessor will follow the line numbering
+of the original source code.
+  Specifying the #line directive with a number causes the preprocessor to
+replace its current line count with the specified number. For example, the
+following directive sets the current line number to 137:
+#line 137
+  Specifying #line directive with both a number and a file name instructs the
+preprocessor to change both the line number and the name of the current file.
+For example, the following directive will set the current position to the first line
+of a file named muggles.h:
+#line 1 "muggles.h"
+  The #line directive modifies the content of the predefined macros __LINE__
+and __FILE__.
+  The #line directive has no effect on the file names or directories searched by
+the #include directive.
+*** #pragma and _Pragma
+#pragma GCC dependency
+The dependency pragma tests the timestamp of the current file against the timestamp
+of another named file. If the other file is newer, a warning message is issued. 
+#pragma GCC dependency "lexgen.tbl"
+---> warning: current file A is older than "lexgen.tbl"
+
+#pragma GCC poison
+The poison pragma can be used to cause a message to be issued whenever a specified
+name is used. You can use this, for example, to guarantee that certain function calls are
+never made. 
+#pragma GCC poison memcpy memmove
+memcpy(target,source,size);
+---> show.c:38:9: attempt to use poisoned "memcpy"
+
+#pragma GCC system_header
+The code beginning with the system_header pragma and continuing to the end of
+the file is treated as if it were the code in a system header. System header code is
+compiled slightly differently because runtime libraries cannot be written so they are
+strictly C standard conforming. All warnings (except on the #warnings directive)
+are suppressed. In particular, certain macro definitions and expansions are immune
+to warning messages.
+
+_Pragma
+A normal #pragma directive cannot be included as part of a macro expansion, so the
+_Pragma operator was devised to generate #pragma directives inside macros. 
+_Pragma("GCC poison printf")
+_Pragma("GCC dependency \"lexgen.tbl\"")
+
+
+** Predefined Macros
+You can use the -dM option on the preprocessor to view the entire list:
+$ > cpp -E -dM myprog.c | sort | more
+
+---> #define __always_inline __inline __attribute__ ((__always_inline__))
+#define __ASMNAME2(prefix,cname) __STRING (prefix) cname
+#define __ASMNAME(cname) __ASMNAME2 (__USER_LABEL_PREFIX__, cname)
+#define _ATFILE_SOURCE 1
+#define __ATOMIC_ACQ_REL 4
+#define __ATOMIC_ACQUIRE 2
+#define __ATOMIC_CONSUME 1
+#define __ATOMIC_HLE_ACQUIRE 65536
+#define __ATOMIC_HLE_RELEASE 131072
+#define __ATOMIC_RELAXED 0
+#define __ATOMIC_RELEASE 3
+#define __ATOMIC_SEQ_CST 5
+#define __attribute_alloc_size__(params) __attribute__ ((__alloc_size__ params))
+#define __attribute_artificial__ __attribute__ ((__artificial__))
+#define __attribute_const__ __attribute__ ((__const__))
+#define __attribute_deprecated__ __attribute__ ((__deprecated__))
+#define __attribute_format_arg__(x) __attribute__ ((__format_arg__ (x)))
+#define __attribute_format_strfmon__(a,b) __attribute__ ((__format__ (__strfmon__, a, b)))
+#define __attribute_malloc__ __attribute__ ((__malloc__))
+#define __attribute_noinline__ __attribute__ ((__noinline__))
+#define __attribute_pure__ __attribute__ ((__pure__))
+#define __attribute_used__ __attribute__ ((__used__))
+...
+** Including a Header File Only Once
+Because header files will include other header files, it is very easy to have a program
+that includes the same header file more than once. This can lead to error messages
+because items that have already been defined are being defined again. To prevent this
+from happening, a header file can be written to detect whether it has already been
+included. The following is an example of how this can be done:
+/* myheader.h */
+#ifndef MYHEADER_H
+#define MYHEADER_H
+    /* The body of the header file */
+#endif  /* MYHEADER_H */
+** Including Location Information in Error Messages
+The predefined macros can be used to automate the construction of error messages that
+contain detailed information about the location at which the error occurred. The predefined
+macros __FILE__, __LINE__, and __func__ contain the information, but they must
+be used at the point the message is created. Therefore, if you write a function that contains
+them all, error messages will be reported as happening in that function.
+The perfect solution is to define a macro that contains them. That way, when the
+preprocessor expands the macros, they will all be in the correct place and have the correct
+information. 
+#define msg(str) \
+        fprintf(stderr,"File: %s Line: %d Function: %s\n%s\n", \
+               __FILE__,__LINE__,__func__,str);
+msg("There is an error here.");
+--->
+File: hamlink.c Line: 822 Function: hashDown
+There is an error here
+** Removing Source Code in Place
+During software development, it often becomes necessary to remove blocks of code in
+such a way that they can be restored later, if needed. The code can be surrounded by
+comments, but this can cause problems because comments in C don’t nest inside one
+another, and there could be a number of comments included in the code that is to be
+removed. A clean and safe way to omit the code is by using the preprocessor’s #if
+directive as follows:
+#if 0
+    /* The code being removed */
+#endif
+** Producing Makefiles
+The preprocessor can be used to read a source file and produce the dependency line that
+goes in a makefile. For example, the following command uses the -E to instruct the
+compiler to invoke the preprocessor and then halt without compiling or linking.
+The -M option instructs the preprocessor to output a complete dependency line:
+$ > gcc -E -M trick.c
+---> bad.o: bad.c /usr/include/stdc-predef.h /usr/include/stdio.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h \
+ /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
+ /usr/include/gnu/stubs-32.h \
+ /usr/lib/gcc/i586-suse-linux/4.8/include/stddef.h \
+ /usr/include/bits/types.h /usr/include/bits/typesizes.h \
+ /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+ /usr/lib/gcc/i586-suse-linux/4.8/include/stdarg.h \
+ /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+
+As described in Appendix D, the options -MD, -MMD, -MF, -MG, -MP, -MQ, and -MT
+can be used to create dependencies in different ways and in different formats than -M.
+Examples of using these options to create makefiles can be found in Chapter 14.
+** Command-Line Options and Environment Variables
+A number of command-line options can be used to specify the way the preprocessor
+operates. These options are listed here and described in detail in Appendix D.
+...
+The following is a list of the environment variables that can be set to pass instructions
+to the preprocessor. The environment variables are described in Appendix B.
+C_INCLUDE_PATH, CPATH, CPLUS_INCLUDE_PATH, DEPENDENCIES_OUTPUT,
+OBJC_INCLUDE_PATH, SUNPRO_DEPENDENCIES
+...
+
+* Compiling C
+** Fundamental Compiling
+*** Source File to Object File
+$ gcc -c helloworld.c
+*** Preprocessing
+$ gcc -E helloworld.c -o helloworld.i
+*** Generating Assembly Language
+$ gcc -S helloworld.c
+*** Creating a Static Library
+$ gcc -c hellofirst.c hellosecond.c
+$ ar -r libhello.a hellofirst.o hellosecond.o
+$ gcc twohellos.c libhello.a -o twohellos | $ gcc twohellos.c -lhello -o twohellos
+*** Creating a Shared Library
+The -fpic option causes the output object modules to be generated using relocatable
+addressing. The acronym pic stands for position independent code.
+$ gcc -c -fpic shellofirst.c shellosecond.c
+Normally the linker locates
+and uses the main() function as the entry point of a program, but this output module
+has no such entry point, and the -shared option is necessary to prevent an error message.
+$ gcc -shared shellofirst.o shellosecond.o -o hello.so
+The compiler recognizes that a file with the .c suffix is the C source code of program,
+and it knows how to compile it into an object file. Because of this, the two previous
+commands can be combined into one, and the modules can be compiled and stored
+directly into the shared library with the following command:
+$ gcc -fpic -shared shellofirst.c shellosecond.c -o hello.so
+--->
+$ gcc stwohellos.c hello.so -o stwohellos
+The program stwohellos is now ready to run, but to do so it must be able to
+locate the shared library hello.so, because the routines stored in the library must be
+loaded at runtime. Information on the location of shared libraries can be found in
+Chapter 12.
+*** Overriding the Naming Convention
+If circumstances require that you name your C source file using something other than
+with a .c suffix, you can override the default by using the -x option to specify the
+language. 
+$ gcc -xc helloworld.jxj -o helloworld
+Normally, without the -x option, any source files with unknown extensions are
+assumed to be known to the linker, and the names are passed to it unchanged. The -x
+option applies to unknown extensions for all files following it on the command line.
+For example, the following command assumes that both align.zzz and types.xxx
+are C source files:
+$ gcc -c -xc align.zzz types.xxx
+** Standards
+By default, GCC compiles the source using the rules of the latest standard, and it 
+has all GNU extensions enabled. 
+The most fundamental difference between a standards compliant and noncompliant
+C program is the form of the arguments on a function call and the presence or absence
+of function prototypes. To help in overcoming this problem, the GCC compiler has
+the -aux-info option, which can be used to automatically generate prototypes for the
+functions. 
+The functions of a C program A can be converted to ANSI standard form by using the
+protoize utility, which is described in Chapter 14.
+** WAITING C Language Extensions
+Specifying the -pedantic option (as well as some other options) will cause warning
+messages to be issued when using a C language extension, but you can suppress
+the warning messages by preceding the extended expression with the keyword
+__extension__.
+*** Alignment
+The __alignof__ operator returns the boundary alignment of a data type or a specific
+data item. The following program displays the alignments of each of the data types:
+/* align.c */
+#include <stdio.h>
+typedef struct {
+  double dvalue;
+  int ivalue;
+} showal;
+int main(int argc,char *argv[])
+{
+   printf(“__alignof__(char)=%d\n”,__alignof__(char));
+   printf(“__alignof__(short)=%d\n”,__alignof__(short));
+   printf(“__alignof__(int)=%d\n”,__alignof__(int));
+   printf(“__alignof__(long)=%d\n”,__alignof__(long));
+   printf(“__alignof__(long long)=%d\n”,__alignof__(long long));
+   printf(“__alignof__(float)=%d\n”,__alignof__(float));
+   printf(“__alignof__(double)=%d\n”,__alignof__(double));
+   printf(“__alignof__(showal)=%d\n”,__alignof__(showal));
+   return(0);
+}
+The actual alignments vary from one hardware system to the next, because it is the
+machine that sets the requirements. The alignment can either be an absolute hardware
+requirement or a boundary suggestion to make data access more efficient.
+*** Anonymous Unions
+Within a struct, a union can be declared without a name, making it possible to address
+the union members directly, just as if they were members of the struct. The following
+example provides two names and two data types for the same four bytes:
+struct {
+  char code;
+  union {
+    char chid[4];
+    int numid;
+  };
+  char *name;
+} morx;
+*** Arrays of Variable Length
+An array can be declared in such a way that its size is determined at runtime. This is
+achieved by using an expression as the declaring subscript. 
+*** Arrays of Zero Length
+GNU C allows the declaration of arrays of zero length to facilitate the creation of
+variable-length structures. This only makes sense if the zero-length array is the last
+member of a struct. The size of the array can be specified by simply being allocated
+the amount of space necessary. 
+*** Attributes
+The __attribute__ keyword can be used to assign an attribute to a function or data
+declaration. The primary purpose of assigning an attribute to a function is to make it
+possible for the compiler to perform optimization. The attribute is assigned to a function
+in the declaration of the function prototype, as in the following example:
+void fatal_error() __attribute__ ((noreturn));
+. . .
+void fatal_error(char *message)
+{
+  fprintf(stderr,"FATAL ERROR: %s\n",message);
+  exit(1);
+}
+In this example, the noreturn attribute tells the compiler that this function does
+not return to its caller, so any code that would normally be executed on the function’s
+return can be omitted by the optimizer.
+Multiple attributes can be assigned in the same declaration by including them in a
+comma-separated list. For example, the following declaration assigns attributes to assure
+the compiler that it does not modify global variables and that the function must never
+be expanded inline:
+int getlim() __attribute__ ((pure,noinline));
+Attributes can be assigned to variables and to members of structs. For example,
+to guarantee that a field has a specific alignment within a struct, it could be declared
+as follows:
+struct mong {
+  char id;
+  int code __attribute__ ((align(4)));
+};
+*** Compound Statements Returning a Value
+A compound statement is a block of statements enclosed in braces. A compound
+statement has its own scope level and can declare its own local variables, as in the
+following example:
+{
+  int b = a;
+  int a = b;
+  b = a + 3;
+}
+In GNU C, by surrounding a compound statement with parentheses, it produces
+a return value, as in the following example, which returns the value 8:
+rslt = ({
+  int b = a;
+  int a = b;
+  b = a + 3;
+})
+The return value is the result type and value of the last statement in the block.
+This construct can be useful when writing macros.
+#define even(x) (2*(x / 2) == x ? x : x + 1)
+---> int nexteven = even(value++);
+#define evenint(x) \
+  ({ int y = x; \
+     (2*(y / 2) == y ? y : y + 1); \
+  })
+It should be noted that this extension does not work well with C++, so it could
+cause problems if you use it in header files that are to be included in C++ programs.
+The problem comes from the destructors for the temporaries inside the macro being
+run earlier than they would be for an inline function.
+*** Conditional Operand Omission
+In a conditional expression, the true or false condition is determined by the result of an
+expression being zero or nonzero, so it can happen that the test value and the resulting
+value are the same. For example, in the following statement, x will be assigned the value
+of y only if y is something other than zero:
+x = y ? y : z;
+The expression y will be evaluated a second time if it is determined to be nonzero
+the first time it is evaluated. This second evaluation can be omitted by forming the
+expression as follows:
+x = y ? : z;
+This becomes especially useful if the expression y has side effects and should not
+be evaluated more than once.
+*** Enum Incomplete Types
+enum enumcolor_list;
+...
+color_list {BLACK,WHITE, BLUE };
+*** Function Argument Construction
+
+* Compiling C++
+** Fundamental Compiling
+*** File Name Suffixes in C++ Programming
+.C, .c++,
+.cc, .cp,
+.cpp, .cxx
+---> C++ source code that is to be preprocessed.
+.ii
+---> C++ source code that is not to be preprocessed. This type of file is
+produced as an intermediate step in compilation.
+ 
+*** Single Source File to Executable
+$ g++ helloworld.cpp -o helloworld | $ c++ helloworld.cpp -o helloworld
+$ gcc helloworld.cpp -lstdc++ -o helloworld
+*** Multiple Source Files to Executable
+*** Source File to Object File
+*** Preprocessing
+The GCC suffix for preprocessed C++ code is .ii, which can be produced by using
+the -o option, as follows:
+$ gcc -E helloworld.cpp -o helloworld.ii
+*** Generating Assembly Language
+$ ar -r libsay.a sayhello.o say.o
+*** Creating a Shared Library
+$ g++ -c -fpic average.cpp
+$ gcc -shared average.o -o average.so
+
+** Extensions to the C++ Language
+*** Attributes
+init_priority --->
+Standard C++ specifies that objects be initialized in the order
+in which they appear within a compilation unit, but there is
+no specification for the order across compilation units. The
+init_priority attribute makes it possible to specify the
+order of object initialization within a given namespace by
+assigning priority numbers to the object declarations.The
+priorities are assigned numerically, with the smaller numbers
+having priority over larger numbers. For example, the
+following three objects will be initialized in the order B, then
+C, then A, no matter what source modules they are found in:
+  SpoClass A __attribute__ ((init_priority(680)));
+  SpoClass B __attribute__ ((init_priority(220)));
+  SpoClass C __attribute__ ((init_priority(400)));
+The values used have no particular meaning, except in the
+way they relate to one another.
+java_interface --->
+This attribute specifies that the class is to be defined as
+a Java interface. It can only be applied to classes defined
+inside an extern "Java" block. Calls to methods of a class
+defined this way use the GCJ interface table instead of the
+C++ virtual table.
+*** Header Files
+All system header files are, by default, included as if they were enclosed in an extern
+"C" { ... } block. This can cause problems where C++ code exists in a system header
+file, but the problem can be solved with the following pragma:
+  #pragma cplusplus
+When this pragma is found in a header file, the rest of the code in the file is compiled
+as if it were included in an extern "C++"{ ... } block.
+Using this pragma inside an explicit extern "C" { ... } block is an error.
+*** Function Name
+... --->
+  __FUNCTION__
+  NameShow
+  __PRETTY_FUNCTION__
+  void Xyz::NameShow (int, double)
+  __func__
+  NameShow
+The identifiers __FUNCTION__ and __func__ are both defined as strings that
+contain the simple name of the current function. The identifier __PRETTY_FUCNTION__
+contains the complete function name, including the return type, the name of the class,
+and a list of parameter types.
+*** Interface and Implementation
+The interface and the implementation of a class can be combined into one. That is, there
+is no need to maintain a separate prototype definition of a class because the code that
+completely implements a class can also be used as the interface definition.
+This is achieved by using #pragma interface to specify that the class definition
+is to be used as an interface definition only and by using #pragma implementation
+to instruct GCC to compile the class functions and data into object code.
+
+To implement this pair of pragmas, you can take the following steps:
+1. Create a header file that contains the complete class implementation. For
+example, the header file for a class named MaxHolder could be called
+maxholder.h.
+2. Inside the header file, and before the class definition, insert the following line:
+  #pragma interface
+3. In any source file that refers to the MaxHolder class, include the header as normal.
+4. In one source file (usually the mainline of the program), insert the following
+#pragma directive before the #include directive:
+  #pragma implementation "maxholder.h"
+  #include "maxholder.h"
+*** Operators <? and >?
+minvalue = a <? b;
+maxvalue = a >? b;
+
+*** Restrict
+Any pointer declared __restrict__ is guaranteed to have exclusive
+access to the location in memory to which it points. The fact that the compiler can be
+assured that there are no alias references to a memory location means that more
+efficient code can be generated.
+The __restrict__ keyword can be used as a qualifier like const or volatile.
+The __restrict__ keyword is only valid for pointers and references. Unlike
+const or volatile, the __restrict__ qualifier applies only to a pointer
+and never to the data being addressed.
+The this pointer can be restricted by using the __restrict__ keyword on
+the member function declaration, as follows:
+void T::fnctn() __ restrict__ { ... }
+** Compiler Operation
+*** Libraries
+If you need to statically link a program and you are not using library routines, you
+can link with libsupc++.a instead and include only routines that are part of the
+fundamental language definition. To make the change, it is only necessary to specify
+the library name on the g++ command line as -lsupc.
+*** Mangling Names
+The solution is to have the compiler change the names in such a way
+that the argument information is not lost and the linker is able to
+match them up. The process of changing the names is called mangling.
+A mangled name is made up from the following pieces of information, in this order:
+1. The base name of the function
+2. A pair of underscore characters
+3. A possibly zero-length list of codes indicating any function qualifiers, such
+as const
+4. The number of characters in the name of the class of which the function is
+a member
+5. The name of the class
+6. A list of codes indicating the data types of the parameters
+
+For example, the function void cname::fname(void) is encoded as
+fname__5cname. The function int cname::stname(long frim) const is encoded
+as stname__C5cnamel, where C indicates the function is const and the trailing l
+(ell) indicates a single parameter of type long. A constructor is encoded by omitting
+the function name. For example, the constructor cname::cname(signed char) is
+encoded as __5cnameSc, where the Sc pair indicates a signed char parameter.
+The codes for the various types and qualifiers are listed in Table 5-3. The meanings
+of some of the codes depend on how and where they are used in the encoding string,
+but with the entries in the table and a little practice you will be able to demangle the
+names in object files well enough to match the names with the source.
+
+A demangler named c++filt is part of the binutils package. You can enter a
+mangled name on the command line, and it will present you with a demangled version
+of the name, as shown in the following example:
+$ c++filt pdq__3MphiUsJde
+---> Mph::pdq(int, unsigned short,__complex double, ...)
+*** Linkage
+1.Virtual Function Table
+A virtual table is a list of the addresses of the virtual functions in a class. If class A
+contains a virtual function, and the function is overridden by the subclass B, then the
+address of the new function replaces the address of the original function in the virtual
+function table, or vtable. This is done because of the requirements of polymorphism—if
+an object of class B has been cast as being an object of class A, then a call to the virtual
+function uses the table and will actually be a call to the function in B, not the one in A.
+2.Runtime Type Identification
+In C++ each object contains identity information for the implementation of
+dynamic_cast, typeid, and exception handling. For classes with virtual functions,
+the information is included along with the vtable so that the type can be determined at
+runtime by dynamic_cast. If there is no vtable (that is, the class is not polymorphic),
+the information is only included in the object code where it is actually used (on
+a typeid statement or where an exception is thrown).
+3.COMDAT
+A declaration in a header file can cause a copy of the generated code to be included
+as part of the object file of every compilation unit that includes the header file. This
+involves such things as global data declarations and member functions with bodies
+declared as part of the class definition. On systems that support it (the GNU linker on
+an ELF system, such as Linux or Solaris, and on Microsoft Windows and others), the
+linker will discard all but one copy of the code to be placed in the final executable.
+In the documentation of linkers, you will see this referred to as folding, comdat
+folding, identical comdat folding, comdat discarding, or even transitive comdat elimination.
+4.Inline Functions
+An inline function is generally declared in a header file that is included by every
+module that needs to call the function. Even though it may be declared as inline,
+an instance of the function itself is also created in case it is needed in a situation
+where it cannot be expanded inline, such as when its address is taken.
+*** Including a template definition in a header file and including the header file in multiple
+modules creates multiple copies of the compiled template. This approach will work,
+but, in a large program with a large number of templates, a compiled copy of every
+template is included in every object file. This can make the compile time very long and
+can create very large object files. Here are some alternatives:
+■ The #pragma interface and #pragma implementation directives can be
+used in the source files (as described earlier in this chapter), which causes the
+creation of only one version of the compiled template.
+■ An approach similar to using the two pragmas is to use the command-line
+option -falt-external-templates to compile all the source. This instructs
+the compiler to include a compiled template instance only if the module actually
+uses it. One important characteristic of this approach is that the header file must
+be identical for each module using it.
+■ Compile the code using the -frepo command-line option. This causes the
+creation of files with the suffix .rpo, each listing the template instantiations
+to be found in its corresponding object file. The link wrapper utility, named
+collect2, will then be invoked to update the .rpo files with instructions to the
+linker as to the placement of the template instances in the final program. The only
+difficulty with this approach has to do with libraries—unless the associated .rpo
+files are also present, linking template instantiations stored in a library will fail.
+■ Compile the code using -fno-implicit-templates, which disables implicit
+template instantiation and explicitly instantiates the ones you want. This
+approach requires that you know exactly which template instantiations you
+are using, but it does cause the source code to be more explicit and clear.
+
+* Compiling Objective-C
+* Compiling Fortran
+* Compiling Java 
+* Compiling Ada
+* Mixing Languages
+** Mixing C++ and C
+*** Calling C from C++
+*** Calling C++ from C
+* Internationalization
+* Peripherals and Internals
+* Linking and Libraries
+** Object Files and Libraries
+*** Object Files in a Directory
+*** Object Files in a Static Library
+To create an index or to update an existing index, you can use the
+ranlib utility. For example, the following pair of commands use the -q
+option of ar to quickly append files to an existing archive without
+updating the index, and then it uses ranlib to update the index to
+reflect the current status of the archive:
+$ ar -q libspin.a mongul.o strop.o klbrgr.o
+$ ranlib libspin.a
+*** Object Files in a Dynamic Library
+** A Front End for the Linker
+On almost every system, gcc invokes a utility program named collect2 that
+assumes the responsibility of linking. The collect2 process detects static constructors
+that must be executed before the mainline of the program begins. To make certain these
+static constructors are executed, collect2 generates a special table of the constructors
+in a temporary .c source file, compiles it, and includes it as part of the linked executable.
+At the beginning of the main() function is a call to __main() to execute the static
+constructors.
+The collect2 program can be executed just as if it were the linker ld. It takes the
+same set of arguments and passes the arguments on to ld to do the actual linking. In
+fact, it may need to link the program twice—once to determine the names of the static
+constructors (which will be found in the linker’s output) and again to produce the final
+executable file.
+Not only does collect2 invoke ld the linker, it also uses nm to demangle and extract
+names from object files, and it uses strip to remove symbols from the object files.
+** Locating the Libraries
+*** Locating Libraries at Link Time
+*** Locating Libraries at Runtime
+■ Each of the directories listed in the colon-separated list in the environment
+variable LD_LIBRARY_PATH
+■ The list of libraries found in the file /etc/ld.so.cache, which is maintained
+by the ldconfig utility
+■ The directory /lib
+■ The directory /usr/lib
+
+  If you want to find out which A libraries are being loaded and used by a specific
+application, you can use the ldd utility described later in this chapter.
+  Another environment variable, LD_PRELOAD, can contain a list of shared library
+names (separated by spaces, tabs, or newlines) that will be preloaded before any other
+library searching takes place. In this way, you can override the functions that would
+normally be loaded from a shared library. For security reasons, some limitations are
+imposed on this technique for setuid programs.
+** Loading Functions from a Shared Library
+/* sayhello.c */
+#include <stdio.h>
+void sayhello()
+{
+  printf("Hello from aloaded function\n");
+}
+/* saysomething.c */
+#include <stdio.h>
+void saysomething(char *string)
+{
+  printf("%s\n",string);
+}
+$ gcc -fpic -shared sayhello.c saysomething.c -o libsayfn.so
+
+/* say.c#include#include*/
+<dlfcn.h>
+<stdio.h>
+int main(int argc,char *argv[])
+{
+  void *handle;
+  char *error;
+  void (*sayhello)(void);
+  void (*saysomething)(char *);
+  handle = dlopen("libsayfn.so",RTLD_LAZY);
+  if(error = dlerror()) {
+    printf("%s\n",error);
+    exit(1);
+  }
+  sayhello = dlsym(handle,"sayhello");
+  if(error = dlerror()) {
+    printf("%s\n",error);
+    exit(1);
+  }
+  saysomething = dlsym(handle,"saysomething");
+  if(error = dlerror()) {
+    printf("%s\n",error);
+    exit(1);
+  }
+  sayhello();
+  saysomething("This is something");
+
+  dlclose(handle);
+}
+$ gcc say.c -ldl -o say
+The flag used as the second argument on the call to dlopen() can be RTLD_NOW,
+which causes all the functions in the library to be loaded into memory and become
+immediately available. The other option is to specify RTLD_LAZY, which will delay the
+actual loading of each function until it is referenced on a call to dlsym(). Either of these
+flags can be OR‘ed with RTLD_GLOBAL, which allows any external references in this
+library to be resolved by calling functions found in other (also loaded) dynamic libraries.
+The calls to dlsym() in the example, with the handle returned from dlopen()
+and the name of a function, return the address of a function in the loaded library.
+Once the function address is returned and stored in the appropriate pointer, it can
+be called directly.
+After the calls to dlopen() and dlsym(), calls to dlerror() are made so the
+program will detect and report any error condition.
+** Utility Programs to Use with Object Files and Libraries
+The ldconfig utility performs two fundamental functions dealing with shared libraries.
+First, it creates links so that references to shared libraries are always to the latest version.
+Second, it stores a complete list of the available shared libraries in the file /etc/
+ld.so.cache.
+Because of the privileged accesses required, it is necessary to log in as root to run
+ldconfig. The following command will create all the new links necessary and generate
+a new version of the file /etc/ld.so.cache:
+% ldconfig -v
+*** Listing Symbols Names in Object Files
+nm /lib/libc-2.18.so
+*** Removing Unused Information from Object Files
+The strip utility removes the debugging symbol table information from the object
+file or files named on the command line. The object file can be a static library, a shared
+library, or a .o file produced by the compiler. 
+$ strip main.o libglom.a
+*** Listing Shared Library Dependencies
+$ ldd /lib/libc.so.6
+--->  /lib/ld-linux.so.2 (0xb760e000)
+      linux-gate.so.1 (0xb760d000)
+*** Displaying the Internals of an Object File
+The objdump utility can be used to extract information from object files, static libraries,
+and shared libraries and then list this information in a human-readable form. It can be
+used to dump the information from several different formats of object files. To determine
+the object file formats recognized by objdump, enter the following command:
+$ objdump -i
+
+$ objdump -f -h -EB helloworld.o
+-d --disassemble Assembly language of the executable code
+-f --file-headers Contents of the overall file headers
+-h --section-headers Contents of the section headers
+-EB Same as --endian=big.
+-t --syms Contents of the symbol table
+
+* Using the GNU Debugger
+** Debugging Information Formats
+*** STABS
+.stabs "name:symdesc=typeinfo",type,other,description,value
+.stabn type,other,description,value
+.stabd type,other,description
+*** DWARF
+The debug information is generated in the assembly language in special sections of
+code with names such as .debug_pubnames, .debug_aranges, .debug_info, or
+just .debug. These special sections contain data and executable code that can be used
+to identify and extract information from a running program. The linker groups the ones
+with the same section names into single blocks in the object code, which can be used to
+identify the location of items and establish relationships between object code addresses
+and lines of source code.
+*** COFF
+  The Common Object File Format (COFF), sometimes called the a.out format, is a
+standard format of object files on UNIX System V and many of its derivative systems.
+This is the object file format adopted by Microsoft for DOS and Windows. The Linux
+variant of this format is called ELF.
+  The COFF format doesn’t contain information specifically designed for debugging—
+the information is primarily for linking—but it does contain much of the information
+required by a debugger. The symbol table contains every relocatable symbol, and the
+relocation table contains references to the symbol table entries and information on the
+data types. It also contains line number information that can be used to associate the
+binary code with the original source code. The symbol table contains a full
+description of each symbol, along with size and descriptive information.
+  The COFF format divides the object into sections. The .text section contains
+executable code, the .data section contains variables with initial values, and the .bss
+section contains uninitialized data. The fundamental reason for this division is that if
+more than one instance of a program is running, they can share the same .text section
+in memory, the .data section can be loaded into memory as a single block to set all
+initial values, and the .bss section can exist in the file as only a single number (the size)
+and can be expanded to the correct size when the program is loaded.
+  The information contained in this format is not as extensive as that contained in
+STABS or DWARF, so you will often see a basic COFF file with STABS or DWARF
+information inserted into it to allow for more extensive debugging.
+*** XCOFF
+  The XCOFF object file format is an extension of the basic COFF format.
+  The fundamental format is the same as COFF, but the XCOFF format also includes
+STABS strings stored in a .debug section rather than the COFF approach of storing
+them in a string table. That is, the XCOFF format is a blend of COFF and STABS, with
+some of the COFF pieces left out so there is no duplication of data, as is required when
+STABS is inserted into the COFF format.
+** Compiling a Program for Debugging
+$ gcc -g3 -gstabs+ ...
+** Loading a Program into the Debugger
+$ gcc -g fibonacci.c -o fibonacci
+(gdb) break main
+Breakpoint 1 at 0x80483a0: file fibonacci.c, line 14.
+(gdb) display current
+(gdb) display next
+(gdb) run
+** Performing a Postmortem
+On a UNIX system, a program that crashes will trigger a function of the operating system
+that dumps a copy of the program’s image in memory to a file named core. If the program
+has been compiled with the -g option, it is a relatively simple matter to determine
+exactly where in the code the crash occurred.
+
+$ ulimit -c 
+$ ulimit -c unlimited 
+---> switch to generate core file while a program crashes
+$ gdb falldown core
+...
+#0 0x080483d0 in setbad () at falldown.c:14
+14 *nowhere = "This is a string\n";
+(gdb) print nowhere
+$1 = (char **) 0x0
+(gdb) bt
+#0 0x080483d0 in setbad () at falldown.c:14
+#1 0x080483a5 in main (argc=1, argv=0xbffffa8c) at falldown.c:8
+** Attaching the Debugger to a Running Program
+$ gcc -g looper.c -o looper
+To start the program running in the background, enter the following command:
+$ looper &
+$ ps ax | grep looper
+29627 pts/4 R 1.58 looper
+32298 pts/4 S 0:00 grep looper
+$ gdb looper 29627
+...
+** Command Summary
+*** awatch
+Sets a watch point so that execution will stop whenever
+the value in the named location is either read from or
+written to. Also see rwatch and watch.
+*** backtrace,bt
+Prints a backtrace of all stack frames showing the function
+calls and argument values that brought the program to
+this location. This command has the short form bt.
+*** break,b
+Sets a breakpoint that stops execution at the specified line
+number or function name.
+*** clear
+Clears the breakpoint at the line number or function that
+ breakwas initially set by the command.
+*** continue
+Continues execution of a program that has been halted by
+the  debugger.
+*** Ctrl-C
+Interrupts a running program just as if a breakpoint were
+hit at the current line.
+*** disable
+ Disables the breakpoints listed by number.
+*** display
+Displays the value of the specified expression each time
+the program is halted.
+*** enable
+Enables the breakpoints listed by number.
+*** finish
+Continues execution of a program that has been
+halted by the debugger and continues until the
+current function returns.
+*** ignore
+Sets the ignore count of a breakpoint. For example,
+the command ignore 4 23 will require that breakpoint
+number 4 be hit 23 times before it actually breaks.
+*** info breakpoints,i ...
+Lists the status and description, including the number,
+of all breakpoints.
+*** info display,i ...
+Lists the status and description, including the number,
+of the previously defined display commands.
+*** kill
+Kills the running of the current process.
+*** list,l
+Lists ten lines of code. If no other arguments are on
+the command line, the ten lines begin with the current
+location. If a function is named, the ten lines start
+with the beginning of the function. If a line number
+is specified, that line number will be the one in the
+center of the listing.
+*** load
+Dynamically loads the named executable file into gdb
+and prepares it for debugging.
+*** next,n
+Continues execution of a program that has been halted
+and executes all the instructions corresponding to a
+single line of source code, but treats a call to a function
+as one line of code and doesn’t stop until it returns.
+*** nexti
+Continues execution of a program that has been halted
+and executes a single assembly language instruction, but
+treats a call to a function as one instruction and doesn’t
+stop until it returns.
+*** print,p
+Immediately displays the value of the specified expression.
+*** ptype
+Prints the type of the named item.
+*** return
+Forces an immediate return from the current function.
+*** run
+Starts the program into execution from its beginning.
+*** rwatch
+Sets a watch point so that execution will stop whenever
+the value in the named location is read. Also see awatch
+and watch.
+*** set
+Sets the named variable to the expression. For example,
+set nval=54 will store the value 54 into the memory
+location named nval.
+*** step,s
+Continues execution of a program that has been
+halted and executes all the instructions corresponding
+to a single line of source code. It will step into a
+called function.
+*** stepi
+Continues execution of a program that has been halted
+and executes a single assembly language statement.
+It will step into a called function.
+*** txbreak
+Sets a temporary breakpoint (works only one time) at
+the exit point of the current function. Also see xbreak.
+*** undisplay
+Deletes the display expression listed by number.
+*** watch
+Sets a watch point so that execution will stop whenever
+the value in the named location is written. Also see
+rwatch and awatch.
+*** whatis
+Prints the data type and the value of the specified
+expression.
+*** xbreak
+Sets a breakpoint at the exit point of the current function.
+Also see txbreak.
+
+* Make and Autoconf
+** make
+The relationship of an object file to the source file used to produce
+it is known as a dependency. The object file produced by the commands
+associated with a dependency is known as the target.
+the command lines must be indented with a tab character. The tab
+character, even though invisible on the screen or when printed, is
+part of the syntax of the makefile script. If you fail to use a tab
+(or use spaces instead), you will get a “missing separator” message,
+which, fortunately, specifies the line number of the missing tab.
+*** Internal Definitions
+While reading a makefile, whenever make encounters a # character, the rest of the
+line is considered a comment and is ignored.
+**** Macros
+showmacros:
+echo HOME is $(HOME) # defined as an environment variable
+echo COMPILE.f is $(COMPILE.f) #defined as a makefile default
+echo HERBERT is $(HERBERT) # defined locally in the makefile
+--->
+echo HOME is /home/k # defined as an environment variable
+HOME is /home/k
+echo COMPILE.f is f77   -c #defined as a makefile default
+COMPILE.f is f77 -c
+echo HERBERT is Herbivore # defined locally in the makefile
+HERBERT is Herbivore
+
+Each of the echo commands is displayed before the output it produces because the
+default mode of make is to echo each command before it is executed.
+
+**** Suffix Rules
+all: hello.o hello.s
+hello.o: hello.c
+hello.s: hello.c
+.SUFFIXES: .o .c .s
+
+.c.o:
+   gcc -c $<
+.c.s:
+   gcc -S $<
+
+This makefile is designed to make two targets: one is hello.o, and the other is
+hello.s. Because the rules to make these targets have no commands associated with
+them, the three file suffixes recognized are .c, .o, and .s. The suffix rule named .c.o
+converts a file with a .c suffix into a file with a .o suffix, and the suffix rule .c.s has
+a command that will convert a file with a .c suffix into a file with a .s suffix. The
+special macro $< is a reference to the name of the file being used to construct the target.
+
+Suffix rules can be, and usually are, a bit more complicated than the ones shown
+here, but you normally don’t have to write them yourself. A large number of suffix
+rules are built into GNU make—enough that you only need to spell out the commands
+if you are doing something special.
+**** Viewing the Definitions
+$ make -p | more
+  To see the same list but prohibit the makefile commands from actually being executed,
+you can enter the command this way:
+$ make -p -q | more
+  If you would rather see only the definitions that are built into GNU make without
+seeing any of the definitions from the local makefile, you can have make read an empty
+makefile this way:
+$ make -p -f /dev/null | more
+
+*** How to Write a Makefile
+If you are new to writing makefiles, the best thing to do is copy an existing one and
+modify to it do what you would like it to do. After you do this for your first few
+makefiles, you begin to get the feel for the general form. If you want to learn enough
+about how make works to be able to write makefiles from scratch, you are going to
+need to spend some time researching and experimenting. 
+CC=gcc
+PROGS=howdy hello
+CFLAGS=-Wall
+all: $(PROGS)
+howdy: howdy.c
+
+hello: hello.c
+    $(CC) $(CFLAGS) hello.c -o hello
+clean:
+    rm -f *.o
+    rm -f *.so
+    rm -f *.a
+    rm -f $(PROGS)
+*** The Options of Make
+**** --assume-old=filename,-o filename,--old-file=filename
+Specifies to not remake the named file regardless
+of its age, and not remake any other files based
+on a dependency on this file.
+**** --assume-new=filename,-W filename
+ Assumes that the specified file name is a new
+file and that every target depending on it must
+be rebuilt.
+**** -C directory,--directory=directory
+ Changes to the named directory before searching
+for files to determine dependencies.
+**** -d
+ Same as --debug=a.
+**** --debug[=flags]
+Displays information about processing in a form that can be useful
+for debugging makefile errors. If no flags are specified, basic
+debugging information is displayed. The value of flags can be any
+combination of the following letters:
+a -- Displays all types of debugging information. This is a very
+verbose option. 
+b -- Displays basic information, including a list of out-of-date
+targets and whether the commands were successful.
+i -- Displays information about the search for implicit rules for each
+target along with the information of the b flag.
+j -- Displays information on the invocation of subcommands.
+m -- The other options are disabled during the construction of
+makefiles by this makefile, but this flag enables any other flags
+during makefile generation.
+v -- Displays the information of the b flag and adds information about
+targets that did not require command execution.
+**** --dry-run,--just-print,-n,--recon
+Specifies to not execute any commands. Instead, this option lists all
+the commands that would be executed if this were not a dry run.
+**** --environment-overrides,e
+Environment variables override variables defined
+inside the makefile.
+**** --ignore-errors,-i
+Processing normally stops at the first failure to
+make a target, but this option instructs make
+to continue by going to the next target.
+**** --keep-going,-k
+Specifies to continue to process as many targets
+as possible after an error. Nothing that depends
+on a failed target can be made, but the failure of
+one dependency does not prevent the others
+from being processed.
+**** --print-data-base,-p
+Prints the rules and the values of variables. This
+information is a combination of the predefined
+values and the contents of the makefile.
+**** --print-directory
+Prints a message stating the name of the working
+directory both before and after executing the
+makefile. This only has meaning when makefiles
+are invoking one another.
+**** -q
+Specifies to not run any commands or produce
+any other form of output, except a return status
+code. A status code of 0 indicates that all targets
+are up to date and nothing would be compiled if
+make were run normally. A status code of 1 indicates
+that one or more of the targets need to be made.
+A status code of 2 indicates an error.
+**** --silent,-quiet,-s
+Suppresses the normal printing of each command
+as it is executed.
+**** --touch,-t
+Adjusts the date settings on the target files to
+bring them up to date, instead of actually executing
+the commands to create new versions of the files.
+
+** autoconf
+    Autoconf is a utility that creates installation shell scripts to be included as part of the
+distributed source code. By default, the installation script is named configure. The
+configure script runs independently, so there is no need for Autoconf to be present
+on the system to be able to configure and install the software.
+    There is more than one advantage to using Autoconf to package and organize your
+distribution. The configure script will check for the presence or absence of certain
+system capabilities and will generate makefiles that reflect the current environment,
+which means your application can be immediately ported to virtually every version of
+UNIX. The procedure for installing software by using the configure script to set up
+the compilation has become common enough that most people already know the
+installation procedure. To install software that has been packaged using Autoconf, the
+procedure usually goes something like this:
+  $ ./configure
+  $ make
+  $ make install
+*** Autoconf as a set of tools
+**** autoconf
+Using a template file as input, this tool generates a configuration
+script that will generate makefiles and installation scripts for
+the current (or the specified) platform.
+**** autoheader
+This program creates a template file containing #include statements to
+be used by the configure script created by autoconf.
+**** autoreconf
+This program updates the configuration scripts by running autoconf
+only in the directories where the date stamp on the files indicates
+that an update is necessary.
+**** autoscan
+This program scans the source files in the directory tree and
+generates a preliminary version of the template file that is the input
+file to autoconf.
+**** autoupdate
+This program updates an existing template file to match the syntax of
+the current version of autoconf.
+**** ifnames
+This program scans all the C source files and the names appearing
+on #if, #elif, #ifdef, and #ifndef preprocessor directives. The list
+is sorted, and each name includes a list of file names in which it was
+found.
+*** the process of creating installation scripts
+**** Determine conditional compilation
+$ ifnames *.c *.h
+The output is a list of the conditionally defined macro names and the files in
+which they are defined.
+**** Create the configure.in file
+$ autoscan
+This will produce a file named configure.scan, which is a skeleton of the file
+that will be used to construct the final configure script. Copy (or move)
+configure.scan to configure.in so the appropriate setup lines can be
+added to it.
+**** Edit the configure.in file
+This is the main part of the task. This file is made up of m4 macro
+directives to be parsed by Autoconf to generate the final configure
+script. If your installation becomes more complex than can be handled
+by the macros, this script can also include shell script fragments
+that will be copied directly into the final configure script.
+**** Create makefile.in
+To take advantage of the configuration decisions made by Autoconf, you
+need to modify your makefile (and name it makefile.in) to contain the
+definitions produced by Autoconf.
+**** Create config.h.in
+The simplest way to create the header file is to run autoheader
+and let it create config.h.in, which is used as the input in the creation
+of config.h. This can be done by entering the command with no
+arguments, as follows:
+$ autohead | autoheader
+**** Update your source
+In any of your source files that require portability considerations,
+you will want to include the header config.h. This makes it possible
+to conditionally compile according to the installation environment.
+**** Create the installation script
+The autoconf utility reads configure.in and produces the configure
+file with the following command:
+$ autoconf
+**** Copy the Autoconf scripts
+The following three scripts should be included as part of your
+installation package. They are part of your Autoconf installation and
+can normally be found in a directory named /usr/lib/autoconf or
+/usr/share/automake:
+  config.guess
+  config.sub
+  install-sh
+
+* The GNU Assembler
+** Assembling from the Command Line
+If you find yourself in a situation where you need to write an assembly module, the
+best way to start is to write a simple program in C that contains all the structural elements
+you need and then use gcc with the -S option to generate assembly language source.
+Writing in assembly language is error prone and can be very tedious, so it is best to
+start with a solid mechanical foundation.
+If you don’t need much assembly language, it may be easier to insert it as inline
+assembly, as described later in this chapter.
+** Absolute, Relative, and Boundaries
+** Inline Assembly
+*** The asm Construct
+/* half.c */
+#include <stdio.h>
+int main(int argc,char *argv[])
+{
+  int a = 40;
+  int b;
+  asm("movl %1,%%eax; \
+      shr %%eax; \
+      movl %%eax,%0;"
+      :"=r"(b)
+      :"r"(a)
+      :"%eax");
+
+  printf("a=%d b=%d\n",a,b);
+  return(0);
+}
+This construct is much more than a simple technique for inserting assembly language
+code—it makes it possible for you to use C syntax to address your variables and
+even allows you to specify information to be passed on to the C code generation and
+optimization stages, so it can generate efficient code in the context of what you are
+doing. The following is the syntax of the asm construct:
+
+asm(assembly language template
+: output operands
+: input operands
+: list of clobbered registers);
+If you want to prevent the compiler from trying to optimize your assembly language
+code, you can use the volatile keyword, like the following:
+asm volatile ( ... )
+Also, if you need to be POSIX compliant, you can use the keywords __asm__ and
+__volatile__ instead of asm and volatile.
+*** The Assembly Language Template
+1.A register name begins with two percent signs, such as %%eax and %%esi. The
+Intel register names normally begin with a percent sign, and the asm template
+also requires a percent sign, which is why there must be two.
+2.A memory location is one of the input or output operands. Each of these is
+specified by a number according to the order of its declaration following the
+colons. The first output operand is %0. If there is another output operand, it
+will be %1, and so on. The numbers continue with the input operands—for
+example, if there are two output operands, the first input operand will be %2.
+3.A memory location can also be addressed by having its address stored in
+a register and enclosing the register name in parentheses. For example, the 
+following will load the byte addressed by the contents of register %%esi 
+into the %%al register:
+movb (%%esi),%al
+4.An immediate (constant) value is designated by the dollar ($) character
+followed by the number itself, as in $86 or $0xF12A.
+5.All the assembly language is a single-quoted string, and each line of the
+assembly code requires a terminator. The terminator can be a semicolon or
+a newline (\n) character. Also, tabs can be inserted to improve readability
+of assembly language listings.
+*** Input and Output Operands
+The rules for specifying the input and output variables are as follows:
+■ The C expression, which results in an address in your program, is enclosed
+in parentheses.
+■ If the address is preceded by "r", it applies the constraint that the value must
+be stored in a register. Input variables will be loaded before your assembly
+language is executed, and output variables will be stored in memory after
+your code has executed. The "=r" form should be used for output operands.
+■ A variable may be constrained to a specific register with one of the following:
+"a" %%eax
+"b" %%ebx
+"c" %%ecx
+"d" %%edx
+"S" %%esi
+"D" %%edi
+■ A variable can be constrained to be addressed in memory instead of being
+loaded into a register by using the "m" constraint.
+■ In the case of the same variable being used as both an input and output value,
+the "=a" constraint is used for its output constraint, and its reference number
+is used for its input constraint. The following example uses counter for both
+input and output:
+asm("incw %0;"
+: "=a"(counter)
+: "0"(counter));
+■ You may use any number of input and output operands by separating them
+with commas.
+■ The output and input operands are numbered sequentially beginning with $0
+and continuing through $n-1, where n is the total number of both input and
+output operands. For example, if there is a total of six operands, the last one
+would be named $5.
+*** List of Clobbered Registers
+The list of registers that are clobbered by your code is simply a list of the register names
+separated by commas, as in the following example:
+. . .
+"%eax", "%esi");
+toThis information is passed on to the compiler so it will know not to expect any values
+be retained in these registers.
+** Assembler Directives
+  The primary purpose of an assembler is to translate mnemonic opcodes into binary
+opcodes that can be executed by the hardware or used as data storage locations. In
+addition, the assembler understands and acts on assembler directives, which can be
+used to align code, define macro expansions, divide the code into named sections,
+declare named constants, provide conditional assembly, or simply be a shorthand
+method for defining character data.
+  The following is a list of the assembler directives for the GNU assembler. In each case,
+the directive begins with a period. Some directives stand alone, some have arguments
+that appear on the same line, and some can be several lines long, until another directive
+acts as a terminator. Some directives—particularly the ones used to insert debugging
+information—are only valid with one or two object file formats.
+  Some directives are recognized by the assembler, but they are either deprecated or
+have no effect. For example, the .abort directive still aborts the assembly process but
+will probably soon disappear. Examples of directives that are often recognized by the
+assembler but do nothing are .file, .app-file, .extern, .ident, and .lflags.
+*** .if expression 
+The code following this directive is assembled only if the expression
+(which must be absolute) evaluates to a value other than zero. The end of the section of
+conditionally assembled code is marked with an .endif directive. For example, the
+following two instructions will only be assembled if the value of topside and current
+are the same:
+.if topside - current
+    pushl %ebp
+    movl %esp, %bp
+.endif
+The optional .else clause is assembled if thefollowing example:
+expression is false,as in the
+.if ENTERING
+    pushl %ebp
+.else
+    popl %ebp
+.endif
+
+The alternative forms of .if are .ifdef, .ifndef, and .ifnotdef, which test
+whether a symbol has been defined.
+*** .irp tag,str[,str ...]
+The code between the .irp and .endr directives is assembled once for
+each value listed, with the value inserted for each occurrence of the
+tag preceded by a backslash. For example, the following specifies
+three registers:
+.irp
+    tag,esp,ebp,eax
+subl
+    $1,%\tag
+.endr
+The code is assembled once for each of the strings, as follows:
+subl $1,%esp
+subl $1,%ebp
+subl $1,%eax
+Also see .macro, .rept, and .irpc.
+*** .macro name [tag[=value]] [,tag[=value]]
+A recursive macro processor that can be used to assign a name to a
+block of code, with optional arguments, that can be expanded and
+assembled in other locations. For example, the following macro is
+named saveregs and will expand to a pair of pushl statements wherever
+it is used:
+  .macro saveregs
+  pushl %ebp
+  pushl %eax
+  .endm
+To expand the macro, it is a matter of using its name wherever you would normally
+use an opcode, like the following:
+  main:
+  saveregs
+  movl %esp,%ebp
+The .macro directive can be used recursively and can accept arguments. The following
+macro can be used in the declaration of a block containing a variable number of constants
+of a selected type:
+  .macro block type=.int count=1
+  .if \count
+  \type 0
+  block \type,\count-1
+  .endif
+  .endm
+If no arguments are supplied to the macro, the declaration will consist of one .int.
+The following statement will generate the declaration of five .long data types:
+  block .long 5
+It is possible to use .exitm to halt a macro expansion at any point. For example,
+the following statement will abandon macro expansion if the value of trigger is 12:
+  .if trigger-12
+  .exitm
+  .endif
+*** .rept count
+ Repeats the code between .rept and .endr the specified number of times.
+For example, the following sequence will declared 14 .int values, each initialized to 10:
+.rept 14
+.int 10
+.endr
+
+* Cross Compiling and the Windows Ports
+* Embedded Systems
+* Output from the Compiler
+Options are available that make it possible for you to discover what the compiler
+thinks your program means syntactically, where the compiler searches for subprocesses
+and libraries, and get a listing of the intermediate language produced from parsing your
+program. You can get a complete listing of all the header files included by a program,
+and you can automatically generate a dependency statement for a makefile based on
+the source code.
+** Information about Your Program
+The compiler constructs detailed internal tables containing information about the program
+being compiled, and command-line options are available that make it possible for you
+to extract some of this information. Not only can you examine the parse tree, which
+contains the compiler’s interpretation of your code, but you can also get a complete
+listing of all header files included, the amount of time the compile has taken, and how
+much memory each module of your program requires. For C++ programs you can extract
+class definition relationships.
+*** The Parse Tree
+The compiler parses your program into an internal tree. This tree structure, representing
+the original source code, can be dumped to a file with the suffix .tu by using the
+-fdump-translation-unit option, as in the following example:
+  $ gcc -fdump-translation-unit showdump.c -o showdump
+The output file produced by this command contains a textual representation of the
+tree in showdump.c.tu. Each node in the tree is numbered (shown as @1, @2, and so
+on), and the tree structure is represented by each tree node referring to other tree nodes
+by numbers.
+@1 function_decl name: @2 type: @3 srcp: showdump.c:5
+                 chan: @4 args: @5 extern
+@2 identifier_node strg: main lngt: 4
+@3 function_type size: @6 algn: 64 retn: @7
+                 prms: @8
+@4 var_decl name: @9 type: @7 srcp: showdump.c:3
+            chan: @10 init: @11 size: @12
+            algn: 32 used: 1
+@5 parm_decl name: @13 type: @7 scpe: @1
+             srcp: showdump.c:4 chan: @14
+             argt: @7 size: @12 algn: 32
+             used: 0
+*** Header Files
+The -H option, which can also be written as --trace-includes, generates a nested
+listing of all the include files. The following example is the output generated on a Linux
+system for a C program that includes only stdio.h:
+. /usr/lib/gcc-lib/i586-pc-linux-gnu/3.2/include/stdio.h
+.. /usr/include/features.h
+... /usr/include/sys/cdefs.h
+... /usr/include/gnu/stubs.h
+...
+... /usr/lib/gcc-lib/i586-pc-linux-gnu/3.2/include/stdarg.h
+.. /usr/include/bits/stdio_lim.h
+Multiple include guards may be useful for:
+/usr/include/bits/pthreadtypes.h
+/usr/include/bits/sched.h
+/usr/include/bits/stdio_lim.h
+/usr/include/gnu/stubs.h
+Each level of inclusion is indicated by the number of periods preceding the name.
+Also, at the bottom of the listing are the names of header files that probably should be
+fixed because including any one more than once could cause problems with multiple
+definitions.
+*** The Memory Required by the Program
+The compiler can be requested to produce a summary of the amount of memory required
+for the compiled program, along with some details of how that memory has been
+allocated.
+From this listing you can determine the amount of memory allocated for various
+parts of your program as well as how much of each allocation is being used. This can
+be especially useful in analyzing large programs and object modules for embedded
+systems.
+*** Time Consumed
+The -time option can be used when compiling and linking to cause gcc to list the
+amount of time consumed by each individual process. 
+gcc -time getshow.c strmaker.c showstring.c -o getshow
+# cc1 0.15 0.02
+# as 0.01 0.00
+# cc1 0.08 0.03
+# as 0.01 0.01
+# cc1 0.13 0.03
+# as 0.01 0.00
+# collect2 0.13 0.05
+The first of the two times listed for each process is the user time (the amount of time
+spent executing the code of the subprocesses), and the second is the system time (the
+amount of time the process spent in making system calls). The actual wall-clock time is
+not listed, but a total time for the entire gcc process, including the wall-clock time, can
+be added by using the standard time utility to run gcc, as in the following example:
+$ time gcc -time getshow.c strmaker.c showstring.c -o getshow
+*** The C++ Intermediate Tree
+The g++ compiler can be instructed to dump the intermediate language produced by the
+front end translation. The dump can be taken at different points during the compilation
+process.
+$ g++ -fdump-tree-original minmax.cpp -o minmax
+$ g++ -fdump-tree-optimized minmax.cpp -o minmax
+$ g++ -fdump-tree-inlined minmax.cpp -o minmax
+  To reduce the amount of information included in the listing, the
+-slim tag can be specified. To increase the amount of information in
+the dump, append the -all tag.  the following command will produce a
+verbose dump of the intermediate language following optimization:
+$ g++ -fdump-tree-optimized-all minmax.cpp -o minmax
+*** The C++ Class Hierarchy
+The g++ compiler can be instructed to dump the complete class hierarchy and virtual
+function tables of your program.
+$ g++ -fdump-class-hierarchy minmax.cpp -o minmax
+*** Information for the Makefile
+A collection of options exists that can be used to instruct the compiler to scan your source
+files and generate dependencies for insertion into a makefile. 
+The following compiler command reads the source file and produces a dependency
+line for the makefile (in this example, the header file strmaker.h includes motback.h):
+$ gcc -M getshow.c
+---> getshow.o: getshow.c strmaker.h motback.h showstring.h
+The -M option sets the -E option, which suppresses all output other than the
+dependency line. If you wish to produce a dependency line and continue with the
+compilation, enter the following:
+$ gcc -MD getshow.c -o getshow
+This command will produce the executable getshow and store the text of the
+dependencies in a file named getshow.d. The -MF option can be used to specify the name
+of the file, as in the following example, which places the dependencies in a file named
+depends.text:
+$ gcc -MD -MF depends.text getshow.c -o getshow
+The -MF option can also be used along with -M to suppress compilation and store
+the dependencies in a file, as follows:
+$ gcc -M -MF depends.text getshow.c
+An alternative way of specifying the name of the output file is to set the environment
+variable DEPENDENCIES_OUTPUT.
+The -MT option can be used with -M or -MM to specify the name of the target, as in
+the following example:
+$ gcc -M -MT spang.o getshow.c
+spang.o: getshow.c strmaker.h motback.h showstring.h
+** Information about the Compiler
+$ gcc -dumpversion
+To determine the target machine—the type of computer for which this compiler
+creates object files—enter the following:
+$ gcc -dumpmachine
+*** Time to Compile
+The -ftime-report option can be used to generate a listing of the time consumed for
+the various stages of compiling. This is mostly for compiler developers, but it can also
+be used to get a feel for the relative complexity of your programs. 
+Execution times (seconds)
+ R RN Agarbage collection : 1.13 (23%) usr 0.00 ( 0%) sys 0.50 (10%) wall A LL SS
+life analysis : 0.01 ( 0%) usr 0.00 ( 0%) sys 0.00 ( 0%) wall
+ ANpreprocessing : 0.43 ( 9%) usr 0.08 (24%) sys 1.00 (20%) wall D
+lexical analysis : 0.38 ( 8%) usr 0.10 (29%) sys 0.00 ( 0%) wall
+parser : 2.72 (56%) usr 0.14 (41%) sys 3.00 (60%) wall
+expand : 0.02 ( 0%) usr 0.00 ( 0%) sys 0.00 ( 0%) wall
+varconst : 0.05 ( 1%) usr 0.00 ( 0%) sys 0.50 (10%) wall
+integration : 0.03 ( 1%) usr 0.01 ( 3%) sys 0.00 ( 0%) wall
+local alloc : 0.01 ( 0%) usr 0.00 ( 0%) sys 0.00 ( 0%) wall
+global alloc : 0.01 ( 0%) usr 0.00 ( 0%) sys 0.00 ( 0%) wall
+rest of compilation : 0.00 ( 0%) usr 0.01 ( 3%) sys 0.00 ( 0%) wall
+TOTAL : 4.84 0.34 5.00
+The values are shown in terms of the number of seconds and the percentage each
+duration is of the total. The usr time is the duration spent in the actual execution of
+code inside the compiler. The sys time is the duration spent inside system calls (such
+as input and output), and the wall time is the actual time consumed.
+*** Subprocess Switches
+$ gcc -dumpspecs | less
+The specification for the options and arguments passed to a subprocess consists of a
+single string. A default set of spec definitions for each of the fundamental subprocesses
+is built into gcc and automatically becomes a part of the compiler front end, but it is
+possible to override the default spec strings at the time the compiler is configured.
+  *cpp:
+  %{posix:-D_POSIX_SOURCE} A %{pthread:-D_REENTRANT}
+With this spec, whenever gcc invokes cpp, the --posix option on the gcc command
+line will cause the appearance T of -D_POSIX_SOURCE on the cpp command line, and
+the appearance of --pthread on the gcc command line will cause the appearance of
+-D_REENTRANT on the cpp command line.
+The line of spec text defining the conditions for all the possible options passed to a
+subprocess can become quite involved. An example of a more complicated (but by no
+means the most complicated) spec set is one used in invoking an assembler:
+  *asm:
+  %{v:-V}%{Qy:} %{!Qn:-Qy} %{n}%{T}
+  In this example, if -v is specified on the gcc command line, the option -V is specified
+for the assembler. If -Qy is specified on the gcc command line, it is not passed on to
+the assembler, but if -Qn is not specified, then -Qy is added to the assembler command
+line. If either -n or -T is specified for gcc, each will be passed on to the assembler. No
+other options are passed to the assembler.
+*** Verbose Compiler Debugging Information
+The -d option can be used to instruct the GCC system to dump internal information
+at various stages of the compilation process. The information in the dumped files has
+meaning only to those working on the compiler itself, so even though the information
+is quite detailed, it will not help you in debugging or analyzing an application.
+
+** Information about Files and Directories
+  A collection of options can be used to request that the compiler look around the disk to
+find things for you.
+  $ gcc -print-file-name=libgcc.a
+  /usr/lib/gcc-lib/i586-pc-linux-gnu/3.2/libgcc.a
+  The -print-file-name option can be used to locate any library, but the libgcc.a
+library has an option of its own, as shown in the following example:
+  $ gcc -print-libgcc-file-name
+  /usr/lib/gcc-lib/i586-pc-linux-gnu/3.2/libgcc.a
+  In similar fashion, you can determine the full path name of the internal subprocesses,
+such as cc1 and cc1obj. For example, enter the following command to locate f771:
+  $ gcc -print-prog-name=f771
+  /usr/lib/gcc-lib/i586-pc-linux-gnu/3.2/f771
+You can determine the current GCC installation directory and the complete search
+path for both programs and libraries by entering the following command:
+  $ gcc -print-search-dirs
+
+* Implementing a Language
+** From Front to Back
+■ Lexical analysis The source code is read and tokenized. This process usually
+involves reading the source in a stream of one character at a time and deciding
+which of these characters belong together to have meaning for the language.
+The tokens can be roughly divided into three categories: names, numbers, and
+punctuation. Every language has its own set of rules about what is valid and
+what is not valid in each of these categories.
+■ Parsing The tokens have relationships among themselves, depending largely
+on their positions relative to one another in the stream coming in from the lexical
+scan. The parser determines the type of each token (keyword, symbolic name,
+number, and so on) and uses this information to form the entire source file into
+a tree. Nodes in the tree represent data declarations, functions, individual
+statements, and so on. The entire program is represented by the tree.
+■ Pruning Some amount of optimization is performed by analyzing the entries
+in the tree. Redundant and unused portions of the tree are removed. Some
+portions of the tree may be moved to other locations in the tree to prevent
+statements from being executed more often than necessary.
+■ RTL The contents of the parse tree are converted to Register Transfer
+Language (RTL) code. RTL is a special pseudo assembly language that contains
+opcodes for a hypothetical machine. The parse tree is “unrolled” into a linear
+sequence of RTL instructions. The instructions in the tree are reorganized as
+necessary, with branches inserted as necessary, in accordance with if-condition
+tests defined in the parse tree. Branching for case/switch type statements
+and loops is also inserted. Much of the translation done at this stage is target
+dependent—that is, the RTL code generated is in terms of the target machine
+and contains such things as the register allocation information.
+■ RTL optimizing Optimizations are performed on the RTL code. These
+optimizations include such things as tail recursion elimination, common
+subexpression elimination, jump optimization, and several others. This is an
+excellent place to perform optimization because it will apply to every language
+front end and every target back end.
+■ Assembly language The RTL is translated into assembly language for the
+target machine and written to a file.
+■ Assembling The assembler is invoked to translate the assembly language file
+into an object file. This file is not in an executable format—it contains executable
+object code, but not in a loadable form. Besides, it more than likely contains
+unresolved references to routines and data in other modules.
+■ Linking The linker combines object files from the assembler (some of which
+may be stored in libraries filled with object files) into an executable program.
+** Lexical Scan
+A compiler reads the source code of a program as a stream of characters and then
+groups the characters into a stream of tokens for processing. Each token is a number,
+a name, or punctuation. For example, the following line is made up of seven tokens:
+  if (grimle <= 43.1) {
+The process of breaking the line into its tokens is called a lexical scan, or just lex
+for short. The mechanical process of performing a lexical scan is the same for any
+language, except for changes in the rules that define which characters are valid for
+symbols and which are the valid punctuation characters. In fact, the process is consistent
+enough from one programming language to another that a standard utility exists that
+can be used to write your lexical scanner program for you. The standard UNIX utility
+named lex—or the GNU equivalent named flex—can be given the set of rules that
+your language is to follow, and it will produce a program that will generate the token
+stream from the input source.
+*** A Simple Lex
+  %%
+  howdy printf("(The word is 'howdy')");
+  now printf("(The time is %ld)",time(0L));
+  %%
+The %% characters specify the beginning and end of the list of character matching.
+This example will detect a match on either of the two words and execute the command
+following it. The command is actually a C program statement that will be included in
+the program produced by this script. The following pair of statements will create the C
+program, named lex.yy.c, and compile it into an executable named howdy:
+  $ flex howdy.lex
+  $ gcc lex.yy.c -lfl-o howdy
+This program can be run from the command-line. It will run and wait for input,
+which you can enter from the keyboard. Anything that you enter that is not one of the
+two recognized keywords is simply echoed to the output, while the two keywords are
+replaced by the strings in the printf() function calls.
+** Lex with Regular Expressions
+%%
+switch printf("SWITCH ");
+case printf("CASE ");
+[a-zA-Z][_a-zA-Z0-9]* printf("WORD(%s) ",yytext);
+[0-9]+ printf("INTEGER(%s) ",yytext);
+\{ printf("LEFTBRACE ");
+\} printf("RIGHTBRACE ");
+%%
+
+$ flex kwords.lex
+$ gcc lex.yy.c -lfl -o kwords
+$ cat kwtry.text | kwords
+WORD(blatz) LEFTBRACE
+SWITCH WORD(big_time_do)
+CASE WORD(HamFram)
+CASE INTEGER(889)
+RIGHTBRACE WORD(dend)
+** Parsing
+The example described in this section is intended to demonstrate the process of using
+a lexical scan to read the tokens and using a parser to organize the tokens logically, as
+well as calling a collection of C functions with the organized information. In a compiler
+the C functions are used to generate the output (in GCC the output is code in the RTL
+intermediate language), but in this example the output is simply lines of text describing
+the code that would be generated.
+The code that actually performs the job of parsing can be produced by the standard
+UNIX utility named yacc, which is an acronym for Yet Another Compiler Compiler.
+The GNU utility that performs the same task is named bison. The two programs are
+almost identical in purpose and function.
+$ bison -d clang.y
+$ flex clang.lex
+$ gcc clmain.c lex.yy.c clang.tab.c -o clang
+--->
+clang.lex: In function ‘yylex’:
+clang.lex:22:10: warning: assignment makes integer from pointer without a cast [enabled by default]
+ [a-zA-Z][a-zA-Z0-9]* { yylval = strdup(yytext);
+
+The bison command reads the input source file clang.y and produces the output
+file clang.tab.c. The file clang.tab.c contains the C code that parses the input, so it
+must be compiled and linked into the compiler. Also, because the -d option is specified,
+the file clang.tab.h is also produced. This is the header file used in clmain.c and
+clang.lex to provide the numeric definitions of all the token types.
+The flex command is used to produce the file named lex.yy.c, which contains
+the C functions for reading the input stream and organizing it into tokens.
+The gcc command is used to compile and link the three C source files into an
+executable named clang. As it is written, the compiler accepts source code from
+standard input, so the source file of the test program, named figures.clang, can
+be processed with the following command:
+$ cat figures.clang | clang
+--->
+Draw blue circle at (100,200) radius=30
+Draw red rectangle at (250,200) h=10 w=10
+** Creating the Parse Tree
+The output from the parse operation is a parse tree. The actual format of the tree is a linear
+list of lines of text, with each line being a node in the tree. Each node has an identifier so it
+can be referred to from any other node, and it contains a character that specifies the node
+type. 
+** Connecting the Back to the Front
+The back end of the compiler is not cleanly separated from the front end. A number of
+global variables and functions must be declared as part of the front end so they can be
+directly accessed from the back end.
+* Register Transfer Language
+The Register Transfer Language (RTL) is the central point of the compilation
+process. The purpose of the front end of the compiler is to produce RTL, and 
+the purpose of the back end is to translate the RTL into assembly language. Most of
+the optimization processing is performed on the program while it is in the RTL form.
+This chapter is a description of the form of RTL.
+The RTL code can be dumped to disk files in a text format. Chapter 18 contains
+examples of the procedure required for dumping RTL code into its printed form. This
+chapter contains a description of the RTL code as well as information you will need to
+be able to read the codes embedded in the dumped format.
+** RTL Insns
+A single statement in the RTL is called an insn. The insns are connected internally as a
+doubly linked list. Some insns are actual instructions while others contain information
+such as branch tables used for switch statements. Yet others represent data declarations
+and act as labels for branching targets. Also, each insn has a unique ID by which any
+insn can refer to any other insn.
+*** The Six Fundamental Expression Code
+There are many different kinds of insns. Each insn has an expression code that
+designates its type. The RTL code making up the logic flow of a program is composed
+of only six fundamental types, but each of these can hold references to other types. For
+example, an expression code of insn, which indicates an executable statement, will
+include other insns as its operands. For example, the following insn reads the value of
+the variable named val and stores it in a register. To do this, the RTL code has an
+expression code of insn and contains an insn with the expression code set, which in
+turn employs insns with expression codes of reg and mem. The mem insn contains a
+symbol_ref insn.
+  (insn 12 10 14 (nil) (set (reg:SI 61)
+  (mem/f:SI (symbol_ref:SI("val")) [0 a+0S4 A32])) -1 (nil)
+  (nil))
+**** insn
+This expression code is used for instructions that do not jump and do
+not make function calls. This type of insn loads registers, performs
+arithmetic, compares values, and so on.
+**** jump_insn
+This expression code is used for instructions that will (or may) jump
+to another location, which means the insn will usually contain one or
+more label_ref insns. This expression code is also used to return
+from the current function. A reference to the code_label insn,
+which is the target of the jump, is included for simple conditional
+or unconditional jumps. For more complicated jumps, it may be
+necessary to scan the entire body of insns to find the possible targets.
+**** call_insn
+This expression code is used for instructions that will (or may)
+perform a function call. These instructions must be handled specially
+because they could unexpectedly modify registers and memory
+locations. An insn of this type typically contains clobber and mem
+insns to specify which registers and memory locations are altered.
+There is either a mem insn that specifies the memory block in which
+parameters are passed, or there are clobber and use insns that
+specify the work registers and the registers bearing arguments.
+**** code_label
+This expression code is used to mark a label that can be the target of
+a jump. It contains a code_label_number insn to hold the unique
+label ID number. The ID number is unique to the entire compilation
+unit, not just the current function. The code_label insn is generally
+referred to at the jump location inside a label_ref insn. During and
+after the optimization, a count is maintained of the number of times
+this label is used as a jump target.
+Each code_label is one of the following four kinds:
+NORMAL This is the only kind of label that cannot be an alternate
+entry point into a function.
+STATIC_ENTRY This label is an entry point into the function but is
+visible only from within the compilation unit.
+GLOBAL_ENTRY This label is an entry point into the function and
+is visible (through the linker) to all compilation units.
+WEAK_ENTRY This label is an entry point into the function and
+is a global entry, but it can be overridden by another symbol of the
+same name.
+**** barrier
+This expression code is placed in the sequence of insns to mark a
+location that cannot be reached through control flow. A barrier
+insn is inserted following an unconditional jump and following
+calls to functions that cannot return.
+**** note
+This expression code is used to contain certain debugging and
+declarative information. Each note insn contains one field that
+contains a number and another field that contains a character string.
+The number is usually the line number of the source file named by the
+string. The note insn controls the line number information used for
+debugging. If the number is not a line number, it is a type designator
+specifying one of the following types:
+NOTE_INSN_DELETED The note marks a point at which an
+insn was deleted.
+NOTE_INSN_DELETED_LABEL This note replaces a deleted
+code_label insn, which was removed because it was never the
+target of a jump.
+NOTE_INSN_BLOCK_BEG Marks the beginning of a scoping
+level block of code.
+NOTE_INSN_BLOCK_END Marks the end of a scoping level
+block of code.
+NOTE_INSN_EH_REGION_BEG Marks the beginning of a
+scoping level for exception handling.
+NOTE_INSN_EH_REGION_END Marks the end of a scoping
+level for exception handling.
+NOTE_INSN_LOOP_BEG Marks the beginning of a while or
+for loop.
+NOTE_INSN_LOOP_END Marks the end of a while or for loop.
+NOTE_INSN_LOOP_CONT Marks the place in a loop to which a
+continue statement would jump.
+NOTE_INSN_LOOP_VTOP Marks the place in a loop where the
+exit test begins.
+NOTE_INSN_FUNCTION_END Marks the spot near the end of a
+function just in front of the label jumped to by return statements.
+NOTE_INSN_SETJMP Marks the code immediately following a call
+to a setjmp() type of function.
+*** The Type and Content of Insns
+Each type of insn is unique and is designed to serve a special purpose; therefore, each
+one contains data that pertains to its purpose. Quite often the contained data is in the
+form of another insn, but this chain of linked RTL instructions can always be traced to
+some fundamental data. The data contained in statements of the RTL language is in the
+form of one of the five insn types listed in Table 20-2.
+   Expression,Integer,Wide integer,String,Vector
+
+The format and content of the RTX varies widely, but three fields are always
+present: the ID, the address of the previous insn, and the address of the next insn.
+These three values can be extracted from any insn by using the following three macros:
+  INSN_UID(insn)
+  PREV_INSN(insn)
+  NEXT_INSN(insn)
+The first insn can be retrieved by calling get_insns(), and the last one can be
+retrieved by calling get_last_insn().
+Most of the GCC code that deals with insns is written to deal with expressions. An
+RTL expression insn is referred to as an RTX. These expression insns are the statements
+that contain the executable code of the program. Inside the GCC code they are stored in
+a struct that is referenced through a pointer that has the typedef name rtx.
+Each RTX has its own expression code (or RTX code) that specifies which kind of
+expression it is. The expression codes are defined in the file rtl.def as a collection of
+enumeration constant names. The expression codes are machine independent, which
+means the RTL language is machine independent. The RTX code can be set in an rtx
+struct and then retrieved by using the following two macros defined in rtl.h:
+  PUT_CODE(rtx,code);
+  int code = GET_CODE(rtx);
+The macro named DEF_RTL_EXPR is used to define each RTL in the file rtl.def.
+This macro has four arguments, as shown the following example:
+  DEF_RTL_EXPR(COND_EXEC,"cond_exec","ee",'x')
+The first argument passed to the macro is the name of the RTL in all uppercase
+letters. It is used in the C source code as an enum as the unique identifier of the RTL.
+The second argument is the name of the RTL as a lowercase ASCII string. It is this
+name that is printed in the diagnostic output. The third argument is a list of the data
+types of the operands, with each type being designated by a single character. A
+description of the types is found in Table 20-3. The fourth argument is the single-letter
+class designator of the RTL. The classes are listed in Table 20-4.
+** Modes and Mode Classes
+Each RTX expression has a mode that describes the size and type of the data it
+manipulates and produces. Two identical expressions with different modes can
+produce entirely different code. An example of this is a floating-point expression
+compared to an integer expression. The modes are listed in Table 20-5 and are defined
+as a set of enumerated types in machmode.def.
+** Flags
+A number of flags are included in each insn in the RTL code. In the printed form of the
+RTL, these flags appear as single characters preceded by a backslash, as demonstrated
+in Chapter 18. The exact meaning of the flag depends on the type of insn in which it is
+set. Table 20-7 contains a list of the insns that can have flags set as well as the flag that
+is displayed in the output dump of the RTL.
+* Machine-Specific Compiler Options
+* Appendixes
+** GNU General Public License
+** Environment Variables 
+** Command-Line Cross Reference 
+** Command-Line Options
+** Glossary
+
+* 讀書心得
+** 吐槽
+   不得不吐槽呀，最後才看到精華．前面的簡直就是渣．GNU C的特性沒看完，媽的，作者寫東西沒有重點的，
+我去．十幾二十頁的索引．而且，竟然沒有源碼的．
+   開始幾章，講到C和C++編譯器部分，重點是一些編譯器選項，C特殊語法很多沒看．C++模板的語法也是講得很少，
+雖然看了，但是沒什麼用．
+   中間學到的dbg技巧，makefile的語法，本來以爲已經很好很強大了．
+   看了下Implementing a Language竟然這麼厚道，簡單介紹了flex和bison/yacc.
+   最後，到達高潮了，講RTL．這部分要全部看懂，是要結合gcc的源碼了．所有的編譯器都是圍繞這貨的．
+** dbg
+   只能在命令行下，1.attach可執行文件(-g編譯)的方式才能開始調試，可以加上觀察的變量(display xxx),可以
+調試的時候打印中間(p xxx),可以打印堆棧(bt).run,quit是啓動和停止命令．
+　　2.attach PID; 3.attach 可執行文件 core文件(內存dump出來的文件)，這個dump文件要設置
+"ulimit -c unlimited"，不然不能生成．
+** make/autoconf
+   makefile語法很奇葩的，只能以"/t"(tab)來分隔，不能以" "(空格)爲分隔符．
+前面會自定義一些宏/變量．然後是target:dependency[\n commands options...].
+整個也是一棵樹，一顆object文件依賴的樹．
+   autoconf很神奇，是四五個命令的集合，可以用於自動生成makefile文件．有八個步驟．
+中間只有一個步驟要自己寫．不是太明白．
+   gcc -M選項可以用於生成object的依賴關係．
+** flex,bison/yacc
+   這個最後的那個例子是亮點．Clang的解析例子，這個名字要吐槽一下．
+** RTL
+  整個gcc(或是其他的編譯器)，都以他展開．中間以一堆全局變量維繫．
+  都略過去了，因爲我決定要看Clang+bison/yacc的工具集了，因爲人間有個很好的tutorial．沒有打算研究
+gcc源碼．否則，這是一篇很好的introduction.
