@@ -719,7 +719,6 @@ The C++ Standard (Published by Wiley, ISBN 0-470-84674-7)
 ulimit -c unlimited:這個設置了才能生成core文件．
 ** 一些工具？
    ar,gprof,gcov,ldd,make,gdb.
-
 ** file命令的輸出是什麼意思？
     a.out: ELF 32-bit LSB executable, Intel 80386,
     version 1 (SYSV), dynamically linked (uses shared
