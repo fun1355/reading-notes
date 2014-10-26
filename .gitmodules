@@ -1,0 +1,9 @@
+[submodule "KnR-Solutions"]
+	path = KnR-Solutions
+	url = https://github.com/thvdburgt/KnR-The-C-Programming-Language-Solutions
+[submodule "understanding-computation"]
+	path = understanding-computation
+	url = https://github.com/tomstuart/computationbook
+[submodule "an-introduction-to-programming-in-emacs-lisp-soluctions"]
+	path = an-introduction-to-programming-in-emacs-lisp-soluctions
+	url = https://github.com/RenWenshan/emacs-lisp-intro-solutions
