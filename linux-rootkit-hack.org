@@ -1,6 +1,6 @@
-之前的答案太长了，继续开一个，把自己学过看过的rootkit的资料整理一下。
-* 这个教程就是没有英文字母，其实看起来还好。
-[[http://www.opensecuritytraining.info/Rootkits.html][Rootkits: What they are, and how to find them]]
+linux-rootkit-hack
+* [[http://www.opensecuritytraining.info/Rootkits.html][Rootkits: What they are, and how to find them]]
+这个教程就是没有英文字母，其实看起来还好。
 * [[http://phrack.org/issues/68/6.html#article][Android platform based linux kernel rootkit]]
  reference得一个个看掉：
 ** [1] "[[http://phrack.org/issues/50/5.html#article][Abuse of the Linux Kernel for Fun and Profit]]"
@@ -94,8 +94,18 @@ routines, many of them declared as static inlines,
 available online here -- it has an
 excellent section on proc files in Chapter 4 that I'll be referring to
 a bit later on.
-这本书就是上文说到[[http://oss.org.cn/kernel-book/ldd3/][福利]] 那本，真是缘分。
+这本书就是上文说到[[http://oss.org.cn/kernel-book/ldd3/][福利]] 那本，真是缘分。真是可惜，这本书有新版本了，[[https://github.com/jesstess/ldd4][ldd4]] 。
 **** [[http://www.crashcourse.ca/introduction-linux-kernel-programming/lesson-12-adding-proc-files-your-modules-part-2][十二章]] 课后作业：
 Exercise for the student: Based simply on what we've explained above,
 trace through the code in [[https://github.com/torvalds/linux/blob/master/kernel/irq/proc.c][kernel/irq/proc.c]] to get a general idea of
 how that entire subdirectory comes into existence.
+Additional exercise for the student: If you're feeling ambitious,
+combine the earlier jiffies and HZ examples into a single module, and
+put those two proc files underneath a /proc directory of your
+name. There is an additional challenge here, though -- you need to add
+exit code so that your proc files and directory are deleted when you
+unload the module and, no, I'm not going to explain how to do
+that. You're on your own there. Time to get your feet wet and jump
+into the kernel code and figure out how to do that just from reading
+the source and the header files mentioned above.
+留待把。

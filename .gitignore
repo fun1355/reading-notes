@@ -2,3 +2,13 @@
 .\#*
 \#
 *~
+*.o
+*.ko
+*.mod.c
+*.mod.o
+*.symvers
+*.order
+*.cmd
+.*
+
+
