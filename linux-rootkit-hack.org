@@ -95,4 +95,7 @@ available online here -- it has an
 excellent section on proc files in Chapter 4 that I'll be referring to
 a bit later on.
 这本书就是上文说到[[http://oss.org.cn/kernel-book/ldd3/][福利]] 那本，真是缘分。
-
+**** [[http://www.crashcourse.ca/introduction-linux-kernel-programming/lesson-12-adding-proc-files-your-modules-part-2][十二章]] 课后作业：
+Exercise for the student: Based simply on what we've explained above,
+trace through the code in [[https://github.com/torvalds/linux/blob/master/kernel/irq/proc.c][kernel/irq/proc.c]] to get a general idea of
+how that entire subdirectory comes into existence.
