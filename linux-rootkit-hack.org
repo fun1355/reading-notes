@@ -1,0 +1,98 @@
+之前的答案太长了，继续开一个，把自己学过看过的rootkit的资料整理一下。
+* 这个教程就是没有英文字母，其实看起来还好。
+[[http://www.opensecuritytraining.info/Rootkits.html][Rootkits: What they are, and how to find them]]
+* [[http://phrack.org/issues/68/6.html#article][Android platform based linux kernel rootkit]]
+ reference得一个个看掉：
+** [1] "[[http://phrack.org/issues/50/5.html#article][Abuse of the Linux Kernel for Fun and Profit]]"
+ by halflife[Phrack issue 50, article 05]
+上面的编译不通过，包含的头文件有问题，加了 -I/usr/src/kernels/$(shell
+uname -r)/include/ -I/usr/src/kernels/$(shell uname
+-r)/arch/x86/include/，但是貌似报错越来越多，看来是个系统工程。只能先看
+下面这个补一下LKM的知识（学东西就是各种坑的）。原来是这样，这个make要加
+上 -C $(KERNELDIR) M=$(PWD)。[[http://www.crashcourse.ca/introduction-linux-kernel-programming/lesson-5-details-details-details-bonus-lesson][Lesson 5: Details, details, details
+... (BONUS LESSON)]] 简要讲解了这些make的选项的意义。linux根目录下的
+[[https://github.com/torvalds/linux/blob/master/Documentation/kbuild/modules.txt][Documentation/kbuild/modules.txt]] 更细致的解释,留坑待填。
+*** [[https://www.thc.org/papers/LKM_HACKING.html][(nearly) Complete Linux Loadable Kernel Modules]]
+再是一下这个教程。不行，一样的问题，基本的helloworld.c都编译不通过, 再
+找一个教程。
+***  [[http://www.crashcourse.ca/introduction-linux-kernel-programming/introduction-linux-kernel-programming][introduction-linux-kernel-programming]]
+这本来是一个收费课程，
+[[http://www.crashcourse.ca/introduction-linux-kernel-programming-2nd-edition/introduction-linux-kernel-programming-2nd-edition][introduction-linux-kernel-programming-2nd-edition]] 现在还是收费的，没有
+美元信用卡，不过免费的就是有点过时，其实也没什么。[[http://kroah.com/lkn][Linux Kernel in a
+Nutshell(lkn)]] 是这个课程的参考书，不喜欢刚开始就翻大部头。刚开始的编译
+最新内核，启动不了。运行的内核版本3.10.0-229.7.2，CentOS 7，和教程里面
+的Ubuntu 10.4不一样，我只需要make module_install, make install。还有一
+个dracut代替教程里面的update-initramfs命令（可是我觉得没必要，因为
+initramfs已经生成了。是的，现代的内核就是这样，我从评论区和第二版教程上
+确认了。），不深究，先写LKM。（下面的坑其实都不用细看，只要这个教程学完
+就可以了。我留下这些note是觉得hack的过程，比单纯的罗列知识点更自然。当
+然我也是小白什么都不懂。）
+**** [[http://www.crashcourse.ca/introduction-linux-kernel-programming/lesson-8-module-diagnostics-and-init-and-exit-code-again][第八章]] 留下一个坑。
+“Exercise for the student: Predict what will happen with a message you
+print from your crash3 module with a priority of KERN_DEBUG. Test it.”
+我将crash3.c中的printk第一个宏改成了KERN_DEBUG，insmod之后，cat
+/var/log/message没有找到输出，搜索了一下。发现了[[http://www.makelinux.net/ldd3/chp-4-sect-2Linux][Linux Device
+Drivers(ldd3), 3rd Edition -- chp-4-sect-2]]，以及[[http://oss.org.cn/kernel-book/ldd3/ch04s02.html][福利]]！ （这本书竟然有中
+文版，留坑待填。先不管，继续LKM。）[[https://stackoverflow.com/questions/4518420/where-does-output-of-print-in-kernel-go][linux - Where does output of print
+in kernel go?]] 这里看到答案。
+➜ crash3 dmesg|grep crash3
+[26608.501991] crash3 module being loaded.
+[26646.168736] crash3 module being unloaded.
+[29784.621436] crash3 module being loaded.
+[35418.826363] crash3 module being unloaded.
+通过上面，确实看到了输出，不过不知道原理（[[https://github.com/torvalds/linux/blob/master/kernel/printk/printk.c][linux/kernel/printk.c]] 源码留坑)
+**** 还是[[http://www.crashcourse.ca/introduction-linux-kernel-programming/lesson-8-module-diagnostics-and-init-and-exit-code-again][第八章]] 下面有一个练习：
+Exercise for the student: If you're running the stock Ubuntu kernel
+(and you should be), how can you verify that the kernel doesn't
+support forced module unloading? Besides, of course, just trying it
+and having it fail.
+本来想留个坑的，算了。参见[[http://cateee.net/lkddb/web-lkddb/MODULE_FORCE_UNLOAD.html][CONFIG_MODULE_FORCE_UNLOAD]]。
+至于原理嘛，看[[https://github.com/torvalds/linux/blob/master/kernel/module.c#L984][这里]], 还有 [[https://github.com/torvalds/linux/blob/master/kernel/module.c#L1032][这里]]。
+**** [[http://www.crashcourse.ca/introduction-linux-kernel-programming/lesson-9-all-about-module-parameters][第九章]] 留下一个坑（很好的思路）：
+While we've restricted ourselves to just the int module parameter
+type, there are a number of others including uint, byte, short,
+ushort, pointers, character strings and more. To see the full list,
+peruse the kernel header file include/linux/moduleparam.h.
+
+An excellent way to understand any kernel feature is to scan the
+kernel source tree looking for examples of its usage. Assuming that
+your system has the module usbhid, use modinfo to check its
+properties, then examine its source file under
+drivers/hid/usbhid/hid-core.c to examine its parameters, and compare
+what you see with what's under the /sys directory.
+**** [[http://www.crashcourse.ca/introduction-linux-kernel-programming/lesson-10-kernel-symbol-table-and-why-you-should-care][第十章]] 的坑：
+Exercise for the student: By far, the most common export directive is
+EXPORT_SYMBOL. If you know how to use grep, scan the kernel source
+tree to see how many times someone is very carefully exporting a
+symbol only to GPL-compatible modules with EXPORT_SYMBOL_GPL.
+这道题目非常简单：
+➜ intro-linux-kernel-programming grep -r EXPORT_SYMBOL_GPL ./linux/*|wc -l
+16483
+这一章教程称赞了"[[http://reiber.org/nxt/pub/Linux/LinuxKernelDevelopment/Linux.Kernel.Development.3rd.Edition.pdf][Linux Kernel Development(lkd)]]"的作者[[https://www.rlove.org/][Robert Love]]（也是
+本教程参考书[[http://kroah.com/lkn/][lkn]] 的作者）是kernel wizard。这位巫师说:一个module其实比内
+核内部得到更加受限制的内核符号表。"Core code can call any non-static
+interface in the kernel because all core source files are linked into
+a single base image."That means that normal non-static, unexported
+symbols in kernel space are available to other routines that are built
+into the kernel, but are not available to loadable modules. In short,
+your modules are working with a more restricted kernel symbol table
+than other routines that are part of the kernel itself.
+还简洁的指出，所谓系统API不过是内核的导出符号而已。
+"The set of kernel symbols that are exported are known as the exported
+kernel interfaces or even (gasp) the kernel API."
+**** [[http://www.crashcourse.ca/introduction-linux-kernel-programming/lesson-12-adding-proc-files-your-modules-part-2][十二章]] 留下了RTFS( Read The Fine/FUCK Source)的坑,
+并给我留下指引：
+- fs/proc/ -- a directory of code to generate a number of proc files,
+including some you've already seen,
+- include/linux/fs.h -- declarations for various, generic filesystem
+structures,
+- include/linux/proc_fs.h -- declarations for the various proc file
+routines, many of them declared as static inlines,
+- include/linux/seq_file.h -- declarations specifically for the
+"sequence file" implementation of proc files, and
+- the book "[[http://www.makelinux.net/ldd3/][Linux Device Drivers (3rd ed)]]",referred to as "LDD3" and
+available online here -- it has an
+excellent section on proc files in Chapter 4 that I'll be referring to
+a bit later on.
+这本书就是上文说到[[http://oss.org.cn/kernel-book/ldd3/][福利]] 那本，真是缘分。
+
