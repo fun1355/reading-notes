@@ -1,17 +1,20 @@
-linux-rootkit-hack
+* linux-rootkit-hack
 * [[http://www.opensecuritytraining.info/Rootkits.html][Rootkits: What they are, and how to find them]]
-这个教程就是没有英文字母，其实看起来还好。
+这个教程就是没有英文字母，其实看起来还好,还有是windows的。
 * [[http://phrack.org/issues/68/6.html#article][Android platform based linux kernel rootkit]]
  reference得一个个看掉：
-** [1] "[[http://phrack.org/issues/50/5.html#article][Abuse of the Linux Kernel for Fun and Profit]]"
- by halflife[Phrack issue 50, article 05]
+** [1] "[[http://phrack.org/issues/50/5.html#article][Abuse of the Linux Kernel for Fun and Profit]]" by halflife
+[Phrack issue 50, article 05]
 上面的编译不通过，包含的头文件有问题，加了 -I/usr/src/kernels/$(shell
 uname -r)/include/ -I/usr/src/kernels/$(shell uname
 -r)/arch/x86/include/，但是貌似报错越来越多，看来是个系统工程。只能先看
 下面这个补一下LKM的知识（学东西就是各种坑的）。原来是这样，这个make要加
 上 -C $(KERNELDIR) M=$(PWD)。[[http://www.crashcourse.ca/introduction-linux-kernel-programming/lesson-5-details-details-details-bonus-lesson][Lesson 5: Details, details, details
 ... (BONUS LESSON)]] 简要讲解了这些make的选项的意义。linux根目录下的
-[[https://github.com/torvalds/linux/blob/master/Documentation/kbuild/modules.txt][Documentation/kbuild/modules.txt]] 更细致的解释,留坑待填。
+[[https://github.com/torvalds/linux/blob/master/Documentation/kbuild/modules.txt][Documentation/kbuild/modules.txt]] 更细致的解释,留坑待填。这篇文章太老了。
+很多头文件包不进来，函数声明也变了。文章里也说了：
+“If all does not go well ... well, I shall leave that to your
+nightmares.”但是这篇文章思路非常清晰，基本原来就是这样hook的,还是留待把。
 *** [[https://www.thc.org/papers/LKM_HACKING.html][(nearly) Complete Linux Loadable Kernel Modules]]
 再是一下这个教程。不行，一样的问题，基本的helloworld.c都编译不通过, 再
 找一个教程。
@@ -102,10 +105,101 @@ how that entire subdirectory comes into existence.
 Additional exercise for the student: If you're feeling ambitious,
 combine the earlier jiffies and HZ examples into a single module, and
 put those two proc files underneath a /proc directory of your
-name. There is an additional challenge here, though -- you need to add
+name. 
+There is an additional challenge here, though -- you need to add
 exit code so that your proc files and directory are deleted when you
 unload the module and, no, I'm not going to explain how to do
 that. You're on your own there. Time to get your feet wet and jump
 into the kernel code and figure out how to do that just from reading
 the source and the header files mentioned above.
 留待把。
+** [2] "[[http://phrack.org/issues/52/18.html#article][Weakening the Linux Kernel]]" by plaguez
+[Phrack issue 52, article 18]
+* Writing Modern Linux Rootkits
+** [[http://turbochaos.blogspot.jp/2013/09/linux-rootkits-101-1-of-3.html][Modern Linux Rootkits 101]]
+*** 留一个坑
+It's important to note that there are attempts to prevent runtime
+loading of new LKM's. You can do this by setting the flag in
+/proc/sys/kernel/modules_disabled. There won't be much talk about
+bypassing that on this first part, but we'll look at it and get around
+it in part 3.
+modules_disabled应该是在这里。
+https://github.com/torvalds/linux/blob/master/kernel/module.c
+*** 全文思路
+通过strace分析得到要改写的内核api,然后套一个module模板代码，
+将要钩住的函数改掉。
+*** 分析api
+**** strace ls
+strace -v -s 1024 -o file /bin/ls
+This will cause strace to be verbose, increase default string limit,
+and write to a file called 'file'.
+通过strace命令分析ls的调用的内核接口。然后得到如下总结。
+If you were to man 2 system_call_name, you can see most everything
+you'd want to know. We have a description, arguments, types, usages,
+and more readily available.
+**** man 2 api_interface
+通过man 2 xxx来查内核接口，并且得到ls命令大概的实现流程，漂亮。
+With a new understanding about how these functions work, let's put it
+all together to understand how ls works with system calls to display
+the inormation. It starts off with openat to open a file descriptor
+with the given directory, which was current (.) in our case. Then it
+grabs the information on each of the files/directories in the given
+directory by using getdents and fstat. Getdents retriveving virtual
+filesystem information such as inode number and name. Fstat retrieving
+common information such as timestamps, privilege values, block size,
+and etc. Finally, we take the parsed values of the program and write
+them to the standard out terminal screen.
+最后分析得到的结论是钩住write()。
+*** rootkit模板
+**** sys_call_table地址
+找sys_call_table,这里直接暴力查找的，O(n)可以接受，
+代码在find()这个自己写的函数内，可以替换成其他手法。
+**** 改写系统调用表(sys_call_table)，考虑内核写保护
+ /* disable write protect on page in cr0 */
+ write_cr0(read_cr0() & (~ 0x10000));
+ /* hijack functions */
+ o_write = (void *) xchg(&sys_call_table[__NR_write],rooty_write);
+ /* return sys_call_table to WP */
+ write_cr0(read_cr0() | 0x10000);
+如上，关闭控制寄存器cro的写保护(WP)。然后将自己写的假的系统调用
+rooty_write和系统调用表内保存的write的地址交换。重新开启cro写保护。最后
+就是rooty_write实现了。注意函数签名要和write完全一样。这里只是示意一下，
+有bug的。
+**** 隐藏module本身
+/* Do kernel module hiding*/
+ list_del_init(&__this_module.list);
+ kobject_del(&THIS_MODULE->mkobj.kobj);
+如上，将module“删除”了，这样rmmod也不能正常卸载驱动了，开发的时候要注释
+掉。 
+*** reference
+**** [[https://en.wikipedia.org/wiki/System_call][System call]]
+Tools such as strace and truss allow a process to execute from start
+and report all system calls the process invokes, or can attach to an
+already running process and intercept any system call made by said
+process if the operation does not violate the permissions of the
+user. This special ability of the program is usually also implemented
+with a system call, e.g. strace is implemented with ptrace or system
+calls on files in procfs.
+**** [[http://man7.org/linux/man-pages/man2/syscalls.2.html][syscalls - Linux system calls]]
+Roughly speaking, the code belonging to the system call with number
+__NR_xxx defined in /usr/include/asm/unistd.h can be found in the
+Linux kernel source in the routine sys_xxx().  (The dispatch table for
+i386 can be found in /usr/src/linux/arch/i386/kernel/entry.S.)  There
+are many exceptions, however, mostly because older system calls were
+superseded by newer ones, and this has been treated somewhat
+unsystematically.  On platforms with proprietary operating-system
+emulation, such as parisc, sparc, sparc64, and alpha, there are many
+additional system calls; mips64 also contains a full set of 32-bit
+system calls.
+**** [[http://www.ibm.com/developerworks/library/l-system-calls/][Kernel command using Linux system calls]]
+**** [[http://blog.csdn.net/ce123_zhouwei/article/details/8446520][linux内核中的fastcall和asmlinkage宏]]
+对x86平台来说
+#define asmlinkage CPP_ASMLINKAGE __attribute__((regparm(0)))  
+#define FASTCALL(x) x __attribute__((regparm(3)))  
+#define fastcall    __attribute__((regparm(3)))  
+__attribute__((regparm(0)))：告诉gcc编译器该函数不需要通过任何寄存器来
+传递参数，参数只是通过堆栈来传递。
+__attribute__((regparm(3)))：告诉gcc编译器这个函数可以通过寄存器传递多
+达3个的参数，这3个寄存器依次为EAX、EDX 和 ECX。
+** [[http://turbochaos.blogspot.jp/2013/10/writing-linux-rootkits-201-23.html][Writing Modern Linux Rootkits 201 - VFS]]
+** [[http://turbochaos.blogspot.jp/2013/10/writing-linux-rootkits-301_31.html][Modern Linux Rootkits 301 - Bypassing modules_disabled security]]
