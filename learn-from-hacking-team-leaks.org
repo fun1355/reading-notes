@@ -432,15 +432,15 @@ effectively killing all operations for that client.
 reddit好八卦，我喜欢，FBI某位兄弟曾经发邮件叫HT将他移出广告列表。这个据
 说是[[%E6%8E%A8%E8%8D%90%E4%B9%A6%E5%8D%95][推荐书单]]，福利！还有就是一些政府的八卦，抱怨用纳税人的钱如监视纳税
 人的。不过HT申明，他的客户只有南韩没有北朝鲜等。
-rootkit的 下面的趋势科技的文献比reddit的更好。Flash的漏洞方面，乌云上面
-的360安全团队的文章更好，可能国外的更详细易懂也不一定，反正我是一个水人，
+rootkit相关，下面的趋势科技的文献比reddit的更好。Flash的漏洞方面，乌云上面
+的360安全团队的文章更好，可能国外的更详细易懂也不一定。
 读不懂，不过这种文章都是动手才能看懂的。
 
 * @daige 评论里面的[[http://countuponsecurity.com/2015/07/24/hacking-team-arsenal-of-cyber-weapons/][这份摘要]]
 這是一篇總結性的文章，基本是链接+引用其他开头作爲的摘要,这份列表很多漏洞方面的文章。
 但是有重复，而且我也不太关系Flash方面的漏洞。所以只列了rootkit相关的。
 ** [[http://blog.trendmicro.com/trendlabs-security-intelligence/hacking-team-uses-uefi-bios-rootkit-to-keep-rcs-9-agent-in-target-systems/][Hacking Team Uses UEFI BIOS Rootkit to Keep RCS 9 Agent in Target Systems]]
-*** 背景介绍
+*** Hacking Team使用Bootkit！针对Insyde BIOS,好像也对AMI BIOS有效。
 Hacking Team uses a UEFI BIOS rootkit to keep their Remote Control
 System (RCS) agent installed in their targets’ systems. This means
 that even if the user formats the hard disk, reinstalls the OS, and
@@ -449,14 +449,36 @@ Windows is up and running.
 They have written a procedure specifically for Insyde BIOS (a very
 popular BIOS vendor for laptops).  However, the code can very likely
 work on AMI BIOS as well. 
-Hacking Team使用Bootkit！针对Insyde BIOS,好像也对AMI BIOS有效。
+*** 虽然HT的幻灯片说要硬件插入才能安装，但不能排除远程安装的可能性
+进攻者进入系统，重启进去UEFI的shell,dump出BIOS,安装BIOS bootkit,然后重
+启目标系统。
 A Hacking Team slideshow presentation claims that successful infection
 requires physical access to the target system; however, we can’t rule
 out the possibility of remote installation. An example attack scenario
 would be: The intruder gets access to the target computer, reboots
 into UEFI shell, dumps the BIOS, installs the BIOS rootkit,reflashes
 the BIOS, and then reboots the target system.
+*** 安装中，会拷贝三部分Ntfs.mod，Rkloader.mod，dropper.mod
+In installation, three modules are first copied from an external
+source (this might be from a USB key with UEFI shell) to a file volume
+(FV) in the modified UEFI BIOS. Ntfs.mod allows UEFI BIOS to
+read/write NTFS file. Rkloader.mod then hooks the UEFI event and calls
+the dropper function when the system boots. The file dropper.mod
+contains the actual agents, which have the file name scout.exe and
+soldier.exe.
+*** 防范措施
+Make sure UEFI SecureFlash is enabled
+Update the BIOS whenever there is a security patch
+Set up a BIOS or UEFI password
 ** [[http://www.intelsecurity.com/advanced-threat-research/blog.html][Advanced Threat Research]]
+这篇文章值得深入研究，留个坑把。前面从源码维度介绍rkRootkit做了什么。然后是硬件Rootkit检测工具[[https://cansecwest.com/slides/2014/Platform%2520Firmware%2520Security%2520Assessment%2520wCHIPSEC-csw14-final.pdf][CHIPSEC]].
+包括检测SPI Flash 保护，得到感染的证据。不过好消息是我还没看到linux版本的。
+*** reference
+[[http://www.intelsecurity.com/advanced-threat-research/security-system-firmware.html][BIOS / UEFI Firmware]]
+[[http://www.c7zero.info/stuff/Windows8SecureBoot_Bulygin-Furtak-Bazhniuk_BHUSA2013.pdf][A Tale of One Software Bypass ofWindows 8 Secure Boot]]
+[[https://conference.hitb.org/hitbsecconf2013kul/materials/D1T1%2520-%2520Kallenberg,%2520Kovah,%2520Butterworth%2520-%2520Defeating%2520Signed%2520BIOS%2520Enforcement.pdf][Defeating Signed BIOS Enforcement]]
+[[https://bromiumlabs.files.wordpress.com/2015/01/speed_racer_whitepaper.pdf][Speed Racer: Exploiting an Intel Flash Protection Race Condition]]
+[[https://github.com/hackedteam/vector-edk][HT UEFI开发代码]]
 * 入门的tutorials
 ** UAF
 UAF的一篇简单教程，适合我等小白用户
