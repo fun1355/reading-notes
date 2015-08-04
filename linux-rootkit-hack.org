@@ -1,4 +1,49 @@
 * linux-rootkit-hack
+* from reddit
+** [[http://core.ipsecs.com/rootkit/kernel-rootkit/kbeast-v1/][A Linux Kernel Module Rootkit has been released in 2012: Kbeast]]
+** Rootkit.com mirror?
+https://web.archive.org/web/*/rootkit.com/vault/* 
+http://opensecuritytraining.info/Rootkits.html
+** [[https://www.syscan360.org/slides/2014_EN_AdvancedBootkitTechniquesOnAndroid_ChenZhangqiShendi.pdf][Advanced Bootkit Techniques on Android]]
+** [[http://s3.eurecom.fr/~zaddach/docs/Recon14_HDD.pdf][Exploring the impact of a hard drive backdoor]]
+** [[https://github.com/dynup/kpatch][kpatch: dynamic kernel patching]]
+kpatch is a Linux dynamic kernel patching infrastructure which allows
+you to patch a running kernel without rebooting or restarting any
+processes. It enables sysadmins to apply critical security patches to
+the kernel immediately, without having to wait for long-running tasks
+to complete, for users to log off, or for scheduled reboot windows. It
+gives more control over uptime without sacrificing security or
+stability.
+** [[http://www.phrack.org/issues/63/8.html][Raising The Bar For Windows Rootkit Detection]]
+** [[https://www.blackhat.com/presentations/bh-usa-09/TERESHKIN/BHUSA09-Tereshkin-Ring3Rootkit-SLIDES.pdf][Introducing Ring -3 Rootkits]]
+** [[http://timeglider.com/timeline/5ca2daa6078caaf4][这个时间线好强大，值得深入google!]]
+** Ring3 / Ring0 Rootkit Hook Detection
+[[http://www.malwaretech.com/2013/09/ring3-ring0-rootkit-hook-detection-12.html][Ring3 / Ring0 Rootkit Hook Detection 1/2]]
+[[http://www.malwaretech.com/2013/10/ring3-ring0-rootkit-hook-detection-22.html][Ring3 / Ring0 Rootkit Hook Detection 2/2]]
+** [[http://repo.hackerzvoice.net/depot_madchat/vxdevl/library/Inside%2520Windows%2520Rootkits.pdf][Inside Windows Rootkits]]
+** [[https://media.blackhat.com/us-13/US-13-Vuksan-Press-ROOT-to-Continue-Detecting-MacOS-and-Windows-Bootkits-with-RDFU-WP.pdf][ROOTKIT DETECTION FRAMEWORK FOR UEFI]]
+** [[http://news.saferbytes.it/analisi/2012/09/uefi-technology-say-hello-to-the-windows-8-bootkit/][UEFI technology: say hello to the Windows 8 bootkit!]]
+** [[https://github.com/quarkslab/dreamboot][dreamboot UEFI bootkit]]
+** [[http://www.exfiltrated.com/research.php#BIOS_Based_Rootkits][BIOS Based Rootkits]]
+** [[https://media.blackhat.com/us-13/US-13-Butterworth-BIOS-Security-Slides.pdf][BIOS Chronomancy:Fixing the Core Root of Trust for Measurement]]
+** [[https://www.hackinparis.com/sites/hackinparis.com/files/Slidesthomasroth.pdf][Next generation mobile rootkits]]
+** [[http://beneathclevel.blogspot.co.uk/][A Linux rootkit tutorial - Makefile and symbols]]
+** [[http://www.unixist.com/security/detecting-hidden-files/index.html][>: Detecting hidden files]]
+** [[http://shell-storm.org/blog/Simple-Hook-detection-Linux-module/][Simple hook detection Linux module]]
+** [[https://reverse.put.as/wp-content/uploads/2013/05/SysScan-13-Presentation.pdf][Revisiting Mac OS X Kernel Rootkits!]]
+** Syscall Hijacking: Simple Rootkit
+[[https://memset.wordpress.com/2010/12/28/syscall-hijacking-simple-rootkit-kernel-2-6-x/][Syscall Hijacking: Simple Rootkit (kernel 2.6.x)]]
+[[https://memset.wordpress.com/2011/03/18/syscall-hijacking-dynamically-obtain-syscall-table-address-kernel-2-6-x-2/][Syscall Hijacking: Dynamically obtain syscall table address (kernel 2.6.x) #2]]
+** [[http://phrack.org/issues/68/6.html][Android platform based linux kernel rootkit]]
+** [[http://poppopret.org/2013/01/07/suterusu-rootkit-inline-kernel-function-hooking-on-x86-and-arm/][Suterusu Rootkit: Inline Kernel Function Hooking on x86 and ARM]]
+** [[https://www.trailofbits.com/resources/advanced_macosx_rootkits_paper.pdf][ADVANCED MAC OS X ROOTKITS]]
+** [[http://rkhunter.sourceforge.net/][The Rootkit Hunter project]]
+** [[http://www.symantec.com/connect/articles/detecting-rootkits-and-kernel-level-compromises-linux][Detecting Rootkits And Kernel-level Compromises In Linux]]
+** [[http://static.usenix.org/event/sec09/tech/full_papers/hund.pdf][Return-Oriented Rootkits Bypassing Kernel Code Integrity Protection Mechanisms]]
+** [[https://media.blackhat.com/bh-ad-11/Oi/bh-ad-11-Oi-Android_Rootkit-Slides.pdf][Yet Another Android Rootkit]]
+** [[http://phrack.org/issues/58/7.html][Linux on-the-fly kernel patching without LKM]]
+** [[www.la-samhna.de/library/rootkits/list.html][List of Kernel Rootkits - Samhain Labs]]
+** [[https://www.blackhat.com/presentations/bh-jp-05/bh-jp-05-sparks-butler.pdf]["shadow Walker" Raising The Bar For Rootkit Detection]]
 * [[http://www.opensecuritytraining.info/Rootkits.html][Rootkits: What they are, and how to find them]]
 这个教程就是没有英文字母，其实看起来还好,还有是windows的。
 * [[http://phrack.org/issues/68/6.html#article][Android platform based linux kernel rootkit]]
@@ -202,4 +247,54 @@ __attribute__((regparm(0)))：告诉gcc编译器该函数不需要通过任何�
 __attribute__((regparm(3)))：告诉gcc编译器这个函数可以通过寄存器传递多
 达3个的参数，这3个寄存器依次为EAX、EDX 和 ECX。
 ** [[http://turbochaos.blogspot.jp/2013/10/writing-linux-rootkits-201-23.html][Writing Modern Linux Rootkits 201 - VFS]]
+本教程不仅仅是学习作者的手法，更要学习他的分析的思路。
+*** VFS的优点
+Virtual file systems (VFS) are an abstraction layer to allow easy
+communication with other filesystems such as ext4, reiser fs, or other
+special filesystems like procfs. This extra layer translates easy to
+use VFS functions to their appropriate functions offered by the given
+filesystem. This allows a developer to interact solely with the VFS
+and not needing to find, handle, and support the different functions
+and types of individual filesystems.
+
+There are two major reasons why we should care about this. First, we
+can hook a VFS function and deal with that one function to hide
+information from the concrete filesystem. This allows a one stop shop
+hijack for hiding from any VFS supported filesystem (the majority of
+them). With this we will have the ability to hide files and
+directories from most tool with ease. The second reason is that procfs
+is a supported filesystem.
+*** Procfs (Proc filesystem)简介
+The proc filesystem is an interface to easily manage kernel data
+structures. This includes being able to retrieve and even change data
+inside the linux kernel at runtime. More importantly, for us, it also
+provides an interface for process data. Each process is mapped to
+procfs by its given process id number. Retrieving this pid number
+allows any tool to pull, with appropriate privileges, whatever data it
+needs to find out about that given process. This includes its memory
+mapping, memory usage, network usage, parameters, environment
+variables, and etc. Given this, if we know the pid and we're hooked
+into the VFS for procfs, we can also manipulate data returned to these
+tools to hide processes.
+*** 分析procfs,找到要劫持的函数
+We will then need to get another VFS pointer to /proc for the procfs
+to hide processes. But what pointer/function do we want to hijack?
+*** 通过一系列分析，选定readdir和filldir
+So, when we hijack file->f_op->readdir all we really need to do is
+manage our own filldir function, parse it, and then call the real
+readdir with our filldir values.
+*** 对kernel3.11之后，vfs_readdir被iter_dir替换了,待更新
+With 3.11 kernels, vfs_readdir has been completely removed and now
+uses iter_dir for the new iterator value in file_operations. This
+looks like "file->f_op->iterate(file, ctx);" where ctx is struct
+dir_context *ctx. This structure looks like:
+
+struct dir_context {
+         const filldir_t actor;
+         loff_t pos;
+};
+I will update this post as soon as full coverage for 3.11 kernels is
+completed.
+
+
 ** [[http://turbochaos.blogspot.jp/2013/10/writing-linux-rootkits-301_31.html][Modern Linux Rootkits 301 - Bypassing modules_disabled security]]
