@@ -1,0 +1,271 @@
+* learn-from-hacking-team-leaks
+这份学习笔记主要分为两部分，信息收集和学习教程。至于具体从415G的文件中
+能hack到什么东西，我水平有限。试想415G的电影，你每天看10G，一个月也看不
+完把，更不要说是意大利文/英文的文档。
+* from wooyun
+感谢乌云drops上的高质量的文章，但是本菜水平有限，这里只作罗列。乌云文章
+质量确实很高，但是不适合入门，作者往往没有将自己hack的过程写出来。我想
+那样看起来是水把，毕竟hack是会走很多弯路的，也显得自己水平很低，而这往
+往是国外大牛作者的优点（坦白开放甚至啰嗦）。
+[[http://drops.wooyun.org/papers/6968][Hacking Team攻击代码分析]]
+[[http://drops.wooyun.org/news/6977][人手一份核武器]]
+[[http://drops.wooyun.org/papers/6998][Hacking Team攻击代码分析Part 3 : Adobe Font Driver内核驱动权限提升漏洞]]
+[[http://drops.wooyun.org/papers/7025][简要分析Hacking Team 远程控制系统]]
+[[http://drops.wooyun.org/papers/7030][Hacking Team Android Browser Exploit代码分析]]
+[[http://drops.wooyun.org/papers/7031][Hacking Team 新 Flash 0day分析]]
+[[http://drops.wooyun.org/papers/7049][Hacking Team攻击代码分析Part 4: Flash 0day漏洞 CVE-2015-5122]]
+[[http://drops.wooyun.org/papers/7109][HackingTeam源码泄漏——语音监控分析]]
+[[http://drops.wooyun.org/papers/7116][Hacking Team攻击代码分析Part5 Adobe Font Driver内核权限提升漏洞第二弹+Win32k KALSR绕过漏洞]]
+[[http://drops.wooyun.org/papers/7156][RCS病毒样本分析]]
+[[http://drops.wooyun.org/papers/7199][Hacking Team系列 Flash 0Day分析]]
+[[http://drops.wooyun.org/tips/7195][Hacking Team不需越狱即可监控iOS用户]]
+[[http://drops.wooyun.org/tips/7196][无处不在的监控: Hacking Team:WP8 监控代码分析]]
+
+* from reddit
+从reddit的讨论组 [[https://www.reddit.com/r/HackedTeam/][Information about Hacking Team recent breach]]开始：
+** [[https://tsyrklevich.net/2015/07/22/hacking-team-0day-market/][HACKING TEAM: A ZERO-DAY MARKET CASE STUDY]]
+文章主要关注0day市场的交易情况。0day的价格，0day的作者。这里面可以得到
+很多0day作者的思路，不仅仅是交易信息。还有这位作者的研究方法就是搜索维
+基解密上的邮件列表，然后整理，这个是很好的研究这份泄密文件的思路。
+*** 大量的邮件链接
+比如：Fuzzer results: Though Rosario's fuzzers found numerous crashing
+test cases, like most fuzzer outputs few of them appeared
+[[https://wikileaks.org/hackingteam/emails/emailid/508609][exploitable]]. One of the first crashes that looked exploitable was an
+IE10 [[https://wikileaks.org/hackingteam/emails/emailid/226719][memory corruption]] that was [[https://wikileaks.org/hackingteam/emails/emailid/509902][patched]] within a week of its
+discovery. Soon after, Rosario found a Firefox crash that looked
+[[https://wikileaks.org/hackingteam/emails/emailid/514935][exploitable]] but only appeared to occur under [[https://wikileaks.org/hackingteam/emails/emailid/508958][memory pressure]]. Despite
+months of analysis, Hacking Team was unable to turn this into a
+working exploit. It was discovered in October of 2013 and VUPEN used
+[[https://wikileaks.org/hackingteam/emails/emailid/472530][the same bug]] to win Pwn2Own in May of 2014.
+.......
+The following is a non-exhaustive list of e-mails with crashing test
+cases attached for various browsers: [[https://wikileaks.org/hackingteam/emails/emailid/224056][1]] [[https://wikileaks.org/hackingteam/emails/emailid/224379][2]] [[https://wikileaks.org/hackingteam/emails/emailid/225642][3]] [[https://wikileaks.org/hackingteam/emails/emailid/508630][4]] [[https://wikileaks.org/hackingteam/emails/emailid/514923][5]] [[https://wikileaks.org/hackingteam/emails/emailid/514921][6]] [[https://wikileaks.org/hackingteam/emails/emailid/224056][7]]
+*** 维基解密上的可查询邮件列表
+都是链接到[[https://wikileaks.org/hackingteam/emails/][维基解密的公开邮件]] 那里，这份公开文件是可以快速查询的，其实现
+在真的不用下那些邮件了。邮件有88.5g，分为三个文件夹还有
+*** Keen Team的八卦
+Correction 7/22/15: I've restated the Keen Team section to make it
+clear that Hacking Team solicited them, not the other way around.
+*** 结论
+最后文章说，其实HT的业务并没有受影响，他的0day厂商也没有抛弃他。
+this offers a convenient path forward for browser vendors to enact a
+widespread shutdown of Adobe Flash next.
+所以我也认为Flash的UAF虽然很严重，但是Flash一定会退出历史舞台的。我更喜
+欢系统级别的漏洞，特别是国内很少有人研究的linux方面的，国内因为看雪的普
+及，win方面的牛人真是太多了，可惜我很久不用win了，对win方面的东西没有感
+觉了。
+*** 一些0day作者的思路，比如VLC漏洞发现的过程
+这篇文章其实很值得再看几次的，很多0day的发现者的思路，比如
+Eugene offered to sell a [[https://wikileaks.org/hackingteam/emails/emailid/21453][VLC exploit]]; however, the [[https://wikileaks.org/hackingteam/emails/emailid/1062551][trigger]] used a
+playlist which wouldn't normally be opened with VLC, so he began to
+develop [[https://wikileaks.org/hackingteam/emails/emailid/1082048][another VLC exploit]] targeting videos.
+VLC是我最喜欢的播放器，可以像youtube一样加速看视频。但是这个VLC的漏洞在
+国内的文章中还没看到过。说明什么？也许这份泄密文档，我们不知道的，远多
+于我们现在知道的。
+
+** 伽利略远控的两个系列文章
+*** from 4armed.com & hyperionbristol.co.uk
+*** [[https://www.4armed.com/blog/hacking-team-rcs-analysis-hacked-team/][HACKING TEAM RCS ANALYSIS – (OR IS THAT ‘HACKED TEAM’?)]]
+**** 这里的宙斯代码，我找到了一篇据说是根据他写出的新木马的[[http://www.securityweek.com/zberp-new-trojan-created-leaked-zeus-carberp-source-code][文章]]。
+Malicious actors will take the source code from this leak and use it
+to create new tools (similar to the leak of the Zeus source code); as
+defenders we therefore want to understand the capabilities of these
+pieces of software, and how to create defences against them.
+**** dongle就是加密狗，硬件保护器，wiki上说有些不需要插入USB。
+Unfortunately the latest version of the RCS (9.6) requires a hardware
+[[https://en.wikipedia.org/wiki/Dongle][dongle]] in order to use. We’ll just have to settle with extracting the
+raw files. After extracting the agent cores, we can see the RCS
+supports a large variety of devices.
+**** 确实，泄露的源码是不完整的，最新版本往往没有。
+When we were compiling from source, we could just comment out this
+check, but the leaked source code is only for version 9.2 of the
+software. We’d like to use version 9.6 to explore any new features
+added. Therefore we need to patch the windows agents in use.
+**** 哈哈过了利用某种指针的魔法过了360的沙盒，国内黑产的最爱呀。
+All of the agents check if they’re running in a virtualised
+environment before continuing.
+Of particular interest is the AntiCuckoo() function, which does some
+pointer magic to confuse the Cuckoo Sandbox.
+**** 远控的黑名单，有些我也没见过
+There’s also a set of analysis tools that are blacklisted：
+[[http://www.ntcore.com/exsuite.php][Explorer Suite]]$ # CFF Explorer Suite
+IDA Pro v # IDA Pro vx.xx
+Wireshark # Wireshark x.x.x
+API Monitor # Api Monitor vx
+VMWare Tools # Virtual Machine
+WinPcap # Network analyzer
+^Syser # Syser x.xx
+\.NET Reflector # .NET Reflector Desktop
+^PE Explorer # PE Explorer 1.xx Rx
+^[[https://github.com/dzzie/SysAnalyzer][SysAnalyzer]] # SysAnalyzer 1.x
+Python .* volatility # Volatilty
+VirtualBox Guest Additions # Virtual Machine
+Process Hacker # Process Hacker x.xx
+Mandiant Red Curtain #
+^OSForensics #
+上面我加上链接的这些东西，真是开眼界了。
+比如这个SysAnalyzer可以对某个进程进行快照，然后比较两个快照的内容，这里
+是[[https://www.youtube.com/watch?v%3D4twR8xtVWPk][演示视频]].
+比如The CFF Explorer was designed to make PE editing as easy as possible,
+but without losing sight on the portable executable's internal
+structure. This application includes a series of tools which might
+help not only reverse engineers but also programmers. It offers a
+multi-file environment and a switchable interface.
+好强大！！ 
+**** 总结
+这篇文章主要介绍了伽利略远控三部分的分工。还有一些有趣的代码片段。
+Scout, Soldier and Elite. Each level adds more features above the
+previous level. This is consistent with threat actors such as Duqu,
+who will install a small backdoor to validate that the target is
+interesting before deploying the full espionage platform.
+summarised below:
+Scout:
+Gather Device Information
+Get Screenshots of device
+Get Webcam photos
+Get Social Networking Information
+Soldier:
+Gather Addressbooks Gmail, Yahoo Mail, Facebook, Twitter (Following).
+Enumerate Applications
+Gather Camera Data
+Gather Clipboard Data
+Gather Google Drive Data
+Gather Twitter, Gmail, Yahoo (mail e chat), Facebook (Chat) messages
+Gather IE, Chrome, Firefox passwords
+Gather Photos
+Get Position Data
+Get Screenshots
+Get Visited URLs from Firefox, TOR Browser
+Upload/Download Files
+Upgrade to Elite
+And finally the ‘Elite’ agent
+Gather Skype Calls
+Access the Filesystem
+Record Keystrokes
+Gather email from Outlook/WindowsMail/LiveMail, Gmail webmail, Yahoo.
+Gather audio from the microphone
+Gather Financial Data
+Gather mouse movements and clicks
+Gather passwords from Internet Explorer, Firefox, Chrome, Opera, Outlook, PalTalk, Thunderbird, Trillian.
+
+[[https://www.4armed.com/blog/crash-all-the-flying-things/][CRASH ALL THE FLYING THINGS!]]
+*** [[https://www.4armed.com/blog/hacking-teams-galileo-rcs-repurposing-espionage-software/][HACKING TEAM’S GALILEO RCS – REPURPOSING ESPIONAGE SOFTWARE]]
+这篇文章分析对象是Scout，
+**** 首先是去除反病毒限制
+The first thing we need to do is disable the Anti-virtual machine
+protections, as we’d like to test the setup using a virtual Windows
+target. The implant detects VirtualBox, VMWare and the [[http://www.cuckoosandbox.org/][Cuckoo malware
+sandbox]], as well as other sandboxes such as [[https://help.comodo.com/topic-72-1-451-4768-.html][Comodo]]’s – if it detects
+these then it exits without running.
+这个Cuckoo的沙盒，有是没听说过的，还是开源的，最新的文档在[[http://docs.cuckoosandbox.org/en/latest/][这里]]。
+这个科莫多的也没用过，好像是win平台的。
+**** 通过配置文件确定关键参数
+The implant is normally compiled once, and then key parameters are
+binary patched to a specific deployment. These parameters are
+described in the ‘binpatched_vars.h’ header file.
+**** 改变服务器地址，分析通讯协议
+So we can change the server to re-direct to one that we own, and we
+can ensure that this is the only server that the agent will connect to
+(Which is good for our piece of mind).  The agent connects to it’s
+control server via HTTP, so let’s listen on our control server on
+port 80.
+**** 这张[[http://hyperionbristol.co.uk/wp-content/uploads/2015/07/auth_proto.png][图片]] 是验证身份的过程。
+So the next thing to do is to decode the protocol. Data sent by the
+implant is AES encrypted, then base-64 encoded before being sent by
+HTTP POST to “/index.php”. Before the agent sends any useful data
+however, it performs an authentication handshake with the server.
+
+The encryption is done using AES in CBC mode, but the initialisation
+vector (IV) is always set to 16 zeros – This means the protocol is
+vulnerable to replay attacks, and possible known-plaintext decryption
+attacks.
+哈哈果然是安全人员。
+**** 收集计算机基本信息（软件版本等），一个example
+Once we’ve authenticated to the implant, the implant then sends us a
+device information packet, which contains a large amount of useful
+information, as shown below:
+== System Info Evidence Viewer ==
+=================================================
+
+Enter Build ID {$}->
+{*} – Getting system info for Implant RCS_0000001167
+CPU: 1 x Intel(R) Core(TM) i7-5500U CPU @ 2.40GHz
+Architecture: (64bit)
+RAM: 639MB free / 1023MB total (37% used)
+HardDisk: 4637MB free / 25497MB total
+
+Windows Version: Microsoft Windows 7 Professional (Service Pack 1) (64bit)
+Registered to: #REDACTED USERNAME# {}
+Locale: en_GB ((UTC) Dublin, Edinburgh, Lisbon, London)
+
+User Info: Mostafa [ADMIN]
+SID: S-1-5-21-1825426571-686220015-1722707009-1000
+
+Application List (x86):
+Adobe AIR (18.0.0.180)
+RCS Console (15.03.21)
+Python 2.7 – SendKeys 0.3 (0.3)
+RCS (2015032101)
+Windows Live Essentials (16.4.3528.0331)
+Microsoft Visual C++ 2010 x86 Redistributable – 10.0.30319 (10.0.30319)
+Python 2.7 (2.7.150)
+Java(TM) SE Runtime Environment 6 (1.6.0.0)
+Microsoft Visual C++ 2008 Redistributable – x86 9.0.30729.17 (9.0.30729)
+Adobe Reader XI (11.0.07) (11.0.07)
+
+ApplicationList (x64):
+Microsoft .NET Framework 4 Client Profile (4.0.30319)
+Microsoft .NET Framework 4 Extended (4.0.30319)
+Oracle VM VirtualBox Guest Additions 4.3.10 (4.3.10.0)
+Microsoft Visual C++ 2008 Redistributable – x64 9.0.30729.17 (9.0.30729)
+Microsoft Silverlight (5.1.20513.0)
+Microsoft Visual C++ 2010 x64 Redistributable – 10.0.30319 (10.0.30319)
+我去不要太详细。
+**** 发送加密的截屏，密钥在前面的配置文件中
+After this, the implant then sends encrypted screenshots – these are
+encrypted with the ENCRYPTION_KEY variable declared in the
+“binpatched_vars.h” header file.
+**** 服务端能将截图制作成动画，[[http://hyperionbristol.co.uk/uploads/RCS_0000001167_1436742564.91.gif][一个example]] 
+On the server side, we can stitch these together to make an animated
+‘video’ of the target’s desktop, allowing us to determine key
+information before we commit more complicated tools, this is shown
+below (The GIF is 4.5Mb in size, so it may take a while to load)
+*** [[http://hyperionbristol.co.uk/galileo-rcs-installing-the-entire-espionage-platform/][Galileo RCS – Installing the entire espionage platform]]
+去除软件许可限制，得以安装完整的后端系统，就像一个HT的客户一样。
+After defeating the license restrictions, we’re able to install the
+full backend system, and operate it as if we were a HackingTeam
+customer.
+
+** leaked source
+[[http://pastebin.com/MCY47BaU][Complete Hacking Team Archive Source List {HackedTeam}]]
+這份列表just so so把。看github上的[[https://github.com/hackedteam?tab%3Drepositories][源碼]]仓库 更好。
+** 其他项
+reddit好八卦，我喜欢，FBI某位兄弟曾经发邮件叫HT将他移出广告列表。这个据
+说是[[%E6%8E%A8%E8%8D%90%E4%B9%A6%E5%8D%95][推荐书单]]，福利！还有就是一些政府的八卦，抱怨用纳税人的钱如监视纳税
+人的。不过HT申明，他的客户只有南韩没有北朝鲜等。
+rootkit的 下面的趋势科技的文献比reddit的更好。Flash的漏洞方面，乌云上面
+的360安全团队的文章更好，可能国外的更详细易懂也不一定，反正我是一个水人，
+读不懂，不过这种文章都是动手才能看懂的。
+
+* @daige 评论里面的[[http://countuponsecurity.com/2015/07/24/hacking-team-arsenal-of-cyber-weapons/][这份摘要]]
+這是一篇總結性的文章，基本是链接+引用其他开头作爲的摘要,这份列表很多漏洞方面的文章。
+但是有重复，而且我也不太关系Flash方面的漏洞。所以只列了rootkit相关的。
+[[http://blog.trendmicro.com/trendlabs-security-intelligence/hacking-team-uses-uefi-bios-rootkit-to-keep-rcs-9-agent-in-target-systems/][Hacking Team Uses UEFI BIOS Rootkit to Keep RCS 9 Agent in Target Systems]]
+[[http://www.intelsecurity.com/advanced-threat-research/blog.html][Advanced Threat Research]]
+* 入门的tutorials 
+** UAF
+UAF的一篇简单教程，适合我等小白用户
+[[http://garage4hackers.com/content.php?r%3D143-Beginners-Guide-to-Use-after-free-Exploits-IE-6-0-day-Exploit-Development][Beginners Guide to "Use after free Exploits #IE 6 0-day #Exploit Development"]]
+** linux-insides
+下面这本[[http://0xax.gitbooks.io/linux-insides/content/index.html][linux-insides]] 讲linux的书，天天刷我屏，从各种不同渠道。
+The goal is simple - to share my modest knowledge about the internals
+of the linux kernel and help people who are interested in linux kernel
+internals, and other low-level subject matter.
+** exploit-develop
+这个[[https://expdev-kiuhnm.rhcloud.com/2015/05/11/contents/][Exploit Development Course]]教程貌似被推荐烂了。
+** phrack
+当然，怎么能少了这个,竟然讲android的rootkit,这个教程要从reference看起，巨坑。
+http://phrack.org/issues/68/1.html
+** rootkit
+linux-rootkit-hack, 我更新在[[https://github.com/sancao2/reading-notes/blob/master/linux-rootkit-hack.org][linux-rootkit-hack.org]] 了。
+截图当作目录发在知乎这个问题的答案[[http://www.zhihu.com/question/33695415/answer/57179705?group_id%3D610826434814746624][这里]] 下面，欢迎大牛打脸。
