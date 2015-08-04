@@ -63,8 +63,7 @@ VLC是我最喜欢的播放器，可以像youtube一样加速看视频。但是�
 国内的文章中还没看到过。说明什么？也许这份泄密文档，我们不知道的，远多
 于我们现在知道的。
 
-** 伽利略远控的两个系列文章
-*** from 4armed.com & hyperionbristol.co.uk
+** 伽利略远控系列 from 4armed.com & hyperionbristol.co.uk
 *** [[https://www.4armed.com/blog/hacking-team-rcs-analysis-hacked-team/][HACKING TEAM RCS ANALYSIS – (OR IS THAT ‘HACKED TEAM’?)]]
 **** 这里的宙斯代码，我找到了一篇据说是根据他写出的新木马的[[http://www.securityweek.com/zberp-new-trojan-created-leaked-zeus-carberp-source-code][文章]]。
 Malicious actors will take the source code from this leak and use it
@@ -148,7 +147,6 @@ Gather Financial Data
 Gather mouse movements and clicks
 Gather passwords from Internet Explorer, Firefox, Chrome, Opera, Outlook, PalTalk, Thunderbird, Trillian.
 
-[[https://www.4armed.com/blog/crash-all-the-flying-things/][CRASH ALL THE FLYING THINGS!]]
 *** [[https://www.4armed.com/blog/hacking-teams-galileo-rcs-repurposing-espionage-software/][HACKING TEAM’S GALILEO RCS – REPURPOSING ESPIONAGE SOFTWARE]]
 这篇文章分析对象是Scout，
 **** 首先是去除反病毒限制
@@ -231,14 +229,205 @@ On the server side, we can stitch these together to make an animated
 information before we commit more complicated tools, this is shown
 below (The GIF is 4.5Mb in size, so it may take a while to load)
 *** [[http://hyperionbristol.co.uk/galileo-rcs-installing-the-entire-espionage-platform/][Galileo RCS – Installing the entire espionage platform]]
-去除软件许可限制，得以安装完整的后端系统，就像一个HT的客户一样。
+这篇破文，因为有源码，所以直接从源码和运行日志中得到了加密狗Dongle的信
+息，连逆向都没做绕过了时间限制和加密狗，漂亮。
+**** 去除软件许可限制，得以安装完整的后端系统，就像一个HT的客户一样。
 After defeating the license restrictions, we’re able to install the
 full backend system, and operate it as if we were a HackingTeam
 customer.
+**** 很有意思，只要将license文件的:serial字段改称从时间改成off，就可以绕过了，囧
+  if lic[:serial] != 'off'
+        puts "Checking for hardware dongle..."
+        # get the version from the dongle (can rise exception)
+        info = Dongle.info
+        puts "Dongle info: " + info.inspect
+        raise "Invalid License File: incorrect serial number (#{lic[:serial]}) #{info[:serial]} is needed" 
+        if lic[:serial] != info[:serial]
+      else
+        puts "Hardware dongle not required..."
+      end
+**** 还是不行，弹出“非法的license”的提示，查看日志
+**** 因为有源码，所以直接在源码里面输出了的加密狗的信息
+# print the dongle infos
+pp Dongle.info if license[:serial] != 'off'
+*** [[https://www.4armed.com/blog/galileo-rcs-running-espionage-operation/][GALILEO RCS – RUNNING AN ESPIONAGE OPERATION]]
+[[https://www.4armed.com/wp-content/uploads/2015/07/RCSarch.png][RCS Architecture from the leaked Sysadmin manual]]这张软件架构图非常清晰。
+下面的文章没有将截图的链接带上，因为如果要操作还是要看原文的。这些标题只不过起
+到注释的作用。本篇主要讲了怎么搭建RCS的环境。
+**** 介绍Master,Collector,Anonymizer节点作用
+The main element is the master node, which stores evidence in a
+MongoDB instance, and handles agent deployments and building. The
+‘Collector’ node is the interface between the master node and the
+chain of ‘Anonymizers’ that lead to the agent itself. The anonymisers
+create a chain of connections, obfuscating the location and identity
+of the final Collector node.
+**** Anoymizer作为HTTP代理运行于CentOS
+The anonymiser essentially acts as an HTTP proxy, and runs on
+CentOS. We can therefore setup a virtual machine in our Galileo Lab
+and provision it as an Anonymiser.
+**** 主要介绍部署Anoymizer和Collector的过程
+To provision the Anonymiser, we create a new anonymiser on the
+console, then export the installer. This creates a zip file which we
+copy to the CentOS instance. After un-zipping it, we have an ‘install’
+file, which we can run with:
+ sh install
+We then need to either disable the default iptables firewall, or
+create an exception. As this is just in my lab, I ran:
+ service iptables stop
+Once we’ve done this, we then go back to our console and drag the
+Anonymiser onto the Collector to create a chain. Clicking ‘Apply
+Configuration’ then pushes this to the collector and the anonymiser,
+setting up the chain.
+**** 去除反虚拟机的限制
+The first stage is identifying where the base executables that the
+backend uses are located. When the system is installed, the ‘cores’
+are extracted to ‘C:\RCS\DB\cores’. Each of these is a zip file
+containing the base images for all of the various agents.
+When the master node starts it checks to see if there are any files in
+this directory, and loads them into the MongoDB database if
+so. Therefore if we want to update the windows core, we need to create
+a new ‘windows.zip’ containing our patched agents that will run inside
+VMs, and then load them into the master node.
+The ‘windows.zip’ has the following contents:
 
-** leaked source
-[[http://pastebin.com/MCY47BaU][Complete Hacking Team Archive Source List {HackedTeam}]]
-這份列表just so so把。看github上的[[https://github.com/hackedteam?tab%3Drepositories][源碼]]仓库 更好。
+Volume in drive G is VBOX_downloads_desktop
+Volume Serial Number is 8A93-92DF
+
+Directory of G:\Hacked Team\FAE DiskStation\2. DELIVERY\2.3. Software
+(releases)\RCS 9.6 (stable)\Product\Server\cores\windows
+10/07/2015 13:02 .
+10/07/2015 13:02 ..
+11/01/2011 06:02 11,264 aplib.dll
+08/04/2010 10:18 166,400 AsmJit.dll
+27/11/2014 15:55 1,082 ca.cer
+27/10/2011 16:15 208,896 codec
+16/12/2013 13:03 346,624 cooker.exe
+19/03/2015 17:20 669,184 core
+16/01/2014 12:21 82,432 core64
+16/12/2013 13:02 1,780,736 dropper.exe
+23/03/2015 17:28icons
+20/05/2013 17:49 93,696 packer32.exe
+12/03/2013 05:07 114,688 packer64.exe
+19/10/2012 10:59 17,920 rcedit.exe
+27/03/2015 14:55 245,248 scout
+27/03/2015 11:53 6,486 scout_names.rb
+03/09/2014 15:03 167 scout_packer.rb
+10/03/2015 15:12 4 scout_version
+08/02/2010 12:30 314,368 SignTool.exe
+15/11/2013 08:11 1,064,448 silent
+19/03/2015 17:21 649,216 soldier
+03/09/2014 15:03 138 soldier_packer.rb
+05/08/2014 11:35 6,190 soldier_upgrade
+12/03/2015 12:00 6 soldier_version
+27/10/2011 16:15 258,048 sqlite
+19/10/2012 10:59 110,592 verpatch.exe
+18/02/2015 12:49 10 version
+03/07/2014 23:22 526 VMProtect.key
+04/07/2014 00:31 4,427,848 VMProtect_Con.exe
+28/03/2014 12:55 412,160 VMProtect_Ext.dll
+28/11/2014 16:11 333 vmprotect_project.vmp
+16/12/2014 11:11 6,039 windows.pfx
+29 File(s) 10,994,749 bytes
+3 Dir(s) 54,780,149,760 bytes free
+**** 确定scout和soldier是要patch的image
+It looks like ‘scout’ and ‘soldier’ are the two base images that we
+want to patch.
+We have the source code for the ‘AntiVM()’ function, but we need to
+find what it looks like in the compiled code. Starting with the scout
+agent, we can open it up in IDA (A reverse engineering tool) and find
+the code segments that correspond to the AntiVM code.
+**** 通过分析源码，确定查询字符串定位汇编的地址
+The ‘AntiVBox’ and ‘AntiVMware’ functions both use WMI queries in
+order to identify a virtual environment. These queries use the
+‘CoCreateInstance’, ‘CoInitialise’ and ‘CoSetProxyBlanket’ functions
+from the Windows API.
+In addition, we have these string arrays containing the actual queries
+to be run; The ‘AntiVMWare’ query is: ‘SELECT * FROM Win32_Bios’, and
+the ‘AntiVBox’ query is: ‘SELECT * FROM Win32_PnPEntity’. These aren’t
+stored as strings though, but as character arrays, which makes it
+slightly harder to locate them in IDA.
+However, we can still narrow it down, and eventually find the code
+segments that load and execute these queries.
+Tracing backwards, this allows us to identify the whole ‘AntiVM’
+function:
+So if virtualisation is detected, then the value of EAX is set to 1,
+otherwise it’s set to zero (XOR-ing anything with itself results in
+zero).
+It’s now fairly trivial to locate the specific assembly instruction
+‘mov eax, 1′ and patch it instead to be ‘mov eax, 0′, so that the
+function always returns zero.
+So we’ve now patched the scout implant (finally…), but what about the
+next level up?
+这家伙主要用Immunity Debugger的，国内一般用OD。
+**** 同理，patch了Soldier
+The ‘Soldier’ agent actually shares the same code as the scout to
+detect virtual environments. The compiled code is slightly different
+however, probably due to a compiler optimisation.
+Whereas the scout sets EAX to 1 using ‘mov eax, 1′, the soldier
+instead sets EAX to zero, then increments it by one (‘INC
+EAX’). Regardless, we can still patch the function to always return
+zero by replacing the ‘INC EAX’ with a ‘NOP’ (No-operation)
+instruction. This does nothing, and leaves EAX set to zero.
+**** 打包回去,加载成功
+Now we need to load these updated agents into the database. We copy
+our updated ‘scout’ and ‘soldier’ files into ‘windows.zip’, then copy
+that into ‘C:\RCS\DB\cores’. Lo and behold, the next time the database
+starts our updated core is loaded: 
+2015-07-20 12:26:49 +0100 [INFO]: Loading cores into db… 
+2015-07-20 12:26:49 +0100 [INFO]: Loading core: windows… 
+2015-07-20 12:26:49 +0100 [INFO]: Load core: ‘windows’ |
+version 2015032101 | sha1 1daaeece8c9a7c624b9f26147562b052fb691e44 
+So after all of that work, we should be able to run an agent on a
+virtual machine to try out its features. We first create an
+‘Operation’ that will contain all of our targets.
+**** 后端创建“工厂”，点击选项就能配置“生成”远控客户端。
+We then create a ‘Factory’ to build our agents. This allows us to
+configure what features we want enabled, as well as the frequency of
+call-backs.
+Once we’ve decided on our configuration, we then click ‘Build’ and are
+presented by this mildly amusing pop-up:
+Clicking on, we get to choose what the infection vector will be
+(i.e. how the agent will be executed). Each of these vectors is a post
+on its own, so for the moment we’re just going to generate an
+executable to be run by the victim (i.e. Us).
+Clicking ‘create’ gives us an executable on our local machine under
+‘RCS Downloads’.
+**** scout能收集信息和截图
+We can then copy this to our target machine and run it, installing the
+implant. As mentioned previously, the ‘scout’ implant (which this
+agent is) sends back device information and screenshots so that the
+operator can determine if the target is valid or not. When the implant
+calls home, a new ‘target’ is created in the operation, allowing
+viewing of evidence obtained from that agent. After we’ve decided that
+the target is valid, we can upgrade the agent to allow collection of
+much more data.
+All of the evidence is displayed in an easy-to-view format. Some
+examples of evidence are shown below, including keystroke logs and
+device information.
+**** OCR识别截图中的文字
+Another interesting feature is Optical Character Recognition
+(OCR). This aims to recognise text in images and convert it into
+actual text. This feature allows recognition of text in
+screenshots. This is also coupled with a translation feature, allowing
+the translation of text in screenshots.
+**** 总结
+So to wrap up, we’ve managed to deploy an operational infrastructure,
+patch the implants so they’ll run in our virtual lab and finally run a
+mock operation on our ‘targets’ and gathered intelligence. Using all
+of this information, we can start to put together a picture of what an
+attack using this toolset would look like, and how we could defend
+against it. 
+*** [[https://www.4armed.com/blog/hacking-teams-killswitch-disabling-galileo-rcs-remotely-silently/][HACKING TEAM’S KILLSWITCH – DISABLING THE GALILEO RCS REMOTELY AND SILENTLY]]
+This time we’re looking at an embedded ‘kill switch’ within the system
+that allows Hacking Team to remotely disable a client’s software.
+主要证实了[[http://arstechnica.co.uk/security/2015/07/hacking-team-may-not-have-had-a-backdoor-but-it-could-kill-client-installs/][Hacking Team may not have had a backdoor, but it could kill remote clients]]
+这篇报道，即HT的软件确实存在后门，能远程关闭。文章主要对http_controller.rb和rcs-kill.rb分析。
+留个坑把，要动手操作才有意义。
+**** killswitch通过切断Collector来禁止客户端的任何操作
+The ‘vulnerability’ is in the ‘Collector’, the server that acts as the
+bridge between the Master database and the targets. The Killswitch
+disables this node, preventing any of the targets from calling home;
+effectively killing all operations for that client.
 ** 其他项
 reddit好八卦，我喜欢，FBI某位兄弟曾经发邮件叫HT将他移出广告列表。这个据
 说是[[%E6%8E%A8%E8%8D%90%E4%B9%A6%E5%8D%95][推荐书单]]，福利！还有就是一些政府的八卦，抱怨用纳税人的钱如监视纳税
@@ -250,9 +439,25 @@ rootkit的 下面的趋势科技的文献比reddit的更好。Flash的漏洞方�
 * @daige 评论里面的[[http://countuponsecurity.com/2015/07/24/hacking-team-arsenal-of-cyber-weapons/][这份摘要]]
 這是一篇總結性的文章，基本是链接+引用其他开头作爲的摘要,这份列表很多漏洞方面的文章。
 但是有重复，而且我也不太关系Flash方面的漏洞。所以只列了rootkit相关的。
-[[http://blog.trendmicro.com/trendlabs-security-intelligence/hacking-team-uses-uefi-bios-rootkit-to-keep-rcs-9-agent-in-target-systems/][Hacking Team Uses UEFI BIOS Rootkit to Keep RCS 9 Agent in Target Systems]]
-[[http://www.intelsecurity.com/advanced-threat-research/blog.html][Advanced Threat Research]]
-* 入门的tutorials 
+** [[http://blog.trendmicro.com/trendlabs-security-intelligence/hacking-team-uses-uefi-bios-rootkit-to-keep-rcs-9-agent-in-target-systems/][Hacking Team Uses UEFI BIOS Rootkit to Keep RCS 9 Agent in Target Systems]]
+*** 背景介绍
+Hacking Team uses a UEFI BIOS rootkit to keep their Remote Control
+System (RCS) agent installed in their targets’ systems. This means
+that even if the user formats the hard disk, reinstalls the OS, and
+even buys a new hard disk, the agents are implanted after Microsoft
+Windows is up and running.
+They have written a procedure specifically for Insyde BIOS (a very
+popular BIOS vendor for laptops).  However, the code can very likely
+work on AMI BIOS as well. 
+Hacking Team使用Bootkit！针对Insyde BIOS,好像也对AMI BIOS有效。
+A Hacking Team slideshow presentation claims that successful infection
+requires physical access to the target system; however, we can’t rule
+out the possibility of remote installation. An example attack scenario
+would be: The intruder gets access to the target computer, reboots
+into UEFI shell, dumps the BIOS, installs the BIOS rootkit,reflashes
+the BIOS, and then reboots the target system.
+** [[http://www.intelsecurity.com/advanced-threat-research/blog.html][Advanced Threat Research]]
+* 入门的tutorials
 ** UAF
 UAF的一篇简单教程，适合我等小白用户
 [[http://garage4hackers.com/content.php?r%3D143-Beginners-Guide-to-Use-after-free-Exploits-IE-6-0-day-Exploit-Development][Beginners Guide to "Use after free Exploits #IE 6 0-day #Exploit Development"]]
