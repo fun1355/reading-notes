@@ -3,23 +3,20 @@
 能hack到什么东西，我水平有限。试想415G的电影，你每天看10G，一个月也看不
 完把，更不要说是意大利文/英文的文档。
 * from wooyun
-感谢乌云drops上的高质量的文章，但是本菜水平有限，这里只作罗列。乌云文章
-质量确实很高，但是不适合入门，作者往往没有将自己hack的过程写出来。我想
-那样看起来是水把，毕竟hack是会走很多弯路的，也显得自己水平很低，而这往
-往是国外大牛作者的优点（坦白开放甚至啰嗦）。
-[[http://drops.wooyun.org/papers/6968][Hacking Team攻击代码分析]]
-[[http://drops.wooyun.org/news/6977][人手一份核武器]]
-[[http://drops.wooyun.org/papers/6998][Hacking Team攻击代码分析Part 3 : Adobe Font Driver内核驱动权限提升漏洞]]
-[[http://drops.wooyun.org/papers/7025][简要分析Hacking Team 远程控制系统]]
-[[http://drops.wooyun.org/papers/7030][Hacking Team Android Browser Exploit代码分析]]
-[[http://drops.wooyun.org/papers/7031][Hacking Team 新 Flash 0day分析]]
-[[http://drops.wooyun.org/papers/7049][Hacking Team攻击代码分析Part 4: Flash 0day漏洞 CVE-2015-5122]]
-[[http://drops.wooyun.org/papers/7109][HackingTeam源码泄漏——语音监控分析]]
-[[http://drops.wooyun.org/papers/7116][Hacking Team攻击代码分析Part5 Adobe Font Driver内核权限提升漏洞第二弹+Win32k KALSR绕过漏洞]]
-[[http://drops.wooyun.org/papers/7156][RCS病毒样本分析]]
-[[http://drops.wooyun.org/papers/7199][Hacking Team系列 Flash 0Day分析]]
-[[http://drops.wooyun.org/tips/7195][Hacking Team不需越狱即可监控iOS用户]]
-[[http://drops.wooyun.org/tips/7196][无处不在的监控: Hacking Team:WP8 监控代码分析]]
+感谢乌云drops上的高质量的文章，但是本菜水平有限，这里只作罗列。
+** [[http://drops.wooyun.org/papers/6968][Hacking Team攻击代码分析]]
+** [[http://drops.wooyun.org/news/6977][人手一份核武器]]
+** [[http://drops.wooyun.org/papers/6998][Hacking Team攻击代码分析Part 3 : Adobe Font Driver内核驱动权限提升漏洞]]
+** [[http://drops.wooyun.org/papers/7025][简要分析Hacking Team 远程控制系统]]
+** [[http://drops.wooyun.org/papers/7030][Hacking Team Android Browser Exploit代码分析]]
+** [[http://drops.wooyun.org/papers/7031][Hacking Team 新 Flash 0day分析]]
+** [[http://drops.wooyun.org/papers/7049][Hacking Team攻击代码分析Part 4: Flash 0day漏洞 CVE-2015-5122]]
+** [[http://drops.wooyun.org/papers/7109][HackingTeam源码泄漏——语音监控分析]]
+** [[http://drops.wooyun.org/papers/7116][Hacking Team攻击代码分析Part5 Adobe Font Driver内核权限提升漏洞第二弹+Win32k KALSR绕过漏洞]]
+** [[http://drops.wooyun.org/papers/7156][RCS病毒样本分析]]
+** [[http://drops.wooyun.org/papers/7199][Hacking Team系列 Flash 0Day分析]]
+** [[http://drops.wooyun.org/tips/7195][Hacking Team不需越狱即可监控iOS用户]]
+** [[http://drops.wooyun.org/tips/7196][无处不在的监控: Hacking Team:WP8 监控代码分析]]
 
 * from reddit
 从reddit的讨论组 [[https://www.reddit.com/r/HackedTeam/][Information about Hacking Team recent breach]]开始：
@@ -28,7 +25,8 @@
 很多0day作者的思路，不仅仅是交易信息。还有这位作者的研究方法就是搜索维
 基解密上的邮件列表，然后整理，这个是很好的研究这份泄密文件的思路。
 *** 大量的邮件链接
-比如：Fuzzer results: Though Rosario's fuzzers found numerous crashing
+比如：
+Fuzzer results: Though Rosario's fuzzers found numerous crashing
 test cases, like most fuzzer outputs few of them appeared
 [[https://wikileaks.org/hackingteam/emails/emailid/508609][exploitable]]. One of the first crashes that looked exploitable was an
 IE10 [[https://wikileaks.org/hackingteam/emails/emailid/226719][memory corruption]] that was [[https://wikileaks.org/hackingteam/emails/emailid/509902][patched]] within a week of its
@@ -37,28 +35,31 @@ discovery. Soon after, Rosario found a Firefox crash that looked
 months of analysis, Hacking Team was unable to turn this into a
 working exploit. It was discovered in October of 2013 and VUPEN used
 [[https://wikileaks.org/hackingteam/emails/emailid/472530][the same bug]] to win Pwn2Own in May of 2014.
-.......
-The following is a non-exhaustive list of e-mails with crashing test
-cases attached for various browsers: [[https://wikileaks.org/hackingteam/emails/emailid/224056][1]] [[https://wikileaks.org/hackingteam/emails/emailid/224379][2]] [[https://wikileaks.org/hackingteam/emails/emailid/225642][3]] [[https://wikileaks.org/hackingteam/emails/emailid/508630][4]] [[https://wikileaks.org/hackingteam/emails/emailid/514923][5]] [[https://wikileaks.org/hackingteam/emails/emailid/514921][6]] [[https://wikileaks.org/hackingteam/emails/emailid/224056][7]]
 *** 维基解密上的可查询邮件列表
 都是链接到[[https://wikileaks.org/hackingteam/emails/][维基解密的公开邮件]] 那里，这份公开文件是可以快速查询的，其实现
 在真的不用下那些邮件了。邮件有88.5g，分为三个文件夹还有
 *** Keen Team的八卦
+#+BEGIN_EXAMPLE
 Correction 7/22/15: I've restated the Keen Team section to make it
 clear that Hacking Team solicited them, not the other way around.
+#+END_EXAMPLE
 *** 结论
 最后文章说，其实HT的业务并没有受影响，他的0day厂商也没有抛弃他。
+#+BEGIN_EXAMPLE
 this offers a convenient path forward for browser vendors to enact a
 widespread shutdown of Adobe Flash next.
+#+END_EXAMPLE
 所以我也认为Flash的UAF虽然很严重，但是Flash一定会退出历史舞台的。我更喜
 欢系统级别的漏洞，特别是国内很少有人研究的linux方面的，国内因为看雪的普
 及，win方面的牛人真是太多了，可惜我很久不用win了，对win方面的东西没有感
 觉了。
 *** 一些0day作者的思路，比如VLC漏洞发现的过程
 这篇文章其实很值得再看几次的，很多0day的发现者的思路，比如
-Eugene offered to sell a [[https://wikileaks.org/hackingteam/emails/emailid/21453][VLC exploit]]; however, the [[https://wikileaks.org/hackingteam/emails/emailid/1062551][trigger]] used a
+#+BEGIN_EXAMPLE
+Eugene offered to sell a VLC exploit; however, the trigger used a
 playlist which wouldn't normally be opened with VLC, so he began to
-develop [[https://wikileaks.org/hackingteam/emails/emailid/1082048][another VLC exploit]] targeting videos.
+develop another VLC exploit targeting videos.
+#+END_EXAMPLE
 VLC是我最喜欢的播放器，可以像youtube一样加速看视频。但是这个VLC的漏洞在
 国内的文章中还没看到过。说明什么？也许这份泄密文档，我们不知道的，远多
 于我们现在知道的。
@@ -66,28 +67,37 @@ VLC是我最喜欢的播放器，可以像youtube一样加速看视频。但是�
 ** 伽利略远控系列 from 4armed.com & hyperionbristol.co.uk
 *** [[https://www.4armed.com/blog/hacking-team-rcs-analysis-hacked-team/][HACKING TEAM RCS ANALYSIS – (OR IS THAT ‘HACKED TEAM’?)]]
 **** 这里的宙斯代码，我找到了一篇据说是根据他写出的新木马的[[http://www.securityweek.com/zberp-new-trojan-created-leaked-zeus-carberp-source-code][文章]]。
+#+BEGIN_EXAMPLE
 Malicious actors will take the source code from this leak and use it
 to create new tools (similar to the leak of the Zeus source code); as
 defenders we therefore want to understand the capabilities of these
 pieces of software, and how to create defences against them.
+#+END_EXAMPLE
 **** dongle就是加密狗，硬件保护器，wiki上说有些不需要插入USB。
+#+BEGIN_EXAMPLE
 Unfortunately the latest version of the RCS (9.6) requires a hardware
-[[https://en.wikipedia.org/wiki/Dongle][dongle]] in order to use. We’ll just have to settle with extracting the
+dongle in order to use. We’ll just have to settle with extracting the
 raw files. After extracting the agent cores, we can see the RCS
 supports a large variety of devices.
+#+END_EXAMPLE
 **** 确实，泄露的源码是不完整的，最新版本往往没有。
+#+BEGIN_EXAMPLE
 When we were compiling from source, we could just comment out this
 check, but the leaked source code is only for version 9.2 of the
 software. We’d like to use version 9.6 to explore any new features
 added. Therefore we need to patch the windows agents in use.
+#+END_EXAMPLE
 **** 哈哈过了利用某种指针的魔法过了360的沙盒，国内黑产的最爱呀。
+#+BEGIN_EXAMPLE
 All of the agents check if they’re running in a virtualised
 environment before continuing.
 Of particular interest is the AntiCuckoo() function, which does some
 pointer magic to confuse the Cuckoo Sandbox.
-**** 远控的黑名单，有些我也没见过
+#+END_EXAMPLE
+**** 远控自己要去掉的黑名单，有些我也没见过
+#+BEGIN_EXAMPLE
 There’s also a set of analysis tools that are blacklisted：
-[[http://www.ntcore.com/exsuite.php][Explorer Suite]]$ # CFF Explorer Suite
+Explorer Suite$ # CFF Explorer Suite
 IDA Pro v # IDA Pro vx.xx
 Wireshark # Wireshark x.x.x
 API Monitor # Api Monitor vx
@@ -96,23 +106,29 @@ WinPcap # Network analyzer
 ^Syser # Syser x.xx
 \.NET Reflector # .NET Reflector Desktop
 ^PE Explorer # PE Explorer 1.xx Rx
-^[[https://github.com/dzzie/SysAnalyzer][SysAnalyzer]] # SysAnalyzer 1.x
+^SysAnalyzer # SysAnalyzer 1.x
 Python .* volatility # Volatilty
 VirtualBox Guest Additions # Virtual Machine
 Process Hacker # Process Hacker x.xx
 Mandiant Red Curtain #
 ^OSForensics #
+#+END_EXAMPLE
+[[http://www.ntcore.com/exsuite.php][Explorer Suite]] [[https://github.com/dzzie/SysAnalyzer][SysAnalyzer]] 
 上面我加上链接的这些东西，真是开眼界了。
 比如这个SysAnalyzer可以对某个进程进行快照，然后比较两个快照的内容，这里
 是[[https://www.youtube.com/watch?v%3D4twR8xtVWPk][演示视频]].
-比如The CFF Explorer was designed to make PE editing as easy as possible,
+比如
+#+BEGIN_EXAMPLE
+The CFF Explorer was designed to make PE editing as easy as possible,
 but without losing sight on the portable executable's internal
 structure. This application includes a series of tools which might
 help not only reverse engineers but also programmers. It offers a
 multi-file environment and a switchable interface.
+#+END_EXAMPLE
 好强大！！ 
 **** 总结
 这篇文章主要介绍了伽利略远控三部分的分工。还有一些有趣的代码片段。
+#+BEGIN_EXAMPLE
 Scout, Soldier and Elite. Each level adds more features above the
 previous level. This is consistent with threat actors such as Duqu,
 who will install a small backdoor to validate that the target is
@@ -146,28 +162,35 @@ Gather audio from the microphone
 Gather Financial Data
 Gather mouse movements and clicks
 Gather passwords from Internet Explorer, Firefox, Chrome, Opera, Outlook, PalTalk, Thunderbird, Trillian.
-
+#+END_EXAMPLE
 *** [[https://www.4armed.com/blog/hacking-teams-galileo-rcs-repurposing-espionage-software/][HACKING TEAM’S GALILEO RCS – REPURPOSING ESPIONAGE SOFTWARE]]
 这篇文章分析对象是Scout，
 **** 首先是去除反病毒限制
+#+BEGIN_EXAMPLE
 The first thing we need to do is disable the Anti-virtual machine
 protections, as we’d like to test the setup using a virtual Windows
-target. The implant detects VirtualBox, VMWare and the [[http://www.cuckoosandbox.org/][Cuckoo malware
-sandbox]], as well as other sandboxes such as [[https://help.comodo.com/topic-72-1-451-4768-.html][Comodo]]’s – if it detects
+target. The implant detects VirtualBox, VMWare and the Cuckoo malware
+sandbox, as well as other sandboxes such as Comodo's – if it detects
 these then it exits without running.
-这个Cuckoo的沙盒，有是没听说过的，还是开源的，最新的文档在[[http://docs.cuckoosandbox.org/en/latest/][这里]]。
-这个科莫多的也没用过，好像是win平台的。
+#+END_EXAMPLE
+[[http://www.cuckoosandbox.org/][Cuckoo malware sandbox]]的沙盒，有是没听说过的，还是开源的，最新的文档在[[http://docs.cuckoosandbox.org/en/latest/][这里]]。
+这个[[https://help.comodo.com/topic-72-1-451-4768-.html][Comodo]] (科莫多)的也没用过，好像是win平台的。
 **** 通过配置文件确定关键参数
+#+BEGIN_EXAMPLE
 The implant is normally compiled once, and then key parameters are
 binary patched to a specific deployment. These parameters are
 described in the ‘binpatched_vars.h’ header file.
+#+END_EXAMPLE
 **** 改变服务器地址，分析通讯协议
+#+BEGIN_EXAMPLE
 So we can change the server to re-direct to one that we own, and we
 can ensure that this is the only server that the agent will connect to
 (Which is good for our piece of mind).  The agent connects to it’s
 control server via HTTP, so let’s listen on our control server on
 port 80.
+#+END_EXAMPLE
 **** 这张[[http://hyperionbristol.co.uk/wp-content/uploads/2015/07/auth_proto.png][图片]] 是验证身份的过程。
+#+BEGIN_EXAMPLE
 So the next thing to do is to decode the protocol. Data sent by the
 implant is AES encrypted, then base-64 encoded before being sent by
 HTTP POST to “/index.php”. Before the agent sends any useful data
@@ -177,8 +200,10 @@ The encryption is done using AES in CBC mode, but the initialisation
 vector (IV) is always set to 16 zeros – This means the protocol is
 vulnerable to replay attacks, and possible known-plaintext decryption
 attacks.
+#+END_EXAMPLE
 哈哈果然是安全人员。
 **** 收集计算机基本信息（软件版本等），一个example
+#+BEGIN_EXAMPLE
 Once we’ve authenticated to the implant, the implant then sends us a
 device information packet, which contains a large amount of useful
 information, as shown below:
@@ -218,24 +243,32 @@ Oracle VM VirtualBox Guest Additions 4.3.10 (4.3.10.0)
 Microsoft Visual C++ 2008 Redistributable – x64 9.0.30729.17 (9.0.30729)
 Microsoft Silverlight (5.1.20513.0)
 Microsoft Visual C++ 2010 x64 Redistributable – 10.0.30319 (10.0.30319)
+#+END_EXAMPLE
 我去不要太详细。
 **** 发送加密的截屏，密钥在前面的配置文件中
+#+BEGIN_EXAMPLE
 After this, the implant then sends encrypted screenshots – these are
 encrypted with the ENCRYPTION_KEY variable declared in the
 “binpatched_vars.h” header file.
-**** 服务端能将截图制作成动画，[[http://hyperionbristol.co.uk/uploads/RCS_0000001167_1436742564.91.gif][一个example]] 
+#+END_EXAMPLE
+**** 服务端能将截图制作成动画，[[http://hyperionbristol.co.uk/uploads/RCS_0000001167_1436742564.91.gif][一个example]]
+#+BEGIN_EXAMPLE
 On the server side, we can stitch these together to make an animated
 ‘video’ of the target’s desktop, allowing us to determine key
 information before we commit more complicated tools, this is shown
 below (The GIF is 4.5Mb in size, so it may take a while to load)
+#+END_EXAMPLE
 *** [[http://hyperionbristol.co.uk/galileo-rcs-installing-the-entire-espionage-platform/][Galileo RCS – Installing the entire espionage platform]]
 这篇破文，因为有源码，所以直接从源码和运行日志中得到了加密狗Dongle的信
 息，连逆向都没做绕过了时间限制和加密狗，漂亮。
 **** 去除软件许可限制，得以安装完整的后端系统，就像一个HT的客户一样。
+#+BEGIN_EXAMPLE
 After defeating the license restrictions, we’re able to install the
 full backend system, and operate it as if we were a HackingTeam
 customer.
+#+END_EXAMPLE
 **** 很有意思，只要将license文件的:serial字段改称从时间改成off，就可以绕过了，囧
+#+BEGIN_SRC ruby
   if lic[:serial] != 'off'
         puts "Checking for hardware dongle..."
         # get the version from the dongle (can rise exception)
@@ -246,26 +279,34 @@ customer.
       else
         puts "Hardware dongle not required..."
       end
+#+END_SRC
 **** 还是不行，弹出“非法的license”的提示，查看日志
 **** 因为有源码，所以直接在源码里面输出了的加密狗的信息
+#+BEGIN_SRC ruby
 # print the dongle infos
 pp Dongle.info if license[:serial] != 'off'
+#+END_SRC 
 *** [[https://www.4armed.com/blog/galileo-rcs-running-espionage-operation/][GALILEO RCS – RUNNING AN ESPIONAGE OPERATION]]
 [[https://www.4armed.com/wp-content/uploads/2015/07/RCSarch.png][RCS Architecture from the leaked Sysadmin manual]]这张软件架构图非常清晰。
 下面的文章没有将截图的链接带上，因为如果要操作还是要看原文的。这些标题只不过起
 到注释的作用。本篇主要讲了怎么搭建RCS的环境。
 **** 介绍Master,Collector,Anonymizer节点作用
+#+BEGIN_EXAMPLE
 The main element is the master node, which stores evidence in a
 MongoDB instance, and handles agent deployments and building. The
 ‘Collector’ node is the interface between the master node and the
 chain of ‘Anonymizers’ that lead to the agent itself. The anonymisers
 create a chain of connections, obfuscating the location and identity
 of the final Collector node.
+#+END_EXAMPLE
 **** Anoymizer作为HTTP代理运行于CentOS
+#+BEGIN_EXAMPLE
 The anonymiser essentially acts as an HTTP proxy, and runs on
 CentOS. We can therefore setup a virtual machine in our Galileo Lab
 and provision it as an Anonymiser.
+#+END_EXAMPLE
 **** 主要介绍部署Anoymizer和Collector的过程
+#+begin_example
 To provision the Anonymiser, we create a new anonymiser on the
 console, then export the installer. This creates a zip file which we
 copy to the CentOS instance. After un-zipping it, we have an ‘install’
@@ -278,7 +319,9 @@ Once we’ve done this, we then go back to our console and drag the
 Anonymiser onto the Collector to create a chain. Clicking ‘Apply
 Configuration’ then pushes this to the collector and the anonymiser,
 setting up the chain.
+#+end_example
 **** 去除反虚拟机的限制
+#+begin_example
 The first stage is identifying where the base executables that the
 backend uses are located. When the system is installed, the ‘cores’
 are extracted to ‘C:\RCS\DB\cores’. Each of these is a zip file
@@ -329,14 +372,16 @@ Directory of G:\Hacked Team\FAE DiskStation\2. DELIVERY\2.3. Software
 16/12/2014 11:11 6,039 windows.pfx
 29 File(s) 10,994,749 bytes
 3 Dir(s) 54,780,149,760 bytes free
-**** 确定scout和soldier是要patch的image
-It looks like ‘scout’ and ‘soldier’ are the two base images that we
-want to patch.
-We have the source code for the ‘AntiVM()’ function, but we need to
-find what it looks like in the compiled code. Starting with the scout
-agent, we can open it up in IDA (A reverse engineering tool) and find
-the code segments that correspond to the AntiVM code.
+#+end_example
+**** 确定scout和soldier是要patch的image 
+: It looks like ‘scout’ and ‘soldier’ are the two base images that we
+: want to patch.
+: We have the source code for the ‘AntiVM()’ function, but we need to
+: find what it looks like in the compiled code. Starting with the scout
+: agent, we can open it up in IDA (A reverse engineering tool) and find
+: the code segments that correspond to the AntiVM code.
 **** 通过分析源码，确定查询字符串定位汇编的地址
+#+begin_example
 The ‘AntiVBox’ and ‘AntiVMware’ functions both use WMI queries in
 order to identify a virtual environment. These queries use the
 ‘CoCreateInstance’, ‘CoInitialise’ and ‘CoSetProxyBlanket’ functions
@@ -358,17 +403,19 @@ It’s now fairly trivial to locate the specific assembly instruction
 function always returns zero.
 So we’ve now patched the scout implant (finally…), but what about the
 next level up?
+#+end_example
 这家伙主要用Immunity Debugger的，国内一般用OD。
 **** 同理，patch了Soldier
-The ‘Soldier’ agent actually shares the same code as the scout to
-detect virtual environments. The compiled code is slightly different
-however, probably due to a compiler optimisation.
-Whereas the scout sets EAX to 1 using ‘mov eax, 1′, the soldier
-instead sets EAX to zero, then increments it by one (‘INC
-EAX’). Regardless, we can still patch the function to always return
-zero by replacing the ‘INC EAX’ with a ‘NOP’ (No-operation)
-instruction. This does nothing, and leaves EAX set to zero.
+: The ‘Soldier’ agent actually shares the same code as the scout to
+: detect virtual environments. The compiled code is slightly different
+: however, probably due to a compiler optimisation.
+: Whereas the scout sets EAX to 1 using ‘mov eax, 1′, the soldier
+: instead sets EAX to zero, then increments it by one (‘INC
+: EAX’). Regardless, we can still patch the function to always return
+: zero by replacing the ‘INC EAX’ with a ‘NOP’ (No-operation)
+: instruction. This does nothing, and leaves EAX set to zero.
 **** 打包回去,加载成功
+#+begin_example
 Now we need to load these updated agents into the database. We copy
 our updated ‘scout’ and ‘soldier’ files into ‘windows.zip’, then copy
 that into ‘C:\RCS\DB\cores’. Lo and behold, the next time the database
@@ -380,7 +427,10 @@ version 2015032101 | sha1 1daaeece8c9a7c624b9f26147562b052fb691e44
 So after all of that work, we should be able to run an agent on a
 virtual machine to try out its features. We first create an
 ‘Operation’ that will contain all of our targets.
-**** 后端创建“工厂”，点击选项就能配置“生成”远控客户端。
+#+end_example
+
+**** 后端创建“工厂”，点击选项就能配置“生成”远控客户端
+#+begin_example
 We then create a ‘Factory’ to build our agents. This allows us to
 configure what features we want enabled, as well as the frequency of
 call-backs.
@@ -392,7 +442,9 @@ on its own, so for the moment we’re just going to generate an
 executable to be run by the victim (i.e. Us).
 Clicking ‘create’ gives us an executable on our local machine under
 ‘RCS Downloads’.
+#+end_example
 **** scout能收集信息和截图
+#+begin_example
 We can then copy this to our target machine and run it, installing the
 implant. As mentioned previously, the ‘scout’ implant (which this
 agent is) sends back device information and screenshots so that the
@@ -404,19 +456,20 @@ much more data.
 All of the evidence is displayed in an easy-to-view format. Some
 examples of evidence are shown below, including keystroke logs and
 device information.
+#+end_example
 **** OCR识别截图中的文字
-Another interesting feature is Optical Character Recognition
-(OCR). This aims to recognise text in images and convert it into
-actual text. This feature allows recognition of text in
-screenshots. This is also coupled with a translation feature, allowing
-the translation of text in screenshots.
+: Another interesting feature is Optical Character Recognition
+: (OCR). This aims to recognise text in images and convert it into
+: actual text. This feature allows recognition of text in
+: screenshots. This is also coupled with a translation feature, allowing
+: the translation of text in screenshots.
 **** 总结
-So to wrap up, we’ve managed to deploy an operational infrastructure,
-patch the implants so they’ll run in our virtual lab and finally run a
-mock operation on our ‘targets’ and gathered intelligence. Using all
-of this information, we can start to put together a picture of what an
-attack using this toolset would look like, and how we could defend
-against it. 
+: So to wrap up, we’ve managed to deploy an operational infrastructure,
+: patch the implants so they’ll run in our virtual lab and finally run a
+: mock operation on our ‘targets’ and gathered intelligence. Using all
+: of this information, we can start to put together a picture of what an
+: attack using this toolset would look like, and how we could defend
+: against it.
 *** [[https://www.4armed.com/blog/hacking-teams-killswitch-disabling-galileo-rcs-remotely-silently/][HACKING TEAM’S KILLSWITCH – DISABLING THE GALILEO RCS REMOTELY AND SILENTLY]]
 This time we’re looking at an embedded ‘kill switch’ within the system
 that allows Hacking Team to remotely disable a client’s software.
@@ -435,43 +488,43 @@ reddit好八卦，我喜欢，FBI某位兄弟曾经发邮件叫HT将他移出广
 rootkit相关，下面的趋势科技的文献比reddit的更好。Flash的漏洞方面，乌云上面
 的360安全团队的文章更好，可能国外的更详细易懂也不一定。
 读不懂，不过这种文章都是动手才能看懂的。
-
 * @daige 评论里面的[[http://countuponsecurity.com/2015/07/24/hacking-team-arsenal-of-cyber-weapons/][这份摘要]]
 這是一篇總結性的文章，基本是链接+引用其他开头作爲的摘要,这份列表很多漏洞方面的文章。
 但是有重复，而且我也不太关系Flash方面的漏洞。所以只列了rootkit相关的。
 ** [[http://blog.trendmicro.com/trendlabs-security-intelligence/hacking-team-uses-uefi-bios-rootkit-to-keep-rcs-9-agent-in-target-systems/][Hacking Team Uses UEFI BIOS Rootkit to Keep RCS 9 Agent in Target Systems]]
 *** Hacking Team使用Bootkit！针对Insyde BIOS,好像也对AMI BIOS有效。
-Hacking Team uses a UEFI BIOS rootkit to keep their Remote Control
-System (RCS) agent installed in their targets’ systems. This means
-that even if the user formats the hard disk, reinstalls the OS, and
-even buys a new hard disk, the agents are implanted after Microsoft
-Windows is up and running.
-They have written a procedure specifically for Insyde BIOS (a very
-popular BIOS vendor for laptops).  However, the code can very likely
-work on AMI BIOS as well. 
+: Hacking Team uses a UEFI BIOS rootkit to keep their Remote Control
+: System (RCS) agent installed in their targets’ systems. This means
+: that even if the user formats the hard disk, reinstalls the OS, and
+: even buys a new hard disk, the agents are implanted after Microsoft
+: Windows is up and running.
+: They have written a procedure specifically for Insyde BIOS (a very
+: popular BIOS vendor for laptops).  However, the code can very likely
+: work on AMI BIOS as well. 
 *** 虽然HT的幻灯片说要硬件插入才能安装，但不能排除远程安装的可能性
 进攻者进入系统，重启进去UEFI的shell,dump出BIOS,安装BIOS bootkit,然后重
 启目标系统。
-A Hacking Team slideshow presentation claims that successful infection
-requires physical access to the target system; however, we can’t rule
-out the possibility of remote installation. An example attack scenario
-would be: The intruder gets access to the target computer, reboots
-into UEFI shell, dumps the BIOS, installs the BIOS rootkit,reflashes
-the BIOS, and then reboots the target system.
+: A Hacking Team slideshow presentation claims that successful infection
+: requires physical access to the target system; however, we can’t rule
+: out the possibility of remote installation. An example attack scenario
+: would be: The intruder gets access to the target computer, reboots
+: into UEFI shell, dumps the BIOS, installs the BIOS rootkit,reflashes
+: the BIOS, and then reboots the target system.
 *** 安装中，会拷贝三部分Ntfs.mod，Rkloader.mod，dropper.mod
-In installation, three modules are first copied from an external
-source (this might be from a USB key with UEFI shell) to a file volume
-(FV) in the modified UEFI BIOS. Ntfs.mod allows UEFI BIOS to
-read/write NTFS file. Rkloader.mod then hooks the UEFI event and calls
-the dropper function when the system boots. The file dropper.mod
-contains the actual agents, which have the file name scout.exe and
-soldier.exe.
+: In installation, three modules are first copied from an external
+: source (this might be from a USB key with UEFI shell) to a file volume
+: (FV) in the modified UEFI BIOS. Ntfs.mod allows UEFI BIOS to
+: read/write NTFS file. Rkloader.mod then hooks the UEFI event and calls
+: the dropper function when the system boots. The file dropper.mod
+: contains the actual agents, which have the file name scout.exe and
+: soldier.exe.
 *** 防范措施
-Make sure UEFI SecureFlash is enabled
-Update the BIOS whenever there is a security patch
-Set up a BIOS or UEFI password
+: Make sure UEFI SecureFlash is enabled
+: Update the BIOS whenever there is a security patch
+: Set up a BIOS or UEFI password
 ** [[http://www.intelsecurity.com/advanced-threat-research/blog.html][Advanced Threat Research]]
-这篇文章值得深入研究，留个坑把。前面从源码维度介绍rkRootkit做了什么。然后是硬件Rootkit检测工具[[https://cansecwest.com/slides/2014/Platform%2520Firmware%2520Security%2520Assessment%2520wCHIPSEC-csw14-final.pdf][CHIPSEC]].
+这篇文章值得深入研究，留个坑把。前面从源码维度介绍rkRootkit做了什么。然
+后是硬件Rootkit检测工具[[https://cansecwest.com/slides/2014/Platform%2520Firmware%2520Security%2520Assessment%2520wCHIPSEC-csw14-final.pdf][CHIPSEC]].
 包括检测SPI Flash 保护，得到感染的证据。不过好消息是我还没看到linux版本的。
 *** reference
 [[http://www.intelsecurity.com/advanced-threat-research/security-system-firmware.html][BIOS / UEFI Firmware]]
@@ -485,9 +538,9 @@ UAF的一篇简单教程，适合我等小白用户
 [[http://garage4hackers.com/content.php?r%3D143-Beginners-Guide-to-Use-after-free-Exploits-IE-6-0-day-Exploit-Development][Beginners Guide to "Use after free Exploits #IE 6 0-day #Exploit Development"]]
 ** linux-insides
 下面这本[[http://0xax.gitbooks.io/linux-insides/content/index.html][linux-insides]] 讲linux的书，天天刷我屏，从各种不同渠道。
-The goal is simple - to share my modest knowledge about the internals
-of the linux kernel and help people who are interested in linux kernel
-internals, and other low-level subject matter.
+: The goal is simple - to share my modest knowledge about the internals
+: of the linux kernel and help people who are interested in linux kernel
+: internals, and other low-level subject matter.
 ** exploit-develop
 这个[[https://expdev-kiuhnm.rhcloud.com/2015/05/11/contents/][Exploit Development Course]]教程貌似被推荐烂了。
 ** phrack

@@ -1,49 +1,4 @@
 * linux-rootkit-hack
-* from reddit
-** [[http://core.ipsecs.com/rootkit/kernel-rootkit/kbeast-v1/][A Linux Kernel Module Rootkit has been released in 2012: Kbeast]]
-** Rootkit.com mirror?
-https://web.archive.org/web/*/rootkit.com/vault/* 
-http://opensecuritytraining.info/Rootkits.html
-** [[https://www.syscan360.org/slides/2014_EN_AdvancedBootkitTechniquesOnAndroid_ChenZhangqiShendi.pdf][Advanced Bootkit Techniques on Android]]
-** [[http://s3.eurecom.fr/~zaddach/docs/Recon14_HDD.pdf][Exploring the impact of a hard drive backdoor]]
-** [[https://github.com/dynup/kpatch][kpatch: dynamic kernel patching]]
-kpatch is a Linux dynamic kernel patching infrastructure which allows
-you to patch a running kernel without rebooting or restarting any
-processes. It enables sysadmins to apply critical security patches to
-the kernel immediately, without having to wait for long-running tasks
-to complete, for users to log off, or for scheduled reboot windows. It
-gives more control over uptime without sacrificing security or
-stability.
-** [[http://www.phrack.org/issues/63/8.html][Raising The Bar For Windows Rootkit Detection]]
-** [[https://www.blackhat.com/presentations/bh-usa-09/TERESHKIN/BHUSA09-Tereshkin-Ring3Rootkit-SLIDES.pdf][Introducing Ring -3 Rootkits]]
-** [[http://timeglider.com/timeline/5ca2daa6078caaf4][这个时间线好强大，值得深入google!]]
-** Ring3 / Ring0 Rootkit Hook Detection
-[[http://www.malwaretech.com/2013/09/ring3-ring0-rootkit-hook-detection-12.html][Ring3 / Ring0 Rootkit Hook Detection 1/2]]
-[[http://www.malwaretech.com/2013/10/ring3-ring0-rootkit-hook-detection-22.html][Ring3 / Ring0 Rootkit Hook Detection 2/2]]
-** [[http://repo.hackerzvoice.net/depot_madchat/vxdevl/library/Inside%2520Windows%2520Rootkits.pdf][Inside Windows Rootkits]]
-** [[https://media.blackhat.com/us-13/US-13-Vuksan-Press-ROOT-to-Continue-Detecting-MacOS-and-Windows-Bootkits-with-RDFU-WP.pdf][ROOTKIT DETECTION FRAMEWORK FOR UEFI]]
-** [[http://news.saferbytes.it/analisi/2012/09/uefi-technology-say-hello-to-the-windows-8-bootkit/][UEFI technology: say hello to the Windows 8 bootkit!]]
-** [[https://github.com/quarkslab/dreamboot][dreamboot UEFI bootkit]]
-** [[http://www.exfiltrated.com/research.php#BIOS_Based_Rootkits][BIOS Based Rootkits]]
-** [[https://media.blackhat.com/us-13/US-13-Butterworth-BIOS-Security-Slides.pdf][BIOS Chronomancy:Fixing the Core Root of Trust for Measurement]]
-** [[https://www.hackinparis.com/sites/hackinparis.com/files/Slidesthomasroth.pdf][Next generation mobile rootkits]]
-** [[http://beneathclevel.blogspot.co.uk/][A Linux rootkit tutorial - Makefile and symbols]]
-** [[http://www.unixist.com/security/detecting-hidden-files/index.html][>: Detecting hidden files]]
-** [[http://shell-storm.org/blog/Simple-Hook-detection-Linux-module/][Simple hook detection Linux module]]
-** [[https://reverse.put.as/wp-content/uploads/2013/05/SysScan-13-Presentation.pdf][Revisiting Mac OS X Kernel Rootkits!]]
-** Syscall Hijacking: Simple Rootkit
-[[https://memset.wordpress.com/2010/12/28/syscall-hijacking-simple-rootkit-kernel-2-6-x/][Syscall Hijacking: Simple Rootkit (kernel 2.6.x)]]
-[[https://memset.wordpress.com/2011/03/18/syscall-hijacking-dynamically-obtain-syscall-table-address-kernel-2-6-x-2/][Syscall Hijacking: Dynamically obtain syscall table address (kernel 2.6.x) #2]]
-** [[http://phrack.org/issues/68/6.html][Android platform based linux kernel rootkit]]
-** [[http://poppopret.org/2013/01/07/suterusu-rootkit-inline-kernel-function-hooking-on-x86-and-arm/][Suterusu Rootkit: Inline Kernel Function Hooking on x86 and ARM]]
-** [[https://www.trailofbits.com/resources/advanced_macosx_rootkits_paper.pdf][ADVANCED MAC OS X ROOTKITS]]
-** [[http://rkhunter.sourceforge.net/][The Rootkit Hunter project]]
-** [[http://www.symantec.com/connect/articles/detecting-rootkits-and-kernel-level-compromises-linux][Detecting Rootkits And Kernel-level Compromises In Linux]]
-** [[http://static.usenix.org/event/sec09/tech/full_papers/hund.pdf][Return-Oriented Rootkits Bypassing Kernel Code Integrity Protection Mechanisms]]
-** [[https://media.blackhat.com/bh-ad-11/Oi/bh-ad-11-Oi-Android_Rootkit-Slides.pdf][Yet Another Android Rootkit]]
-** [[http://phrack.org/issues/58/7.html][Linux on-the-fly kernel patching without LKM]]
-** [[www.la-samhna.de/library/rootkits/list.html][List of Kernel Rootkits - Samhain Labs]]
-** [[https://www.blackhat.com/presentations/bh-jp-05/bh-jp-05-sparks-butler.pdf]["shadow Walker" Raising The Bar For Rootkit Detection]]
 * [[http://www.opensecuritytraining.info/Rootkits.html][Rootkits: What they are, and how to find them]]
 这个教程就是没有英文字母，其实看起来还好,还有是windows的。
 * [[http://phrack.org/issues/68/6.html#article][Android platform based linux kernel rootkit]]
@@ -61,7 +16,7 @@ uname -r)/include/ -I/usr/src/kernels/$(shell uname
 “If all does not go well ... well, I shall leave that to your
 nightmares.”但是这篇文章思路非常清晰，基本原来就是这样hook的,还是留待把。
 *** [[https://www.thc.org/papers/LKM_HACKING.html][(nearly) Complete Linux Loadable Kernel Modules]]
-再是一下这个教程。不行，一样的问题，基本的helloworld.c都编译不通过, 再
+再试一下这个教程。不行，一样的问题，基本的helloworld.c都编译不通过, 再
 找一个教程。
 ***  [[http://www.crashcourse.ca/introduction-linux-kernel-programming/introduction-linux-kernel-programming][introduction-linux-kernel-programming]]
 这本来是一个收费课程，
@@ -159,6 +114,7 @@ into the kernel code and figure out how to do that just from reading
 the source and the header files mentioned above.
 留待把。
 ** [2] "[[http://phrack.org/issues/52/18.html#article][Weakening the Linux Kernel]]" by plaguez
+
 [Phrack issue 52, article 18]
 * Writing Modern Linux Rootkits
 ** [[http://turbochaos.blogspot.jp/2013/09/linux-rootkits-101-1-of-3.html][Modern Linux Rootkits 101]]
@@ -296,5 +252,79 @@ struct dir_context {
 I will update this post as soon as full coverage for 3.11 kernels is
 completed.
 
-
 ** [[http://turbochaos.blogspot.jp/2013/10/writing-linux-rootkits-301_31.html][Modern Linux Rootkits 301 - Bypassing modules_disabled security]]
+** VFS
+[[http://security.tencent.com/index.php/opensource/detail/16][Linux Rootkit (vfs hook) 隐藏进程检测工具]]
+[[http://staronmytop.blog.51cto.com/6366057/1119475][Linux下的RootKit简单介绍与分析]]
+[[http://pages.cpsc.ucalgary.ca/~crwth/programming/VFS/VFS.php][How to write a Linux VFS filesystem module]]
+* from reddit
+** [[http://core.ipsecs.com/rootkit/kernel-rootkit/kbeast-v1/][A Linux Kernel Module Rootkit has been released in 2012: Kbeast]]
+** Rootkit.com mirror?
+https://web.archive.org/web/*/rootkit.com/vault/* 
+http://opensecuritytraining.info/Rootkits.html
+** [[https://www.syscan360.org/slides/2014_EN_AdvancedBootkitTechniquesOnAndroid_ChenZhangqiShendi.pdf][Advanced Bootkit Techniques on Android]]
+** [[http://s3.eurecom.fr/~zaddach/docs/Recon14_HDD.pdf][Exploring the impact of a hard drive backdoor]]
+** [[https://github.com/dynup/kpatch][kpatch: dynamic kernel patching]]
+kpatch is a Linux dynamic kernel patching infrastructure which allows
+you to patch a running kernel without rebooting or restarting any
+processes. It enables sysadmins to apply critical security patches to
+the kernel immediately, without having to wait for long-running tasks
+to complete, for users to log off, or for scheduled reboot windows. It
+gives more control over uptime without sacrificing security or
+stability.
+** [[https://www.blackhat.com/presentations/bh-usa-09/TERESHKIN/BHUSA09-Tereshkin-Ring3Rootkit-SLIDES.pdf][Introducing Ring -3 Rootkits]]
+** [[http://timeglider.com/timeline/5ca2daa6078caaf4][这个时间线好强大，值得深入google!]]
+** Ring3 / Ring0 Rootkit Hook Detection
+[[http://www.malwaretech.com/2013/09/ring3-ring0-rootkit-hook-detection-12.html][Ring3 / Ring0 Rootkit Hook Detection 1/2]]
+[[http://www.malwaretech.com/2013/10/ring3-ring0-rootkit-hook-detection-22.html][Ring3 / Ring0 Rootkit Hook Detection 2/2]]
+** [[http://repo.hackerzvoice.net/depot_madchat/vxdevl/library/Inside%2520Windows%2520Rootkits.pdf][Inside Windows Rootkits]]
+** [[https://media.blackhat.com/us-13/US-13-Vuksan-Press-ROOT-to-Continue-Detecting-MacOS-and-Windows-Bootkits-with-RDFU-WP.pdf][ROOTKIT DETECTION FRAMEWORK FOR UEFI]]
+** [[http://news.saferbytes.it/analisi/2012/09/uefi-technology-say-hello-to-the-windows-8-bootkit/][UEFI technology: say hello to the Windows 8 bootkit!]]
+** [[https://github.com/quarkslab/dreamboot][dreamboot UEFI bootkit]]
+** [[http://www.exfiltrated.com/research.php#BIOS_Based_Rootkits][BIOS Based Rootkits]]
+** [[https://media.blackhat.com/us-13/US-13-Butterworth-BIOS-Security-Slides.pdf][BIOS Chronomancy:Fixing the Core Root of Trust for Measurement]]
+** [[https://www.hackinparis.com/sites/hackinparis.com/files/Slidesthomasroth.pdf][Next generation mobile rootkits]]
+** [[http://beneathclevel.blogspot.co.uk/][A Linux rootkit tutorial - Makefile and symbols]]
+** [[http://www.unixist.com/security/detecting-hidden-files/index.html][>: Detecting hidden files]]
+** [[http://shell-storm.org/blog/Simple-Hook-detection-Linux-module/][Simple hook detection Linux module]]
+** [[https://reverse.put.as/wp-content/uploads/2013/05/SysScan-13-Presentation.pdf][Revisiting Mac OS X Kernel Rootkits!]]
+** Syscall Hijacking: Simple Rootkit
+[[https://memset.wordpress.com/2010/12/28/syscall-hijacking-simple-rootkit-kernel-2-6-x/][Syscall Hijacking: Simple Rootkit (kernel 2.6.x)]]
+[[https://memset.wordpress.com/2011/03/18/syscall-hijacking-dynamically-obtain-syscall-table-address-kernel-2-6-x-2/][Syscall Hijacking: Dynamically obtain syscall table address (kernel 2.6.x) #2]]
+** [[http://phrack.org/issues/68/6.html][Android platform based linux kernel rootkit]]
+** [[http://poppopret.org/2013/01/07/suterusu-rootkit-inline-kernel-function-hooking-on-x86-and-arm/][Suterusu Rootkit: Inline Kernel Function Hooking on x86 and ARM]]
+** [[https://www.trailofbits.com/resources/advanced_macosx_rootkits_paper.pdf][ADVANCED MAC OS X ROOTKITS]]
+** [[http://rkhunter.sourceforge.net/][The Rootkit Hunter project]]
+** [[http://www.symantec.com/connect/articles/detecting-rootkits-and-kernel-level-compromises-linux][Detecting Rootkits And Kernel-level Compromises In Linux]]
+** [[http://static.usenix.org/event/sec09/tech/full_papers/hund.pdf][Return-Oriented Rootkits Bypassing Kernel Code Integrity Protection Mechanisms]]
+** [[https://media.blackhat.com/bh-ad-11/Oi/bh-ad-11-Oi-Android_Rootkit-Slides.pdf][Yet Another Android Rootkit]]
+** [[http://phrack.org/issues/58/7.html][Linux on-the-fly kernel patching without LKM]]
+** [[www.la-samhna.de/library/rootkits/list.html][List of Kernel Rootkits - Samhain Labs]]
+** [[https://www.blackhat.com/presentations/bh-jp-05/bh-jp-05-sparks-butler.pdf]["shadow Walker" Raising The Bar For Rootkit Detection]]
+* windows rootkits
+** [[http://www.phrack.org/issues/63/8.html][Raising The Bar For Windows Rootkit Detection]]
+   总结windows rootkit的演变历史。
+First generation rootkits were primitive.  They simply replaced /
+modified key system files on the victim's system.  The UNIX login
+program was a common target and involved an attacker replacing the
+original binary with a maliciously enhanced version that logged user
+passwords.  Because these early rootkit modifications were limited to
+system files on disk, they motivated the development of file system
+integrity checkers such as Tripwire [1].
+
+In response, rootkit developers moved their modifications off disk to
+the memory images of the loaded programs and, again, evaded
+detection. These 'second' generation rootkits were primarily based
+upon hooking techniques that altered the execution path by making
+memory patches to loaded applications and some operating system
+components such as the system call table. Although much stealthier,
+such modifications remained detectable by searching for heuristic
+abnormalities. For example, it is suspicious for the system service
+table to contain pointers that do not point to the operating system
+kernel. This is the technique used by VICE [2].
+
+Third generation kernel rootkit techniques like Direct Kernel Object
+Manipulation (DKOM), which was implemented in the FU rootkit [3],
+capitalize on the weaknesses of current detection software by
+modifying dynamically changing kernel data structures for which it is
+impossible to establish a static trusted baseline.
