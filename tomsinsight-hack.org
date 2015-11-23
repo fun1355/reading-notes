@@ -287,7 +287,7 @@ SP可以写的东西非常多，曾经是地下黑市的主要变现渠道。
 *** 流量的价格 广告联盟
 **** TODO [[https://sites.google.com/site/mengkaishidedifeng/wang-zhuan-ji-chu-zhi-shi][网赚入门]]
 **** TODO [[http://t.20shx.com/][20shx.com Toolbox]]
-*** 互联网 历史
+*** 互联网历史
 **** TODO [[http://linjun1024.blog.techweb.com.cn/][互联网史话—林军]]
 **** TODO [[http://vdisk.weibo.com/s/FF5y-ERqEQo][沸腾十五年]]
 **** TODO [[http://chuansong.me/account/Left-Right-007][左邻右狸]]
@@ -306,6 +306,16 @@ LEAF,李华-腾讯最早招聘的外地大学生 马化腾、张志东、曾李�
 ***** [[http://chenzhong.baijia.baidu.com/article/17462][和游久CEO刘亮聊天：贵人周鸿祎]]
 [[http://chenzhong.baijia.baidu.com/article/17668][和游久CEO刘亮聊天：结怨腾讯(下)]]
 
+*** 中国黑客历史
+**** [[http://www.router.net.cn/Mu-Ma-Bing-Du/29178.html]["沸腾十五年"——中国互联网史1995-2009:互联网老兵谈网络黑社会：中国黑客走上自绝之路]]
+**** [[http://www.bwchinese.com/Chapter/4018_2.html][《中国互联网风云16年》 1998极客当道 互联网商业史人物——曾经的“黑客帝国”]]
+**** [[http://www.125135.com/272088.htm][中国黑客档案总序]]
+**** [[http://tech.163.com/15/0623/17/ASQF19GV000915BD.html][中国黑客的进阶之路]]
+**** [[http://tech.163.com/09/0610/09/5BEGTK0E000915BF_3.html][互联网老兵谈中国黑客史：放弃理想而追逐短利]]
+**** [[http://www.leiphone.com/news/201506/igdXfKV3QCxes68b.html][你不知道的中国黑客：一半以上月薪不到8000]]
+**** [[http://www.125135.com/642195.htm][揭开中国黑客群体的神秘面纱 年薪数百万]]
+**** [[http://www.125135.com/847429.htm][中国黑客产业解密：流水化运作 一夜赚600万]]
+**** [[http://mobile.163.com/14/0502/05/9R7GC1850011309K.html][揭秘中国黑客：攻击网游牟利捞金后洗白]]
 ** 流量获取分发相关产业链部分
 *** 流量获取分发相关产业链部分整体分析
 **** original toc
