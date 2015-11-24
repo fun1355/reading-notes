@@ -1413,6 +1413,8 @@ SEO数据如何搜集和分析
 [[http://blog.sina.com.cn/s/blog_c206a2c30101emv6.html][20种黑帽SEO作弊手法(下)]] 中 [[http://blog.sina.com.cn/s/blog_c206a2c30101cv3p.html][石榴算法]] 的链接跳转到一个采集页面 [[http://blog.sina.com.cn/s/blog_c206a2c30101cv3p.html][【木木推荐】网络营销/新媒体营销精彩文章汇总]]
 *** #<<my-anchor-cheat-click-links>> 欺骗点击链接
 [[http://blog.sina.com.cn/s/blog_c206a2c30101emv6.html][20种黑帽SEO作弊手法(下)]] 中 [[http://blog.sina.com.cn/s/blog_c206a2c30101dxip.html][百度刷排名的原理]] 链接到“点击网站排名的影响”这篇文章
+*** [[http://www.cnjushui.com/cnjushui/flashsky%2B%25E5%258D%259A%25E5%25AE%25A2][关键词堆砌]]
+通过关键词堆砌能做到google排名第一,query:"flashsky 我的安全之路".
 ** 其他关于SEO的文章
 ** DONE #<<my-anchor-baidu-Baiduspider>> [[http://blog.sina.com.cn/s/blog_c206a2c30101dg0e.html][百度Baiduspider]]
      CLOSED: [2015-11-22 Sun 20:38]

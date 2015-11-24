@@ -34,8 +34,7 @@ initramfs已经生成了。是的，现代的内核就是这样，我从评论�
 : Exercise for the student: Predict what will happen with a message you
 : print from your crash3 module with a priority of KERN_DEBUG. Test it.
 我将crash3.c中的printk第一个宏改成了KERN_DEBUG，insmod之后，cat
-/var/log/message没有找到输出，搜索了一下。发现了[[http://www.makelinux.net/ldd3/chp-4-sect-2Linux][Linux Device
-Drivers(ldd3), 3rd Edition -- chp-4-sect-2]]，以及[[http://oss.org.cn/kernel-book/ldd3/ch04s02.html][福利]]！ （这本书竟然有中
+/var/log/message没有找到输出，搜索了一下。发现了[[http://www.makelinux.net/ldd3/chp-4-sect-2][Linux Device Drivers(ldd3), 3rd Edition -- chp-4-sect-2]]，以及[[http://oss.org.cn/kernel-book/ldd3/ch04s02.html][福利]]！ （这本书竟然有中
 文版，留坑待填。先不管，继续LKM。）[[https://stackoverflow.com/questions/4518420/where-does-output-of-print-in-kernel-go][linux - Where does output of print
 in kernel go?]] 这里看到答案。
 : ➜ crash3 dmesg|grep crash3
@@ -318,6 +317,35 @@ $string                                       #执行命令
 [[http://security.tencent.com/index.php/opensource/detail/16][Linux Rootkit (vfs hook) 隐藏进程检测工具]]
 [[http://staronmytop.blog.51cto.com/6366057/1119475][Linux下的RootKit简单介绍与分析]]
 [[http://pages.cpsc.ucalgary.ca/~crwth/programming/VFS/VFS.php][How to write a Linux VFS filesystem module]]
+* windows rootkits
+** [[http://www.phrack.org/issues/63/8.html][Raising The Bar For Windows Rootkit Detection]]
+   总结windows rootkit的演变历史。
+#+begin_example
+First generation rootkits were primitive.  They simply replaced /
+modified key system files on the victim's system.  The UNIX login
+program was a common target and involved an attacker replacing the
+original binary with a maliciously enhanced version that logged user
+passwords.  Because these early rootkit modifications were limited to
+system files on disk, they motivated the development of file system
+integrity checkers such as Tripwire [1].
+
+In response, rootkit developers moved their modifications off disk to
+the memory images of the loaded programs and, again, evaded
+detection. These 'second' generation rootkits were primarily based
+upon hooking techniques that altered the execution path by making
+memory patches to loaded applications and some operating system
+components such as the system call table. Although much stealthier,
+such modifications remained detectable by searching for heuristic
+abnormalities. For example, it is suspicious for the system service
+table to contain pointers that do not point to the operating system
+kernel. This is the technique used by VICE [2].
+
+Third generation kernel rootkit techniques like Direct Kernel Object
+Manipulation (DKOM), which was implemented in the FU rootkit [3],
+capitalize on the weaknesses of current detection software by
+modifying dynamically changing kernel data structures for which it is
+impossible to establish a static trusted baseline.
+#+end_example
 * from reddit
 ** [[http://core.ipsecs.com/rootkit/kernel-rootkit/kbeast-v1/][A Linux Kernel Module Rootkit has been released in 2012: Kbeast]]
 ** Rootkit.com mirror?
@@ -362,32 +390,96 @@ stability.
 ** [[http://phrack.org/issues/58/7.html][Linux on-the-fly kernel patching without LKM]]
 ** [[www.la-samhna.de/library/rootkits/list.html][List of Kernel Rootkits - Samhain Labs]]
 ** [[https://www.blackhat.com/presentations/bh-jp-05/bh-jp-05-sparks-butler.pdf]["shadow Walker" Raising The Bar For Rootkit Detection]]
-* windows rootkits
-** [[http://www.phrack.org/issues/63/8.html][Raising The Bar For Windows Rootkit Detection]]
-   总结windows rootkit的演变历史。
+** [[https://www.reddit.com/r/linux/comments/3gw172/a_good_book_on_how_the_linux_kernel_works/][linux内核的好书]]
+http://pdos.csail.mit.edu/6.828/2014/xv6.html
+: I recommend Xv6. This is a "teaching kernel", based on Linux
+: predecessor v6. The advantage is that Xv6 is much simpler, but
+: maintains the same skeleton as Linux. The full source code is
+: available and runs in a VM. The related book is very readable, and
+: makes specific references to source code, so it's clear.
+
+http://www.cs.uic.edu/~jbell/CourseNotes/OperatingSystems/ 
+: PS　"Computer Architecture, A Quantitative Approach ", i agree, it's
+: an amazing book
+* linux-device-drivers-3rd
+这本书过时了，有第四版了，可惜没有电子版看起来不方便。
+** [[http://www.makelinux.net/ldd3/chp-1-sect-1][1.1. The Role of the Device Driver]]
+: The distinction between mechanism and policy is one of the best ideas
+: behind the Unix design. Most programming problems can indeed be split
+: into two parts: "what capabilities are to be provided" (the mechanism)
+: and "how those capabilities can be used" (the policy). If the two
+: issues are addressed by different parts of the program, or even by
+: different programs altogether, the software package is much easier to
+: develop and to adapt to particular needs.
+
 #+begin_example
-First generation rootkits were primitive.  They simply replaced /
-modified key system files on the victim's system.  The UNIX login
-program was a common target and involved an attacker replacing the
-original binary with a maliciously enhanced version that logged user
-passwords.  Because these early rootkit modifications were limited to
-system files on disk, they motivated the development of file system
-integrity checkers such as Tripwire [1].
-
-In response, rootkit developers moved their modifications off disk to
-the memory images of the loaded programs and, again, evaded
-detection. These 'second' generation rootkits were primarily based
-upon hooking techniques that altered the execution path by making
-memory patches to loaded applications and some operating system
-components such as the system call table. Although much stealthier,
-such modifications remained detectable by searching for heuristic
-abnormalities. For example, it is suspicious for the system service
-table to contain pointers that do not point to the operating system
-kernel. This is the technique used by VICE [2].
-
-Third generation kernel rootkit techniques like Direct Kernel Object
-Manipulation (DKOM), which was implemented in the FU rootkit [3],
-capitalize on the weaknesses of current detection software by
-modifying dynamically changing kernel data structures for which it is
-impossible to establish a static trusted baseline.
+When writing drivers, a programmer should pay particular attention to
+this fundamental concept: write kernel code to access the hardware,
+but don't force particular policies on the user, since different users
+have different needs. The driver should deal with making the hardware
+available, leaving all the issues about how to use the hardware to the
+applications. A driver, then, is flexible if it offers access to the
+hardware capabilities without adding constraints. Sometimes, however,
+some policy decisions must be made. For example, a digital I/O driver
+may only offer byte-wide access to the hardware in order to avoid the
+extra code needed to handle individual bits.
+#+end_example
+** [[http://www.makelinux.net/ldd3/chp-1-sect-2][1.2. Splitting the Kernel]]
+: Device control
+: Almost every system operation eventually maps to a physical
+: device. With the exception of the processor, memory, and a very few
+: other entities, any and all device control operations are performed by
+: code that is specific to the device being addressed. That code is
+: called a device driver. The kernel must have embedded in it a device
+: driver for every peripheral present on a system, from the hard drive
+: to the keyboard and the tape drive. This aspect of the kernel's
+: functions is our primary interest in this book.
+** [[http://www.makelinux.net/ldd3/chp-1-sect-3][1.3. Classes of Devices and Modules]]
+*** Character devices
+#+begin_example
+A character (char) device is one that can be
+accessed as a stream of bytes (like a file); a char driver is in
+charge of implementing this behavior. Such a driver usually implements
+at least the open, close, read, and write system calls. The text
+console (/dev/console) and the serial ports (/dev/ttyS0 and friends)
+are examples of char devices, as they are well represented by the
+stream abstraction. Char devices are accessed by means of filesystem
+nodes, such as /dev/tty1 and /dev/lp0. The only relevant difference
+between a char device and a regular file is that you can always move
+back and forth in the regular file, whereas most char devices are just
+data channels, which you can only access sequentially. There exist,
+nonetheless, char devices that look like data areas, and you can move
+back and forth in them; for instance, this usually applies to frame
+grabbers, where the applications can access the whole acquired image
+using mmap or lseek.
+#+end_example
+*** Block devices
+#+begin_example
+Like char devices, block devices are accessed by
+filesystem nodes in the /dev directory. A block device is a device
+(e.g., a disk) that can host a filesystem. In most Unix systems, a
+block device can only handle I/O operations that transfer one or more
+whole blocks, which are usually 512 bytes (or a larger power of two)
+bytes in length. Linux, instead, allows the application to read and
+write a block device like a char device—it permits the transfer of any
+number of bytes at a time. As a result, block and char devices differ
+only in the way data is managed internally by the kernel, and thus in
+the kernel/driver software interface. Like a char device, each block
+device is accessed through a filesystem node, and the difference
+between them is transparent to the user. Block drivers have a
+completely different interface to the kernel than char drivers.
+#+end_example
+*** Network interfaces
+#+begin_example
+Any network transaction is made through an interface, that is, a
+device that is able to exchange data with other hosts. Usually, an
+interface is a hardware device, but it might also be a pure software
+device, like the loopback interface. A network interface is in charge
+of sending and receiving data packets, driven by the network subsystem
+of the kernel, without knowing how individual transactions map to the
+actual packets being transmitted. Many network connections (especially
+those using TCP) are stream-oriented, but network devices are,
+usually, designed around the transmission and receipt of packets. A
+network driver knows nothing about individual connections; it only
+handles packets.
 #+end_example
