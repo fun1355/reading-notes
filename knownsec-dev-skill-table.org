@@ -224,7 +224,7 @@ v2.2  2014/03/09 发布
       FreeMind,本技能表就是这个制作
 **** TODO 上手Linux
 《鸟哥的Linux私房菜》
-[[http://man7.org/tlpi/][The Linux Programming Interface]] is better
+[[http://man7.org/tlpi/][The Linux Programming Interface]] is better.
 **** CANCELLED 熟练VIM
      CLOSED: [2015-11-28 Sat 11:08]
      实战至少3回合：http://coolshell.cn/articles/5426.html
