@@ -1,5 +1,7 @@
-* [[http://blog.knownsec.com/Knownsec_RD_Checklist/v2.2.html#][知道创宇研发技能表v2.2]]
-  2014/3/9 发布
+* [[http://blog.knownsec.com/Knownsec_RD_Checklist/index.html][知道创宇研发技能表]]
+v3.0 update 2015/08/21
+----
+v2.2  2014/03/09 发布
   by @知道创宇(www.knownsec.com) @余弦 & 行之
   知道创宇是国内Geek十足且普遍被认为特别有前途的互联网安全公司，
   动态请关注微信公众号：Lazy-Thought。
@@ -109,29 +111,29 @@
       写出了自己的相关工具，爽
     我实战了N回，遇到了很多奇葩环境，我有足够的信心绕过
     以上这些之后，这才叫熟练！其他同理
-*** 好书推荐
+*** TODO 好书推荐
 **** 推荐理由
      打通任督二脉的书，怎能不看？
      任何科学研究最终必须至少到哲学层面，触碰到上帝的脚
      具体技术类书籍请见“专业技能”相关部分
 **** 鸡汤类
 ***** 黑客与画家
-****** 印象深刻：设计者的品味
-       好设计是简单的设计
-       抓住本质
-       好设计是永不过时的设计
-       如果解决方法是丑陋的，那就肯定还有更好的解决方法，只是还没有发现而已
-       好设计是解决主要问题的设计
-       好设计是启发性的设计
-       好设计通常是有点趣味性的设计
-       好设计是艰苦的设计
-       好设计是看似容易的设计
-       好设计是对称的设计
-       好设计是模仿大自然的设计
-       好设计是一种再设计
-       好设计是能够复制的设计
-       好设计往往是奇特的设计
-       好设计是成批出现的
+      印象深刻：设计者的品味
+      好设计是简单的设计
+      抓住本质
+      好设计是永不过时的设计
+      如果解决方法是丑陋的，那就肯定还有更好的解决方法，只是还没有发现而已
+      好设计是解决主要问题的设计
+      好设计是启发性的设计
+      好设计通常是有点趣味性的设计
+      好设计是艰苦的设计
+      好设计是看似容易的设计
+      好设计是对称的设计
+      好设计是模仿大自然的设计
+      好设计是一种再设计
+      好设计是能够复制的设计
+      好设计往往是奇特的设计
+      好设计是成批出现的
        好设计常常是大胆的设计
 **** 浪潮之巅
      感受IT帝国的崛起与没落，我们现在站在又一个互联网浪潮之巅
@@ -141,8 +143,7 @@
      代码大全2
      数学之美
 **** 敏捷类
-     Rework中文版
-     37signals团队的敏捷经验
+     Rework中文版,37signals团队的敏捷经验
      高效程序员的45个习惯
 **** 产品类
      人人都是产品经理
@@ -170,7 +171,7 @@
       各种强大的过滤器语法
 ***** Tcpdump
       命令行的类Wireshark抓包神器
-***** Python
+***** TODO Python
       urllib2,打开请求响应调试,编辑urllib2的do_open里的
       h.set_debuglevel,改为h.set_debuglevel(1)，这时可以清晰看到请求响
       应数据，包括https.
@@ -212,7 +213,8 @@
       完整熟练
       20.2 使用Python进行Web应用：创建一个简单的Web客户端
       完整熟练
-**** Office能力
+**** CANCELLED Office能力
+     CLOSED: [2015-11-28 Sat 11:08]
      Word文档编写，看去要专业，尤其对外的
      Excel里面大量的统计、图表功能，需要善于使用
      PPT演讲、培训等必备，如何做好PPT？百度一下.
@@ -220,27 +222,28 @@
       yEd
       Visio
       FreeMind,本技能表就是这个制作
-**** 熟练VIM
+**** TODO 上手Linux
+《鸟哥的Linux私房菜》
+[[http://man7.org/tlpi/][The Linux Programming Interface]] is better
+**** CANCELLED 熟练VIM
+     CLOSED: [2015-11-28 Sat 11:08]
      实战至少3回合：http://coolshell.cn/articles/5426.html
-**** 算法
-     快排
-     二分
-**** 正则表达式
-**** 调试工具
-     Kodos
-     RegexBuddy,支持多种语言,支持调试优化
-     [[%20http://www.regexper.com/][正则图解]]
-     [[http://deerchao.net/tutorials/regex/regex.htm][正则表达式30分钟入门教程]]
-     http://wiki.ubuntu.org.cn/Python正则表达式操作指南
-     [[http://blog.knownsec.com/Knownsec_RD_Checklist/regex/regularexpressions.pptx][regex/regularexpressions.pptx]]
-     [[http://blog.knownsec.com/Knownsec_RD_Checklist/regex/about_regx_engine.txt][regex/正则表达式引擎浅析.txt]]
+
+**** TODO 正则表达式
+***** 调试工具
+      Kodos
+      RegexBuddy,支持多种语言,支持调试优化
+***** [[http://www.regexper.com/][正则图解]]
+[[%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F30%E5%88%86%E9%92%9F%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B][正则表达式30分钟入门教程]]
+http://wiki.ubuntu.org.cn/Python正则表达式操作指南
+《精通正则表达式》
 **** 研发能力
 ***** 瀑布模型
       需求->需求分析->设计->开发->测试->上线->运维/运营
 ***** 需求分析能力
       给你一个需求，如何给出一个优美的执行思路——方法论
       这个能力非常非常非常的关键
-***** 调试能力
+***** SOMEDAY 调试能力
       只要定位出，就没有解决不了的Bugs
       肉眼看到的都是假象,一定要专业的工具与经验配合
       Bugs在哪出现，最终就在哪进行真实模拟调试
@@ -257,6 +260,9 @@
       习惯Wiki记录，利于沉淀与分享
 **** 翻墙
      http://code.google.com/p/goagent/
+***** 优雅解决方案
+shadowsocks + 一台海外 VPS + Chrome(SwitchyOmega)/Firefox(AutoProxy)
+[[http://mp.weixin.qq.com/s?__biz%3DMzA3NTEzMTUwNA%3D%3D&mid%3D210457700&idx%3D1&sn%3D322d1e4c13d3f33ade848e3889c410bf#rd][详情了解]] 
 ***** SSH隧道
      http://www.ibm.com/developerworks/cn/linux/l-cn-sshforward/index.html
      本地转发:ssh -L <local port>:<remote host>:<remote port> <SSH hostname>
@@ -267,30 +273,154 @@
      [[http://blog.knownsec.com/Knownsec_RD_Checklist/web_component.png][8+1：一图胜千言哎:)]] 
      [[http://www.zoomeye.org][钟馗之眼]] :网络空间搜索引擎,大数据;懂的人懂，不懂的人不懂     
      组件具有影响面，越底层的组件影响面可能越大
+     [[http://www.zoomeye.org/search/dork][大量样例]]
 **** 安全维度
      漏洞,风险,事件
 **** Web安全标准
      OWASP,WASC,我们内部Wiki
 **** 实战环境
-***** XSS
+***** TODO XSS
       aks-xsslab_open（内部虚拟机）
-      可以搞通
-      XSS
-      CSRF
-      ClickJacking
-      http://xss-quiz.int21h.jp/: [[http://blog.knownsec.com/Knownsec_RD_Checklist/xss/xss_quiz.txt][答案：xss/xss_quiz.txt]]
-***** SQL
+      可以搞通XSS,CSRF,ClickJacking
+****** http://xss-quiz.int21h.jp/:
+ [[http://blog.knownsec.com/Knownsec_RD_Checklist/xss/xss_quiz.txt][答案：xss/xss_quiz.txt]]
+****** http://prompt.ml/0 
+答案：https://github.com/cure53/XSSChallengeWiki/wiki/prompt.ml
+****** http://escape.alf.nu/ 
+答案：http://blog.nsfocus.net/alert1-to-win-write-up/ 
+***** TODO SQL
       [[https://github.com/Audi-1/sqli-labs][SQLI-LABS]] is a platform to learn SQLI
-***** 500多个WSL靶场
+***** i春秋
+http://www.ichunqiu.com/
+***** Sebug + ZoomEye
+http://sebug.net
+http://zoomeye.org
 ***** 渗透虚拟机/BT5/Kali,海量各类型黑客工具
-**** 书
+**** TODO 书
      黑客攻防技术宝典（Web实战篇）
      白帽子讲Web安全
-     Web前端黑客技术揭秘,我和xisigr自己出品
+     Web前端黑客技术揭秘
+     Web之困
      SQL注入攻击与防御
-**** papers
+**** TODO papers
      http://www.exploit-db.com/papers/
      BlackHat/Defcon/国内各安全沙龙等Papers需要持续跟进
+     phrack.org
+*** 嵌入式安全
+**** 路由器安全
+***** 基础
+      嵌入式Linux系统方面知识
+      开发系统互联参考模型-第三层网络层
+      MIPS/ARM汇编知识
+      VxWorks系统方面知识
+      JTAG调试接口规范
+      嵌入式系统交叉环境开发
+****** 路由器芯片方案提供商
+       博通
+       Atheros
+       TrendChip
+       ACROSPEED
+       IC+
+       瑞昱
+
+***** 站点
+https://www.openwrt.org/ 
+OpenWrt is described as a Linux distribution for embedded devices
+http://routerpwn.com 
+全球主流路由器相关漏洞大集合
+http://see.sl088.com/wiki/Uboot_%E7%BC%96%E8%AF%91 
+Uboot_编译
+http://www.devttys0.com/ 
+Embedded Device Hacking
+***** 工具
+Binwalk
+IDA Pro
+gdb/gdbserver
+qemu-system
+qemu-user-static
+Smiasm
+Metasm
+JTAG硬件调试器
+***** 书
+《揭秘家用路由器0day漏洞挖掘技术》
+《Hacking the XBOX: An Introduction to Reverse Engineering》
+《Hacking the Cable Modem: What Cable Companies Don't Want You to Know》
+《MIPS体系结构透视 》
+《计算机组成与设计：硬件、软件接口》
+**** 摄像头安全
+http://www.openipcam.com/ 
+https://media.blackhat.com/us-13/US-13-Heffner-Exploiting-Network-Surveillance-Cameras-Like-A-Hollywood-Hacker-Slides.pdf 
+**** 工控安全
+***** 基础
+工业生产环境的基本结构，如：SCADA、PCS
+工业生产环境的信息安全风险点（可参考DHS出版物）
+Improving Industrial Control Systems Cybersecurity with Defense-In-Depth Strategies
+工控网络组态、逻辑开发、应用组态的基本技术方法
+抓包、看RFC分析几个常规工业以太网协议，如：Profinet、Modbus
+买两款PLC玩玩，会真实感受到工业环境的信息安全问题（一定记得买以太网模块，不贵二手几百块）
+***** 站点
+****** 事件跟踪分析
+http://plcscan.org/blog/ 
+http://scadastrangelove.blogspot.kr 
+http://www.phdays.com/ 
+http://www.scadasl.org 
+https://scadahacker.com 
+******* Duqu
+https://scadahacker.com/resources/duqu.html ￼
+******* Stuxnet
+https://scadahacker.com/resources/stuxnet.html ￼
+******* Havex
+https://scadahacker.com/resources/havex.html ￼
+****** 标准协会/测试工具
+DHS CET套件
+http://ics-cert.us-cert.gov/Assessments 
+NERC ES-ISAC
+http://www.esisac.com/SitePages/Home.aspx 
+ICS-ISAC
+http://ics-isac.org 
+NTSB美国国家工控测试床
+http://energy.gov/oe/downloads/common-cyber-security-vulnerabilitiesobserved-control-system-assessments-inl-nstb 
+NIST SP 800-82
+http://csrc.nist.gov/publications/nistpubs/800-82/SP800-82-final.pdf 
+ISA-99控制系统安全协会
+http://isa99.isa.org/ISA99%20Wiki/Home.aspx 
+NERC CIP标准
+http://www.nerc.com/pa/Stand/Pages/ReliabilityStandards.aspx 
+***** 工具
+****** 仿真类
+电力仿真软件testhaness
+Modbus仿真软件ModScan
+电力104协议仿真软件PMA
+****** 测试类
+Wurldtech Achilles
+Codenomicon Defensics
+Spirent
+BPS
+****** 源代码
+发现
+https://code.google.com/p/plcscan/ 
+https://code.google.com/p/modscan/ 
+https://github.com/arnaudsoullie/scan7 
+https://github.com/atimorin 
+https://github.com/digitalbond/Redpoint 
+操纵
+https://www.scadaforce.com/modbus 
+https://github.com/bashwork/pymodbus 
+https://rubygems.org/gems/modbus-cli 
+http://libnodave.sourceforge.net 
+https://code.google.com/p/dnp3 
+异常监测
+http://blog.snort.org/2012/01/snort-292-scada-preprocessors.html 
+http://www.digitalbond.com/tools/quickdraw/ 
+Fuzz
+https://github.com/jseidl/peach-pit/blob/master/modbus/modbus.xml 
+其他
+ZoomEye工控专题： http://ics.zoomeye.org/ 
+Shodan工控专题：https://www.shodan.io/report/l7VjfVKc 
+https://github.com/evilcos/papers/blob/master/网络空间工控设备的发现与入侵.ppt 
+**** zoomeye.org
+全球可以找到无数真实路由器/摄像头/工控设备等
+如：http://www.zoomeye.org/search?q=app:%22MikroTik%20RouterOS%22&from=dork 
 *** 研发清单
 **** 编码环境
      pip
@@ -310,29 +440,36 @@
 **** Python
      官方手册,至少过一遍，这都没过一遍，视野会局限
      行之说：「我没看过Python的书，却熟读官方手册……」
-**** Linux
+**** TODO Linux
      Bash新手指南.pdf 
      高级Bash脚本编程.pdf 
      Bash快捷操作.txt 
      screen最佳实践.pdf 
      crontab格式详解.pdf 
-**** 前端
-书,JavaScript DOM编程艺术
+--------
+《鸟哥的Linux私房菜》
+《Linux Shell脚本攻略》
+《UNIX编程艺术》
+《Software Design 中文版 01》《Software Design 中文版 02》《Software Design 中文版 03》
+
+**** TODO 前端书
+JavaScript DOM编程艺术
 了解DOM,这同样是搞好前端安全的必要基础
-***** 库
+***** TODO 库
 jQuery,优秀的插件应该体验一遍，并做些尝试;官方文档得过一遍
+D3.js
 ECharts,来自百度
 Google API
 ZoomEye Map组件,ZoomEye团队自己基于开源的打造
 AngularJS,Google出品的颠覆性前端框架
 Bootstrap,应该使用一遍
-**** 爬虫进阶
+**** TODO 爬虫进阶
 代理池
 爬虫「稳定」需要
 网络请求
 wget/curl
 urllib2/httplib2/requests
-idea scrapy
+scrapy
 验证码破解
 pytesser
 **** 调度
@@ -341,18 +478,19 @@ crontab是最原生的定时调度
 基于rpyc实现的分布式调度
 celery/gearman等调度框架
 **** 并发
-线程池
+***** 线程池
 进程内优美的并发方案
-协程
-进程内另一种优美的并发方案
-多进程
+***** 协程
+进程内另一种优美的并发方案 gevent
+***** 多进程
 os.fork
-idea multiprocessing
+multiprocessing
 **** 数据结构
 JSON
 cPickle
 protobuf
-数据库
+**** 数据存储及处理
+***** 数据库
 MySQL
 MongoDB
 Cassandra
@@ -360,12 +498,23 @@ Hadoop体系
 Redis
 Sqlite
 bsddb
+ElasticSearch
+***** 大数据处理
+Hive
+Spark
+****** ELK
+ElasticSearch
+Logstash
+Kibana
 **** DevOps
      SSH证书
      Fabric
      SaltStack
      puppet
      pssh/dsh
+***** 运维进阶
+运维工程师必须掌握的基础技能有哪些？
+http://www.zhihu.com/question/23665108/answer/25299881 ￼
 **** 调试
 pdb
 logging
@@ -373,8 +522,8 @@ Sentry
 strace/ltrace
 lsof
 ***** 性能
-Python内,timeit,cProfile,Python性能分析指南：http://www.oschina.net/translate/python-performance-analysis User Link
-Python外,top/htop/free/iostat/vmstat/ifconfig/iftop...
+Python内,timeit,cProfile,Python性能分析指南：http://www.oschina.net/translate/python-performance-analysis 
+Python外,top/htop/free/iostat/vmstat/ifconfig/iftop
 **** 算法
 分词
 贝叶斯
@@ -382,21 +531,21 @@ Python外,top/htop/free/iostat/vmstat/ifconfig/iftop...
 神经元
 遗传算法
 聚类/分类
-...
 **** 持续集成
 自测试
 nose
 Jenkins
 **** 协作
      类似Trello的在线协同平台
+     Slack
      微信
      立会
 *** 设计思想
     人人都是架构师：具备架构思想是一件多酷的事
     实战出真知
 **** 如何设计
-     [[http://blog.knownsec.com/Knownsec_RD_Checklist/arch_design_evolution.pdf][任务架构设计变迁.pdf]]
-     松耦合、紧内聚
+     [[http://blog.knownsec.com/Knownsec_RD_Checklist/arch_design_evolution.pdf][任务架构设计变迁.pdf]] 
+    松耦合、紧内聚
      单元与单元属性
      生产者与消费者
      结构:队列,LRU
@@ -408,7 +557,12 @@ Jenkins
       「run it优先」能摆脱细节（繁枝末节）的束缚
       「run it优先」能快速迭代出伟大的v1
       一个字总结:美
-*** 优质资源
+*** 牛人1,2,3
+1研究：研究东西，有足够洞察力，研究水准不错
+2研发：hack idea自己有魄力实现，不懂研发的黑客如同不会游泳的海盗
+3工程：研发出来的需要实战、需要工程化，否则只是玩具，而不能成为真的武器
+** 优质资源
+*** 站点
     知乎周刊：http://zhuanlan.zhihu.com/Weekly 
     码农周刊：http://weekly.manong.io/ 
     Pycoder's Weekly：http://pycoders.com/archive/ 
@@ -420,7 +574,32 @@ Jenkins
     GitHub：https://github.com/ 
     FreeBuf：http://www.freebuf.com/ 
     WooYun：http://drops.wooyun.org/ 
-*** 牛人1,2,3
-1研究：研究东西，有足够洞察力，研究水准不错
-2研发：hack idea自己有魄力实现，不懂研发的黑客如同不会游泳的海盗
-3工程：研发出来的需要实战、需要工程化，否则只是玩具，而不能成为真的武器   
+    深蓝阅读：http://bluereader.org/ 
+*** RSS订阅
+漏洞相关
+http://sebug.net/rss.xml 
+https://www.exploit-db.com/rss.xml 
+https://rss.packetstormsecurity.com 
+http://www.wooyun.org/feeds/public 
+强烈推荐圈内人打造的深蓝阅读
+http://bluereader.org/ 
+这上面已经很多黑客/技术类似的RSS资源了
+*** 威胁情报
+本来不想提任何这方面的，想想还是抖个资源，如下
+https://github.com/kbandla/APTnotes 
+*** 安全平台
+在线学习平台
+i春秋：http://www.ichunqiu.com 
+https://pentesterlab.com 
+PoC提交与学习
+Sebug: http://sebug.net 
+Beebeeto: http://www.beebeeto.com 
+Bugscan: http://www.bugscan.net 
+Tangscan: http://www.tangscan.com 
+** 结尾
+本技能表会持续不断更新
+如果有相关好资源/建议可以联系我：evilcos@gmail.com
+如果本技能表引起你的强烈共鸣，想加入我们，可以联系我：evilcos@gmail.com，我会结合你的情况
+给你仅仅一道有趣的笔试题
+或者和你线下约聊
+邮件联系我，邮件标题务必包含「技能表」三个字，感谢
