@@ -111,10 +111,6 @@ TOMsInsight为一家创业公司，专注于中国互联网的深度数据分析
 |   98 | 厦门三五互联科技股份有限公司     |
 |   99 | 苏州八爪鱼在线旅游发展有限公司   |
 |  100 | 深圳市中青宝互动网络股份有限公司 |
-|      |                                  |
-|      |                                  |
-|      |                                  |
-
 **** [[http://www.isc.org.cn/zxzx/ywsd/listinfo-27096.html][“中国互联网100强”（2013）发布]]
 | 排名 | 名称                                                 |
 |    1 | 腾讯（深圳市腾讯计算机系统有限公司）                 |
@@ -217,7 +213,6 @@ TOMsInsight为一家创业公司，专注于中国互联网的深度数据分析
 |   98 | 维动网络（广州维动网络科技有限公司）                 |
 |   99 | 大众点评网（上海汉涛信息咨询有限公司）               |
 |  100 | 武神（北京武神世纪网络技术股份有限公司）             |
-  
 **** [[http://tech.163.com/api/13/0812/07/962H46B8000915BF.html][中国互联网重大死亡名录 TOP10]]
 **** [[http://www.huxiu.com/article/18389/1.html][十家近期待嫁或恨嫁的中国互联网公司]]
 **** [[http://www.zhihu.com/question/20182144][百度竞价广告客户来源? 大型企业是不是不需要做竞价？]]
@@ -294,10 +289,9 @@ References are very interesting.
 **** TODO [[http://baijia.baidu.com/?tn%3Dlistarticle&labelid%3D101][百度百家--人物]]
 ***** [[http://chenzhong.baijia.baidu.com/article/17462][和游久CEO刘亮聊天：贵人周鸿祎]]
 [[http://chenzhong.baijia.baidu.com/article/17668][和游久CEO刘亮聊天：结怨腾讯(下)]]
-
 *** 中国黑客历史
 [[http://www.router.net.cn/Mu-Ma-Bing-Du/29178.html]["沸腾十五年"——中国互联网史1995-2009:互联网老兵谈网络黑社会：中国黑客走上自绝之路]]
- [[http://www.bwchinese.com/Chapter/4018_2.html][《中国互联网风云16年》 1998极客当道 互联网商业史人物——曾经的“黑客帝国”]]
+[[http://www.bwchinese.com/Chapter/4018_2.html][《中国互联网风云16年》 1998极客当道 互联网商业史人物——曾经的“黑客帝国”]]
 [[http://www.125135.com/272088.htm][中国黑客档案总序]]
 [[http://tech.163.com/15/0623/17/ASQF19GV000915BD.html][中国黑客的进阶之路]]
 [[http://www.zhihu.com/question/19817408/answer/13054712][中国黑客界发生过什么事？崇慕的回答]]
@@ -306,7 +300,6 @@ References are very interesting.
 [[http://bangpai.taobao.com/group/thread/274245-264603995.htm][我的黑客之路之走上正路--淘宝]]
 [[http://www.cnblogs.com/invade/articles/2999243.html][我的黑客成长之路 by 作案在凌晨时]]
 [[http://www.zhihu.com/question/21173007/answer/17720780][Roy Li的成长之路]]
-[[http://www.zhihu.com/question/21173007/answer/17717924][caoz的成长之路]]
 [[http://chuansong.me/n/1620876][Flashsky：我的安全之路（1-5）]]
 [[http://chuansong.me/n/1620877][Flashsky：我的安全之路(6-14)]]
 [[http://www.enet.com.cn/article/2004/0830/A20040830338809.shtml][中国”绿色兵团“代表人物介绍]]
@@ -335,7 +328,6 @@ PPLive,PPStream,QQLive,Anysee,悠视等,其中,PPLive 是当前用户数量最�
 **** TODO [[file:blackhat-SEO.org][黑帽SEO系列]]
 *** 腾讯生态流量与分发产业链分析
 **** [[http://e.qq.com/index.shtml][广点通]]
-
 *** 微信生态流量与分发产业链分析
 *** 广告联盟以及流量再分发产业链
 **** [[https://en.wikipedia.org/wiki/Affiliate_marketing][Affiliate marketing]] 
@@ -350,11 +342,10 @@ aso 应用名》keywords》应用描述》IAP item name
 **** [[http://blog.csdn.net/tlm0911/article/details/1550537][中国黑客自揭黑色产业链条：做病毒一定要低调]]
 **** [[http://tieba.baidu.com/p/4126084714][嗨！还记得那个会烧香的熊猫吗？]]
 
-*** 移动流量数据与移动化趋势分析
- 
+*** 移动流量数据与移动化趋势分析 
 *** 总结与洞察启示
 
-** 流量变现盈利相关产业链部分 
+** 流量变现盈利相关产业链部分
 *** 流量变现盈利相关产业链部分整体分析
 *** 淘宝天猫与相关生态变现产业链
 *** 独立网站电商与货到付款类电商
@@ -364,6 +355,18 @@ aso 应用名》keywords》应用描述》IAP item name
 *** 网络色情及诱惑相关产业链分析
 *** 网络培训与传销相关产业链分析
 *** 比特币与山寨币相关产业链分析
+**** [[http://daily.zhihu.com/story/4831821][自己做了一个比特币套利系统，每天躺着收钱（多图）]]
+**** [[https://bitcointalk.org/index.php?topic%3D678885][烤猫帝国的兴衰——读比特史,可知未来]]
+**** [[https://bitcointalk.org/index.php?topic%3D771050][{20140906}盘点那些因比特币挖矿走上致富之路的人]]
+**** [[https://velaciela.ms/btcvsltc][莱特币对比特币具有优势吗]]
+[[https://velaciela.ms/blackforest_of_altcoins][电子货币的黑暗森林]]
+[[https://velaciela.ms/pos_vs_pow][为什么POS与POW不具有可比性]]
+[[https://velaciela.ms/bitcoin_01][比特币：通缩货币能解决问题吗]]
+**** Mt.Gox事件
+[[https://bitcointalk.org/index.php?topic%3D459445][Mt Gox公布比特币Bug始末]]
+[[http://tieba.baidu.com/p/2897263151][【解密】Mtgox事件推测以及未来比特币发展]]
+**** [[http://www.btc38.com/btc/btc_market/1094.html][“三.二一”虚拟货币暴跌事件总结]]
+**** [[https://bitcointalk.org/index.php?topic%3D206068.0;all][国内比特币名人排行]]
 *** 移动变现数据与移动化趋势分析
 *** 总结与洞察启示
 ** 数据信息安全相关产业链部分 
@@ -395,8 +398,7 @@ http://www.zhihu.com/question/28173417
 犯罪分子口中“内料四大件”，即“身份证号、登录密码、手机号码和银行卡账户”齐全
 
 *** 总结与洞察启示 
-** 总结性分析洞察与结论 
-
+** 总结性分析洞察与结论
 * [[http://netsec.ccert.edu.cn/wp-content/uploads/2012/07/%25E4%25B8%25AD%25E5%259B%25BD%25E4%25BF%25A1%25E6%2581%25AF%25E5%25AE%2589%25E5%2585%25A8%25E5%259C%25B0%25E4%25B8%258B%25E4%25BA%25A7%25E4%25B8%259A%25E9%2593%25BE%25E8%25B0%2583%25E6%259F%25A5_final.pdf][中国信息安全地下产业链调查_final.pdf]] 
 [[http://www.hcocoa.com/2012/12/14/Underground-Security-Industrial-Chain-in-China][地下灰色产业链简介--中国互联网信息安全的黑话、黑市和黑客]]
 [[http://netsec.ccert.edu.cn/zhugejw/files/2012/07/%25E4%25B8%25AD%25E5%259B%25BD%25E4%25BF%25A1%25E6%2581%25AF%25E5%25AE%2589%25E5%2585%25A8%25E5%259C%25B0%25E4%25B8%258B%25E4%25BA%25A7%25E4%25B8%259A%25E9%2593%25BE%25E8%25B0%2583%25E6%259F%25A5.pdf][中国信息安全地下产业链调查]]
