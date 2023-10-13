@@ -10,5 +10,6 @@
 *.order
 *.cmd
 .*
+.gitignore
 
 
